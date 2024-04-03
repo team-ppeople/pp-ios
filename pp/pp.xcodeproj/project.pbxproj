@@ -23,7 +23,6 @@
 		A91019632BBD245900046A62 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019622BBD245900046A62 /* PostService.swift */; };
 		A91019652BBD246200046A62 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019642BBD246200046A62 /* PostModel.swift */; };
 		A91019672BBD247000046A62 /* DiaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019662BBD247000046A62 /* DiaryViewModel.swift */; };
-		A91019692BBD248400046A62 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019682BBD248400046A62 /* TabBarView.swift */; };
 		A910196B2BBD249000046A62 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910196A2BBD249000046A62 /* LoginView.swift */; };
 		A91019702BBD24B700046A62 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910196F2BBD24B700046A62 /* SettingView.swift */; };
 		A91019732BBD24D100046A62 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019722BBD24D100046A62 /* CommunityView.swift */; };
@@ -57,7 +56,6 @@
 		A91019622BBD245900046A62 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		A91019642BBD246200046A62 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		A91019662BBD247000046A62 /* DiaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewModel.swift; sourceTree = "<group>"; };
-		A91019682BBD248400046A62 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		A910196A2BBD249000046A62 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A910196F2BBD24B700046A62 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		A91019722BBD24D100046A62 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
@@ -128,8 +126,7 @@
 				A910196E2BBD24A400046A62 /* Setting */,
 				A910196D2BBD249D00046A62 /* Community */,
 				A910196C2BBD249400046A62 /* Diary */,
-				A910196A2BBD249000046A62 /* LoginView.swift */,
-				A91019682BBD248400046A62 /* TabBarView.swift */,
+				A91019802BBD462900046A62 /* Login */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -218,6 +215,14 @@
 				A910196F2BBD24B700046A62 /* SettingView.swift */,
 			);
 			path = Setting;
+			sourceTree = "<group>";
+		};
+		A91019802BBD462900046A62 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A910196A2BBD249000046A62 /* LoginView.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		B92B235530ABBCFFBB608850 /* Pods */ = {
@@ -353,7 +358,6 @@
 				A910195F2BBD244C00046A62 /* UserModel.swift in Sources */,
 				A91019672BBD247000046A62 /* DiaryViewModel.swift in Sources */,
 				A91019732BBD24D100046A62 /* CommunityView.swift in Sources */,
-				A91019692BBD248400046A62 /* TabBarView.swift in Sources */,
 				A910196B2BBD249000046A62 /* LoginView.swift in Sources */,
 				A91019792BBD24EE00046A62 /* DiaryUploadView.swift in Sources */,
 				9AF0F3922BBBF8C800964E75 /* ppApp.swift in Sources */,
