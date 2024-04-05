@@ -10,6 +10,14 @@ import CoreData
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
+	
+	init() {
+		let appearance: UITabBarAppearance = UITabBarAppearance()
+		appearance.configureWithOpaqueBackground()
+		appearance.shadowColor = UIColor.darkGrayColor
+		UITabBar.appearance().standardAppearance = appearance
+		UITabBar.appearance().scrollEdgeAppearance = appearance
+	}
     
     var body: some View {
         TabView {
@@ -44,7 +52,7 @@ struct ContentView: View {
                         Text("설정")
                     }
                 }
-        }
+		}
     }
 }
 
