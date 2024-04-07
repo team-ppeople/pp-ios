@@ -6,35 +6,66 @@
 //
 
 import SwiftUI
-//import Kingfisher
+import Kingfisher
 
 struct DiaryView: View {
-
-//	@ObservedObject var categoryViewModel: DiaryViewModel
+	@ObservedObject var vm: DiaryViewModel = DiaryViewModel()
 	
 	var body: some View {
-		NavigationView {
-			VStack(alignment: .leading, spacing: 0){
-				LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 21) {
-//					ForEach(categoryViewModel.categories, id: \.self) { category in
-//						NavigationLink(destination: CategoryDetailView(categoryDeatilViewModel: CategoryDetailViewModel(useCase: CategoryUseCase(repository: CategoryRepository())),
-//																	   searchValue: "",
-//																	   subCategoryInfo: SubCategoryInfo(),
-//																	   mainCategorySeq: category.id ?? 0)) {
-//							VStack {
-//								KFImage(URL(string: "\(ServerUrl.imageCloudFront.baseUrl)\(category.imagePath ?? "")"))
-//									.resizable()
-//									.scaledToFit()
-//								
-//								Text(category.name ?? "")
-//									.frame(height: 16)
-//									.foregroundColor(Color(hex: "#5C6270"))
-//									.font(.system(size: 12, weight: .medium))
-//							}
-//						}
-//					}
+		NavigationStack {
+			VStack {
+				Spacer()
+				
+				if vm.diaryPosts.count == 0 {
+					Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
+						.multilineTextAlignment(.center)
+				} else {
+					List {
+						ForEach(vm.diaryPosts, id: \.self) { diaryPost in
+							NavigationLink(destination: DiaryDetailView()) {
+								HStack {
+									VStack(alignment: .leading) {
+										Text(diaryPost.title ?? "")
+											.lineLimit(1)
+											.bold()
+										
+										Text(diaryPost.contents ?? "")
+											.lineLimit(1)
+									}
+								}
+							}
+						}
+					}
 				}
-				.padding(.init(top: 20, leading: 16, bottom: 40, trailing: 16))
+				
+				Spacer()
+				
+				HStack {
+					Spacer()
+					
+					Button {
+						print("UploadView로 이동")
+					} label: {
+						NavigationLink(destination: DiaryUploadView(vm: self.vm)) {
+							HStack {
+								Image(systemName: "pencil")
+									.tint(.white)
+							}
+							.frame(width: 40, height: 40)
+						}
+					}
+					.background(.accent)
+					.cornerRadius(40)
+					.padding(16)
+					.zIndex(1.0)
+				}
+			}
+			.toolbar {
+				ToolbarItem(placement: .navigation) {
+					Text("나의 일기")
+						.font(.system(size: 20))
+						.bold()
+				}
 			}
 		}
 	}

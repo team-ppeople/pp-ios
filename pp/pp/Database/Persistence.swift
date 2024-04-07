@@ -13,7 +13,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "pp")
+        container = NSPersistentContainer(name: "DiaryPostModel")
 		
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -21,7 +21,7 @@ struct PersistenceController {
 		
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
-				print("코어데이터 로드 FAIL", error.localizedDescription)
+				print("코어데이터 로드 실패!", error.localizedDescription)
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
@@ -35,13 +35,13 @@ struct PersistenceController {
 			do {
 				try context.save()
 			} catch {
-				print("코어데이터 saveChanges() FAIL", error.localizedDescription)
+				print("코어데이터 저장 실패!", error.localizedDescription)
 			}
 		}
 	}
 	
 	// MARK: - 나의 일기 작성
-	func createDiaryPost(title: String, contents: String, images: Data) {
+	func create(title: String, contents: String, images: Data) {
 		let entity = DiaryPost(context: container.viewContext)
 			
 		entity.id = UUID()
@@ -54,7 +54,7 @@ struct PersistenceController {
 	}
 	
 	// MARK: - 나의 일기 조회
-	func getDiaryPost(fetchLimit: Int? = nil) -> [DiaryPost] {
+	func read(fetchLimit: Int? = nil) -> [DiaryPost] {
 		var results: [DiaryPost] = []
 		let request = NSFetchRequest<DiaryPost>(entityName: "DiaryPost")
 		
@@ -64,15 +64,16 @@ struct PersistenceController {
 
 		do {
 			results = try container.viewContext.fetch(request)
+			print("나의 일기 조회 성공! \(results.count)개")
 		} catch {
-			print("Could not fetch notes from Core Data.")
+			print("나의 일기 조회 실패!")
 		}
 	
 		return results
 	}
 
 	// MARK: - 나의 일기 삭제
-	func deleteDiaryPost(_ entity: DiaryPost) {
+	func delete(_ entity: DiaryPost) {
 		container.viewContext.delete(entity)
 		saveChanges()
 	}
