@@ -6,12 +6,25 @@
 //
 
 import SwiftUI
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 struct ppApp: App {
+	init() {
+		// Kakao SDK 초기화
+		KakaoSDK.initSDK(appKey: Secrets().kakaoAppKey)
+	}
+	
     var body: some Scene {
         WindowGroup {
-            ContentView()
+			// onOpenURL()을 사용해 커스텀 URL 스킴 처리
+			ContentView()
+				.onOpenURL(perform: { url in
+					if (AuthApi.isKakaoTalkLoginUrl(url)) {
+						_ = AuthController.handleOpenUrl(url: url)
+					}
+				})
         }
     }
 }

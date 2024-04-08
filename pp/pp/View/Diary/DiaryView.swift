@@ -19,6 +19,7 @@ struct DiaryView: View {
 				if vm.diaryPosts.count == 0 {
 					Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
 						.multilineTextAlignment(.center)
+						.frame(maxWidth: .infinity, maxHeight: .infinity)
 				} else {
 					List {
 						ForEach(vm.diaryPosts, id: \.self) { diaryPost in

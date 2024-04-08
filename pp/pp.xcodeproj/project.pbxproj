@@ -15,6 +15,7 @@
 		9A73F56F2BBFCA3D00FFB0B7 /* TermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F56E2BBFCA3D00FFB0B7 /* TermsView.swift */; };
 		9A73F5712BBFD31500FFB0B7 /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5702BBFD31500FFB0B7 /* ImageExtension.swift */; };
 		9A73F5732BBFD42F00FFB0B7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5722BBFD42F00FFB0B7 /* Utils.swift */; };
+		9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */; };
 		9AF0F3922BBBF8C800964E75 /* ppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3912BBBF8C800964E75 /* ppApp.swift */; };
 		9AF0F3942BBBF8C800964E75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3932BBBF8C800964E75 /* ContentView.swift */; };
 		9AF0F3962BBBF8CA00964E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		9A73F5702BBFD31500FFB0B7 /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		9A73F5722BBFD42F00FFB0B7 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9A73F58B2BC241C900FFB0B7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		9AF0F38E2BBBF8C800964E75 /* pp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AF0F3912BBBF8C800964E75 /* ppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ppApp.swift; sourceTree = "<group>"; };
 		9AF0F3932BBBF8C800964E75 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				9A73F5722BBFD42F00FFB0B7 /* Utils.swift */,
+				9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */,
 				9A73F5692BBE23BD00FFB0B7 /* Extension */,
 			);
 			path = Util;
@@ -413,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */,
+				9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */,
 				9A73F56F2BBFCA3D00FFB0B7 /* TermsView.swift in Sources */,
 				A910197B2BBD24F900046A62 /* CommunityDetailView.swift in Sources */,
 				9A73F5712BBFD31500FFB0B7 /* ImageExtension.swift in Sources */,
@@ -582,7 +586,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "피피";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -618,7 +622,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "피피";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
