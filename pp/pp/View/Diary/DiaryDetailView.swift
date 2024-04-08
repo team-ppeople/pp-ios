@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct DiaryDetailView: View {
+    @ObservedObject var diaryPost: DiaryPost = DiaryPost()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text(diaryPost.title ?? "")
+            Text(diaryPost.contents ?? "")
+        }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

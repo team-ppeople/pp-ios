@@ -37,6 +37,7 @@ struct DiaryUploadView: View {
 			.cornerRadius(5)
 		}
 		.navigationTitle("업로드")
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

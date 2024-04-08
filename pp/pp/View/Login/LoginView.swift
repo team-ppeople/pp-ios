@@ -34,6 +34,7 @@ struct LoginView: View {
 			.background(.kakao)
 			.cornerRadius(10)
 			.padding(.bottom, 10)
+            .padding(.horizontal, 16)
 		
 			Button {
 				print("TermsAgreementView로 이동 - A")
@@ -51,9 +52,8 @@ struct LoginView: View {
 			.background(.black)
 			.cornerRadius(10)
 			.padding(.bottom, 10)
-			
+            .padding(.horizontal, 16)
 		}
-		.padding(.horizontal, 16)
 	}
 }
 

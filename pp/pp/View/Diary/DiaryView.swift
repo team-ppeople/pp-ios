@@ -13,7 +13,7 @@ struct DiaryView: View {
 	
 	var body: some View {
 		NavigationStack {
-			VStack {
+            ZStack(alignment: .bottomTrailing) {
 				Spacer()
 				
 				if vm.diaryPosts.count == 0 {
@@ -22,7 +22,7 @@ struct DiaryView: View {
 				} else {
 					List {
 						ForEach(vm.diaryPosts, id: \.self) { diaryPost in
-							NavigationLink(destination: DiaryDetailView()) {
+                            NavigationLink(destination: DiaryDetailView(diaryPost: diaryPost)) {
 								HStack {
 									VStack(alignment: .leading) {
 										Text(diaryPost.title ?? "")
@@ -43,9 +43,7 @@ struct DiaryView: View {
 				HStack {
 					Spacer()
 					
-					Button {
-						print("UploadView로 이동")
-					} label: {
+					Button {} label: {
 						NavigationLink(destination: DiaryUploadView(vm: self.vm)) {
 							HStack {
 								Image(systemName: "pencil")
