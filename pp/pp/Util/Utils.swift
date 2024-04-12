@@ -11,13 +11,13 @@ import UIKit
 class Utils {
 	static func createImage(_ value: Data) -> Image {
 		#if canImport(UIKit)
-			let songArtwork: UIImage = UIImage(data: value) ?? UIImage()
-			return Image(uiImage: songArtwork)
+        let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
+			return Image(uiImage: uiImage)
 		#elseif canImport(AppKit)
 			let songArtwork: NSImage = NSImage(data: value) ?? NSImage()
 			return Image(nsImage: songArtwork)
 		#else
-			return Image(systemImage: "some_default")
+			return Image("emty.image")
 		#endif
 	}
 }
