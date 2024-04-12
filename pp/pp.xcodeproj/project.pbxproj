@@ -151,7 +151,6 @@
 		9AF0F3902BBBF8C800964E75 /* pp */ = {
 			isa = PBXGroup;
 			children = (
-				A99B433D2BC3A5B40096A4AB /* Info.plist */,
 				A910194A2BBCFDDA00046A62 /* View */,
 				A910194B2BBCFDE100046A62 /* ViewModel */,
 				A910194C2BBCFDE900046A62 /* API */,
@@ -161,6 +160,7 @@
 				9AF0F3932BBBF8C800964E75 /* ContentView.swift */,
 				9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */,
 				9A73F56A2BBE50A200FFB0B7 /* Launch Screen.storyboard */,
+				A99B433D2BC3A5B40096A4AB /* Info.plist */,
 				9AF0F3972BBBF8CA00964E75 /* Preview Content */,
 			);
 			path = pp;
