@@ -37,6 +37,6 @@ extension UIColor {
 		return UIColor(named: "GrayColor")!
 	}
 	class var darkSubColor: UIColor {
-		return UIColor(named: "DarkSubColor")!
+        return UIColor(named: "DarkSubColor") ?? UIColor.white
 	}
 }

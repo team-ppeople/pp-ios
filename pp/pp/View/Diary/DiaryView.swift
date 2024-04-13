@@ -94,6 +94,8 @@ struct DiaryView: View {
     }
 }
 
+//print("hi")
+
 #Preview {
     DiaryView()
 }
