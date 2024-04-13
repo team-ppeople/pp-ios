@@ -11,8 +11,7 @@ class DiaryViewModel: ObservableObject {
 	@Published var diaryPosts: [DiaryPost] = []
 	
 	let dataService = PersistenceController.shared
-	
-	@Published var showAlert: Bool = false
+
 	@Published var title: String = ""
 	@Published var contents: String = ""
 	@Published var images: Data = Data()
@@ -36,7 +35,6 @@ class DiaryViewModel: ObservableObject {
 	}
 	
 	func clearStates() {
-		showAlert = false
 		title = ""
 		contents = ""
 		images = Data()

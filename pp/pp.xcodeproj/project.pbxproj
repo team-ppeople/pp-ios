@@ -16,6 +16,7 @@
 		9A73F5712BBFD31500FFB0B7 /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5702BBFD31500FFB0B7 /* ImageExtension.swift */; };
 		9A73F5732BBFD42F00FFB0B7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5722BBFD42F00FFB0B7 /* Utils.swift */; };
 		9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */; };
+		9A73F59E2BC67DFC00FFB0B7 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */; };
 		9AF0F3922BBBF8C800964E75 /* ppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3912BBBF8C800964E75 /* ppApp.swift */; };
 		9AF0F3942BBBF8C800964E75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3932BBBF8C800964E75 /* ContentView.swift */; };
 		9AF0F3962BBBF8CA00964E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */; };
@@ -69,6 +70,8 @@
 		9A73F5722BBFD42F00FFB0B7 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9A73F58B2BC241C900FFB0B7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		9A73F59C2BC5359E00FFB0B7 /* pp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pp.entitlements; sourceTree = "<group>"; };
+		9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		9AF0F38E2BBBF8C800964E75 /* pp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AF0F3912BBBF8C800964E75 /* ppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ppApp.swift; sourceTree = "<group>"; };
 		9AF0F3932BBBF8C800964E75 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -160,6 +163,7 @@
 				9AF0F3932BBBF8C800964E75 /* ContentView.swift */,
 				9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */,
 				9A73F56A2BBE50A200FFB0B7 /* Launch Screen.storyboard */,
+				9A73F59C2BC5359E00FFB0B7 /* pp.entitlements */,
 				A99B433D2BC3A5B40096A4AB /* Info.plist */,
 				9AF0F3972BBBF8CA00964E75 /* Preview Content */,
 			);
@@ -189,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				A91019662BBD247000046A62 /* DiaryViewModel.swift */,
+				9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -432,6 +437,7 @@
 				A91019572BBD242D00046A62 /* AuthService.swift in Sources */,
 				A91019612BBD245200046A62 /* PostEndpoint.swift in Sources */,
 				A91019632BBD245900046A62 /* PostService.swift in Sources */,
+				9A73F59E2BC67DFC00FFB0B7 /* LoginViewModel.swift in Sources */,
 				A91019702BBD24B700046A62 /* SettingView.swift in Sources */,
 				A91019752BBD24DA00046A62 /* DiaryView.swift in Sources */,
 				A91019772BBD24E300046A62 /* DiaryDetailView.swift in Sources */,
@@ -578,8 +584,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = pp/pp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
 				ENABLE_PREVIEWS = YES;
@@ -614,8 +621,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = pp/pp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
 				ENABLE_PREVIEWS = YES;
