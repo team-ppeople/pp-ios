@@ -25,6 +25,7 @@ struct DiaryUploadView: View {
 			.overlay(RoundedRectangle(cornerRadius: 5).stroke(.sub, lineWidth: 1))
 			
 			TextField("Title", text: $vm.title)
+                
 			TextField("Body", text: $vm.contents)
 			
 			Button("작성 완료", action: {
