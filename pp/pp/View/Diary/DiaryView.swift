@@ -20,43 +20,49 @@ struct DiaryView: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
+                   
                     GeometryReader { geometry in
                         ScrollView {
                             LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 24) {
                                 ForEach(vm.diaryPosts, id: \.self) { diaryPost in
                                     NavigationLink(destination: DiaryDetailView(diaryPost: diaryPost)) {
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                Image("emty.image")
-                                                    .resizable()
-                                                Text(diaryPost.title ?? "")
-                                                    .font(.system(size: 15))
-                                                    .bold()
-                                                    .foregroundColor(.black)
-                                                    .lineLimit(1)
-                                                    .multilineTextAlignment(.leading)
-                                                    .padding(.horizontal, 10)
-                                                    .padding(.top, 3)
-                                                Text(diaryPost.contents ?? "")
-                                                    .font(.system(size: 12))
-                                                    .foregroundColor(.black)
-                                                    .lineLimit(1)
-                                                    .multilineTextAlignment(.leading)
-                                                    .padding(.horizontal, 10)
-                                                    .padding(.bottom, 5)
-                                            }
+                                        VStack(alignment: .leading) {
+                                            Utils.createImage(diaryPost.images?.first)
+                                                .resizable()
+                                                .frame(width: 171, height: 121)
+                                            
+                                            Text(diaryPost.title ?? "")
+                                                .font(.system(size: 15))
+                                                .bold()
+                                                .foregroundColor(.black)
+                                                .lineLimit(1)
+                                                .multilineTextAlignment(.leading)
+                                                .padding(.horizontal, 10)
+                                                .padding(.top, 3)
+                                            
+                                            Text(diaryPost.contents ?? "")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(.black)
+                                                .lineLimit(1)
+                                                .multilineTextAlignment(.leading)
+                                                .padding(.horizontal, 10)
+                                                .padding(.bottom, 5)
                                         }
                                         .background(RoundedRectangle(cornerRadius: 5).fill(.white))
                                     }
                                 }
                             }
-                            .frame(height: .infinity)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 24)
                             .background(Color("#EBEBF4"))
                         }
                         .frame(height: geometry.size.height)
                     }
+                    
+                    
+                    
+                    
+                    
                 }
                 
                 Spacer()

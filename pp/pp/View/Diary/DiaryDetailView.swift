@@ -16,6 +16,7 @@ struct DiaryDetailView: View {
             Text(diaryPost.contents ?? "")
         }
         .toolbar(.hidden, for: .tabBar)
+        
     }
 }
 

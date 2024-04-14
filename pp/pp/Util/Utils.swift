@@ -9,9 +9,9 @@ import SwiftUI
 import UIKit
 
 class Utils {
-	static func createImage(_ value: Data) -> Image {
+	static func createImage(_ value: Data?) -> Image {
 		#if canImport(UIKit)
-        let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
+        let uiImage: UIImage = UIImage(data: value!) ?? UIImage(named: "emty.image")!
 			return Image(uiImage: uiImage)
 		#elseif canImport(AppKit)
 			let songArtwork: NSImage = NSImage(data: value) ?? NSImage()

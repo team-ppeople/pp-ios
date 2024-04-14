@@ -14,6 +14,7 @@ struct ppApp: App {
 	init() {
 		// Kakao SDK 초기화
 		KakaoSDK.initSDK(appKey: Secrets().kakaoAppKey)
+        
 	}
 	
     var body: some Scene {
