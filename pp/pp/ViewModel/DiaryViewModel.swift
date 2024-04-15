@@ -35,7 +35,6 @@ class DiaryViewModel: ObservableObject {
             for eachItem in selectedPhotos {
                 Task {
                     if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
-                        // JPEG 형식으로 이미지 데이터를 압축합니다. 품질 인자로 0.5를 사용
                         if let image = UIImage(data: imageData),
                            let compressedImageData = image.jpegData(compressionQuality: 0.5) {
                             images.append(compressedImageData)

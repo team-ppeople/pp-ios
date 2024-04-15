@@ -11,7 +11,6 @@ import PhotosUI
 struct DiaryUploadView: View {
     @ObservedObject var vm: DiaryViewModel = DiaryViewModel()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
     let maxPhotosToSelect = 10
 
     var body: some View {
@@ -19,7 +18,9 @@ struct DiaryUploadView: View {
             VStack {
                 HStack(alignment: .top, spacing: 30) {
                     ScrollView(.horizontal) {
-                        HStack(alignment: .center, spacing: 10) {
+                        HStack(alignment: 
+                                .center,
+                                 spacing: 10) {
                             PhotosPicker(
                                 selection: $vm.selectedPhotos,
                                 maxSelectionCount: maxPhotosToSelect,
@@ -56,7 +57,7 @@ struct DiaryUploadView: View {
                         .frame(height: 100)
                         .padding(.leading, 20)
                     }
-                    .background(Color.clear)
+                        .background(Color.clear)
                 }
                
                 Spacer()
@@ -78,12 +79,5 @@ struct DiaryUploadView: View {
             }
           
         }
-    }
-}
-
-// Preview
-struct DiaryUploadView_Previews: PreviewProvider {
-    static var previews: some View {
-        DiaryUploadView()
     }
 }

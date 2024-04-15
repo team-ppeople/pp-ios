@@ -49,12 +49,6 @@ struct PersistenceController {
         entity.contents = contents
         entity.images = images
         entity.date = Date()
-        
-        
-       
-        
-        
-        
         print("entity 생성 \(entity.id),\(entity.title)")
         print("entity 생성 \(entity.contents),\(entity.images),\(entity.date)")
         saveChanges()
@@ -86,34 +80,5 @@ struct PersistenceController {
         container.viewContext.delete(entity)
         saveChanges()
     }
-    
-    
-    func fetchAllEntities() {
-        // Persistence Controller의 Context를 가져옵니다.
-        let context = PersistenceController.shared.container.viewContext
-        
-        // NSFetchRequest를 생성합니다. 여기서 'EntityName'은 Core Data 모델에서 사용한 엔티티의 이름입니다.
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "DiaryPost")
-        
-        do {
-            // 데이터를 조회합니다.
-            let results = try context.fetch(fetchRequest)
-            
-            // 결과를 처리합니다. 예를 들어, 모든 데이터를 출력할 수 있습니다.
-            for result in results as! [NSManagedObject] {
-                print(result)
-            }
-        } catch let error as NSError {
-            // 오류 처리
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+ 
 }
