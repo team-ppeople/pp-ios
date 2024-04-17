@@ -5,17 +5,19 @@
 //  Created by 김지현 on 2024/04/10.
 //
 
-import Foundation
+import Moya
+import Combine
 import KakaoSDKUser
 import _AuthenticationServices_SwiftUI
 
 class LoginViewModel: ObservableObject {
+    private let provider = MoyaProvider<UserAPI>()
+    private var subscription = Set<AnyCancellable>()
+    
 	@Published var isLinkActive: Bool = false
-	@Published var showAlert: Bool = false
-	@Published var accessToken: String = ""
-	@Published var email: String = ""
-	@Published var idToken: String = ""
-	@Published var authCode: String = ""
+    @Published var showAlert: Bool = false
+	@Published var authCode: String?
+    @Published var isRegistered: Bool?
 	
 	func requestKakaoOauth() {
 		if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -26,8 +28,7 @@ class LoginViewModel: ObservableObject {
 					self?.showAlert = true
 				} else {
 					print("카카오톡 인증 성공 - \(oauthToken?.accessToken ?? "")")
-					self?.accessToken = oauthToken?.accessToken ?? ""
-					self?.requestKakaoUserProfile()
+                    self?.requestKakaoUserProfile(accessToken: oauthToken?.accessToken)
 				}
 			}
 		} else {
@@ -38,17 +39,16 @@ class LoginViewModel: ObservableObject {
 					self?.showAlert = true
 				} else {
 					print("카카오계정 인증 성공 - \(oauthToken?.accessToken ?? "")")
-					self?.accessToken = oauthToken?.accessToken ?? ""
-					self?.requestKakaoUserProfile()
+					self?.requestKakaoUserProfile(accessToken: oauthToken?.accessToken)
 				}
 			}
 		}
 	}
 	
-	func requestKakaoUserProfile() {
+    func requestKakaoUserProfile(accessToken: String?) {
 		UserApi.shared.me { [weak self] User, Error in
-			self?.email = User?.kakaoAccount?.email ?? ""
 			print("이메일 - \(User?.kakaoAccount?.email ?? "")")
+            self?.checkRegisteredUser(client: .kakao, idToken: accessToken ?? "")
 		}
 	}
 	
@@ -67,9 +67,8 @@ class LoginViewModel: ObservableObject {
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8)
 						let email = appleIDCredential.email
 						print("애플 인증 성공 - id_token: \(identityToken ?? ""), auth_code: \(authorizationCode ?? "")")
-						self?.idToken = identityToken ?? ""
-						self?.authCode = authorizationCode ?? ""
-						self?.email = email ?? ""
+						self?.authCode = authorizationCode
+                        self?.checkRegisteredUser(client: .apple, idToken: identityToken ?? "")
 					default:
 						break
 					}
@@ -80,8 +79,23 @@ class LoginViewModel: ObservableObject {
 			}
 		)
 	}
-	
-	func requestPPOauth(_ diaryPost: DiaryPost) {
+    
+    func checkRegisteredUser(client: Client, idToken: String) {
+        provider.requestPublisher(.checkRegisteredUser(client: client, idToken: idToken))
+            .sink { completion in
+                switch completion {
+                case let .failure(error) :
+                    print("회원 등록 여부 확인 Fail - \(error.localizedDescription)")
+                case .finished :
+                    print("회원 등록 여부 확인 Finished")
+                }
+            } receiveValue: { recievedValue in
+                guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else { return }
+                self.isRegistered = responseData.data?.isRegistered
+            }.store(in : &subscription)
+    }
+    
+    func login() {
 		// pp oauth api 요청
 	}
 }
