@@ -9,6 +9,7 @@ import Moya
 import Combine
 import KakaoSDKUser
 import _AuthenticationServices_SwiftUI
+import SwiftyJSON
 
 class LoginViewModel: ObservableObject {
     private let provider = MoyaProvider<UserAPI>()
@@ -83,6 +84,7 @@ class LoginViewModel: ObservableObject {
     func checkRegisteredUser(client: Client, idToken: String) {
         provider.requestPublisher(.checkRegisteredUser(client: client, idToken: idToken))
             .sink { completion in
+                print(completion)
                 switch completion {
                 case let .failure(error) :
                     print("회원 등록 여부 확인 Fail - \(error.localizedDescription)")
@@ -91,7 +93,9 @@ class LoginViewModel: ObservableObject {
                 }
             } receiveValue: { recievedValue in
                 guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else { return }
-                self.isRegistered = responseData.data?.isRegistered
+                self.isRegistered = responseData.registered
+                print("회원 등록 여부 확인 Success")
+                print(JSON(recievedValue.data))
             }.store(in : &subscription)
     }
     
