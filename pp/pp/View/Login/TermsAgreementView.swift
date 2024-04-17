@@ -11,6 +11,7 @@ struct TermsAgreementView: View {
     @State var privacyTermsToggleIsOn: Bool = false
     @State var serviceTermsToggleIsOn: Bool = false
     @State var allTermsToggleIsOn: Bool = false
+    @State private var navigateToCommunityView = false // 화면 전환을 위한 상태 변수
     
     var body: some View {
         VStack {
@@ -90,15 +91,24 @@ struct TermsAgreementView: View {
             }
             
             Button("필수 약관 동의 완료") {
+                // 임시 화면전환
+                navigateToCommunityView = true // 버튼 클릭 시 상태 변수 변경
                 
             }
             .background(.accent)
+            NavigationLink("", destination: CommunityView(), isActive: $navigateToCommunityView) // 활성화 상태에 따라 화면 전환
         }
         .navigationTitle("약관동의")
-        .toolbar(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Close") {
+                    // 화면 닫기 코드
+                }
+                //.toolbar(.hidden, for: .tabBar)
+            }
+        }
     }
 }
-
 #Preview {
     TermsAgreementView()
 }
