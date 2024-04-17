@@ -14,6 +14,7 @@ struct DiaryUploadView: View {
     @State private var contents: String = ""
 
     var body: some View {
+
         NavigationView {
             VStack {
                 PhotoPickerView(selectedPhotos: $vm.selectedPhotos, maxPhotosToSelect: maxPhotosToSelect, vm: vm)
@@ -48,6 +49,7 @@ struct DiaryUploadView: View {
 
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+
     }
 }
 

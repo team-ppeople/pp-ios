@@ -39,6 +39,7 @@ struct DiaryView: View {
             }
         }
     }
+
     
     private var emptyStateView: some View {
         Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
@@ -72,4 +73,5 @@ struct DiaryView: View {
                 .shadow(color: .gray, radius: 3, x: 1, y: 1)
         }
     }
+
 }
