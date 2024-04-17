@@ -13,7 +13,9 @@ class LoginViewModel: ObservableObject {
 	@Published var isLinkActive: Bool = false
 	@Published var showAlert: Bool = false
 	@Published var accessToken: String = ""
+	@Published var email: String = ""
 	@Published var idToken: String = ""
+	@Published var authCode: String = ""
 	
 	func requestKakaoOauth() {
 		if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -25,6 +27,7 @@ class LoginViewModel: ObservableObject {
 				} else {
 					print("카카오톡 인증 성공 - \(oauthToken?.accessToken ?? "")")
 					self?.accessToken = oauthToken?.accessToken ?? ""
+					self?.requestKakaoUserProfile()
 				}
 			}
 		} else {
@@ -36,8 +39,16 @@ class LoginViewModel: ObservableObject {
 				} else {
 					print("카카오계정 인증 성공 - \(oauthToken?.accessToken ?? "")")
 					self?.accessToken = oauthToken?.accessToken ?? ""
+					self?.requestKakaoUserProfile()
 				}
 			}
+		}
+	}
+	
+	func requestKakaoUserProfile() {
+		UserApi.shared.me { [weak self] User, Error in
+			self?.email = User?.kakaoAccount?.email ?? ""
+			print("이메일 - \(User?.kakaoAccount?.email ?? "")")
 		}
 	}
 	
@@ -46,15 +57,19 @@ class LoginViewModel: ObservableObject {
 			onRequest: { request in
 				request.requestedScopes = [.fullName, .email]
 			},
-			onCompletion: { result in
+			onCompletion: { [weak self] result in
 				switch result {
 				case .success(let authResults):
 					print("Apple Login Successful")
 					switch authResults.credential{
 					case let appleIDCredential as ASAuthorizationAppleIDCredential:
-						let IdentityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
-						let AuthorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8)
-						print("애플 인증 성공 - id_token: \(IdentityToken ?? ""), auth_code: \(AuthorizationCode ?? "")")
+						let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
+						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8)
+						let email = appleIDCredential.email
+						print("애플 인증 성공 - id_token: \(identityToken ?? ""), auth_code: \(authorizationCode ?? "")")
+						self?.idToken = identityToken ?? ""
+						self?.authCode = authorizationCode ?? ""
+						self?.email = email ?? ""
 					default:
 						break
 					}
