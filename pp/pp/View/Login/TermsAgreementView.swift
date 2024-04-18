@@ -90,7 +90,11 @@ struct TermsAgreementView: View {
             }
             
             Button("필수 약관 동의 완료") {
-                
+				if privacyTermsToggleIsOn && serviceTermsToggleIsOn && allTermsToggleIsOn {
+					
+				} else {
+					
+				}
             }
             .background(.accent)
         }

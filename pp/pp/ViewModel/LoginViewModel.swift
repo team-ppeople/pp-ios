@@ -18,7 +18,6 @@ class LoginViewModel: ObservableObject {
 	@Published var isLinkActive: Bool = false
     @Published var showAlert: Bool = false
 	@Published var authCode: String?
-    @Published var isRegistered: Bool?
 	
 	func requestKakaoOauth() {
 		if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -67,7 +66,9 @@ class LoginViewModel: ObservableObject {
 						let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8)
 						let email = appleIDCredential.email
+						
 						print("애플 인증 성공 - id_token: \(identityToken ?? ""), auth_code: \(authorizationCode ?? "")")
+						
 						self?.authCode = authorizationCode
                         self?.checkRegisteredUser(client: .apple, idToken: identityToken ?? "")
 					default:
@@ -91,11 +92,25 @@ class LoginViewModel: ObservableObject {
                 case .finished :
                     print("회원 등록 여부 확인 Finished")
                 }
-            } receiveValue: { recievedValue in
-                guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else { return }
-                self.isRegistered = responseData.registered
+            } receiveValue: { [weak self] recievedValue in
+				guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else {
+					self?.showAlert = true
+					return
+				}
+                
                 print("회원 등록 여부 확인 Success")
                 print(JSON(recievedValue.data))
+				
+				guard let isRegistered = responseData.registered else {
+					self?.showAlert = true
+					return
+				}
+				
+				if isRegistered {
+					self?.login()
+				} else {
+					self?.isLinkActive = true
+				}
             }.store(in : &subscription)
     }
     
