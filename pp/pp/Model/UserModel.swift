@@ -8,9 +8,5 @@
 import Foundation
 
 struct CheckRegisteredUserResponse: Codable {
-    var data: IsRegisteredUser?
-}
-
-struct IsRegisteredUser: Codable {
-    var isRegistered: Bool?
+    var registered: Bool?
 }

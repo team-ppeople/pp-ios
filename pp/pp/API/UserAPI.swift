@@ -28,20 +28,23 @@ extension UserAPI : TargetType {
         }
     }
     
+    var sampleData: Data {
+        return .init()
+    }
+    
     var task: Task {
         switch self {
-        case let .checkRegisteredUser(_, idToken) :
-            let params = [
-                "idToken" : idToken
-            ]
-            return .requestParameters(parameters: params, encoding: JSONEncoding.default)
+        case let .checkRegisteredUser(_, idToken):
+            return .requestParameters(parameters: ["idToken": idToken], encoding: URLEncoding.default)
         }
     }
     
     var headers: [String : String]? {
         switch self {
         case .checkRegisteredUser:
-            return nil
+            return [
+                "Content-Type": "application/x-www-form-urlencoded"
+            ]
         }
     }
     

@@ -89,7 +89,7 @@ struct TermsAgreementView: View {
                     serviceTermsToggleIsOn = false
                 }
             }
-            
+           
             Button("필수 약관 동의 완료") {
                 // 임시 화면전환
                 navigateToCommunityView = true // 버튼 클릭 시 상태 변수 변경
