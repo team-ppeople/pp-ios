@@ -10,6 +10,7 @@ import CoreData
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
+    @ObservedObject private var vm: DiaryViewModel = DiaryViewModel()
 	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()
@@ -21,7 +22,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            DiaryView()
+            DiaryView(vm: vm)
                 .tabItem {
                     VStack {
                         Image(systemName: "folder.badge.person.crop")

@@ -12,10 +12,15 @@ struct DiaryDetailView: View {
     
     var body: some View {
         VStack {
+            
+            Utils.createImage(diaryPost.images?.first)
+                .resizable()
+                .frame(width: 171, height: 121)
             Text(diaryPost.title ?? "")
             Text(diaryPost.contents ?? "")
         }
         .toolbar(.hidden, for: .tabBar)
+        
     }
 }
 

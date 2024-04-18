@@ -4,96 +4,74 @@
 //
 //  Created by Financial CB on 2024/04/03.
 //
+//
 
 import SwiftUI
-import Kingfisher
 
 struct DiaryView: View {
-	@ObservedObject var vm: DiaryViewModel = DiaryViewModel()
-	
-	var body: some View {
+    @ObservedObject var vm: DiaryViewModel
+
+    var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                if vm.diaryPosts.count == 0 {
-                    Spacer()
-                    Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    GeometryReader { geometry in
-                        ScrollView {
-                            LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 24) {
-                                ForEach(vm.diaryPosts, id: \.self) { diaryPost in
-                                    NavigationLink(destination: DiaryDetailView(diaryPost: diaryPost)) {
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                Image("emty.image")
-                                                    .resizable()
-                                                Text(diaryPost.title ?? "")
-                                                    .font(.system(size: 15))
-                                                    .bold()
-                                                    .foregroundColor(.black)
-                                                    .lineLimit(1)
-                                                    .multilineTextAlignment(.leading)
-                                                    .padding(.horizontal, 10)
-                                                    .padding(.top, 3)
-                                                Text(diaryPost.contents ?? "")
-                                                    .font(.system(size: 12))
-                                                    .foregroundColor(.black)
-                                                    .lineLimit(1)
-                                                    .multilineTextAlignment(.leading)
-                                                    .padding(.horizontal, 10)
-                                                    .padding(.bottom, 5)
-                                            }
-                                        }
-                                        .background(RoundedRectangle(cornerRadius: 5).fill(.white))
-                                    }
-                                }
-                            }
-                            .frame(height: .infinity)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 24)
-                            .background(Color("#EBEBF4"))
+            ZStack(alignment: .bottomTrailing) { 
+              
+                VStack {
+                    if vm.diaryPosts.isEmpty {
+                        emptyStateView
+                    } else {
+                        diaryPostsGrid
+                    }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        HStack {
+                            Text("나의 일기")
+                                .font(.headline)
+                                .padding(.leading, 20)
+                            Spacer()
                         }
-                        .frame(height: geometry.size.height)
+                        .frame(maxWidth: .infinity)
                     }
                 }
                 
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    Button {} label: {
-                        NavigationLink(destination: DiaryUploadView(vm: self.vm)) {
-                            HStack {
-                                Image(systemName: "pencil")
-                                    .tint(.white)
-                                    .font(.system(size: 26, weight: .bold))
-                            }
-                            .frame(width: 50, height: 50)
-                        }
-                    }
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(50)
-                    .background(.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 50))
-                    .shadow(color: .gray, radius: 3, x: 1, y: 1)
-                    .zIndex(1.0)
-                }
-                .padding(16)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Text("나의 일기")
-                        .font(.system(size: 20))
-                        .bold()
-                }
+                floatingActionButton
+                    .padding(16)
             }
         }
     }
-}
 
-#Preview {
-    DiaryView()
+    
+    private var emptyStateView: some View {
+        Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private var diaryPostsGrid: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+                ForEach(vm.diaryPosts, id: \.self) { diaryPost in
+                    DiaryPostPreview(diaryPost: diaryPost)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+            .background(Color("#EBEBF4"))
+            
+        }
+        .offset(y: -20)
+    }
+    
+    private var floatingActionButton: some View {
+        NavigationLink(destination: DiaryUploadView(vm: vm)) {
+            Image(systemName: "pencil")
+                .foregroundColor(.white)
+                .font(.system(size: 26, weight: .bold))
+                .frame(width: 50, height: 50)
+                .background(Color.accentColor)
+                .clipShape(Circle())
+                .shadow(color: .gray, radius: 3, x: 1, y: 1)
+        }
+    }
+
 }

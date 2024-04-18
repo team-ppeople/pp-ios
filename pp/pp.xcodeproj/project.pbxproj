@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		466B92882BCB5DB200DA1213 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B92872BCB5DB200DA1213 /* ImageDetailView.swift */; };
+		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
+		46D334BF2BCF595100C11178 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* PostViewModel.swift */; };
 		6A407C53AC36ECF0FB190C42 /* Pods_pp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */; };
 		9A73F5652BBE237E00FFB0B7 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5642BBE237E00FFB0B7 /* ColorExtension.swift */; };
 		9A73F5672BBE238D00FFB0B7 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5662BBE238D00FFB0B7 /* ViewExtension.swift */; };
@@ -56,6 +59,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		466B92872BCB5DB200DA1213 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
+		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
+		46D334BE2BCF595100C11178 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C89518046957F322B68C3A /* Pods-pp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.debug.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.debug.xcconfig"; sourceTree = "<group>"; };
 		77F17E162996FD910D313C07 /* Pods-pp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.release.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.release.xcconfig"; sourceTree = "<group>"; };
@@ -192,6 +198,7 @@
 			children = (
 				A91019662BBD247000046A62 /* DiaryViewModel.swift */,
 				9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */,
+				46D334BE2BCF595100C11178 /* PostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -221,6 +228,8 @@
 				A91019742BBD24DA00046A62 /* DiaryView.swift */,
 				A91019762BBD24E300046A62 /* DiaryDetailView.swift */,
 				A91019782BBD24EE00046A62 /* DiaryUploadView.swift */,
+				466B92872BCB5DB200DA1213 /* ImageDetailView.swift */,
+				46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */,
 			);
 			path = Diary;
 			sourceTree = "<group>";
@@ -399,6 +408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */,
+				466B92882BCB5DB200DA1213 /* ImageDetailView.swift in Sources */,
 				9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */,
 				9A73F56F2BBFCA3D00FFB0B7 /* TermsView.swift in Sources */,
 				A910197B2BBD24F900046A62 /* CommunityDetailView.swift in Sources */,
@@ -420,8 +430,10 @@
 				A97FD49F2BCF8C42009D2758 /* BaseUrl.swift in Sources */,
 				A91019552BBD242400046A62 /* AuthAPI.swift in Sources */,
 				A910195F2BBD244C00046A62 /* UserModel.swift in Sources */,
+				46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */,
 				9A73F5672BBE238D00FFB0B7 /* ViewExtension.swift in Sources */,
 				A91019672BBD247000046A62 /* DiaryViewModel.swift in Sources */,
+				46D334BF2BCF595100C11178 /* PostViewModel.swift in Sources */,
 				A91019732BBD24D100046A62 /* CommunityView.swift in Sources */,
 				A910196B2BBD249000046A62 /* LoginView.swift in Sources */,
 				A91019792BBD24EE00046A62 /* DiaryUploadView.swift in Sources */,
@@ -564,7 +576,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-				DEVELOPMENT_TEAM = 6RZ3FF956G;
+				DEVELOPMENT_TEAM = 7K76RWRQBL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
@@ -601,7 +613,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-				DEVELOPMENT_TEAM = 6RZ3FF956G;
+				DEVELOPMENT_TEAM = 7K76RWRQBL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
