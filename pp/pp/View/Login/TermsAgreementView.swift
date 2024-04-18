@@ -89,17 +89,23 @@ struct TermsAgreementView: View {
                 }
             }
             
-            Button("필수 약관 동의 완료") {
-				if privacyTermsToggleIsOn && serviceTermsToggleIsOn && allTermsToggleIsOn {
-					
-				} else {
-					
+			Button("필수 약관 동의 완료") {
+					// 임시 화면전환
+				navigateToCommunityView = true // 버튼 클릭 시 상태 변수 변경
+				
+			}
+			.background(.accent)
+			NavigationLink("", destination: CommunityView(), isActive: $navigateToCommunityView) // 활성화 상태에 따라 화면 전환
+		}
+		.navigationTitle("약관동의")
+		.toolbar {
+			ToolbarItem(placement: .navigationBarTrailing) {
+				Button("Close") {
+						// 화면 닫기 코드
 				}
-            }
-            .background(.accent)
-        }
-        .navigationTitle("약관동의")
-        .toolbar(.hidden, for: .tabBar)
+					//.toolbar(.hidden, for: .tabBar)
+			}
+		}
     }
 }
 
