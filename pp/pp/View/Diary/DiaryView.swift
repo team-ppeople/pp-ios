@@ -9,42 +9,47 @@
 import SwiftUI
 
 struct DiaryView: View {
-    @ObservedObject var vm: DiaryViewModel
+    @ObservedObject var vm: DiaryViewModel = DiaryViewModel()
 
     var body: some View {
+		
         NavigationStack {
             ZStack(alignment: .bottomTrailing) { 
-              
-                VStack {
-                    if vm.diaryPosts.isEmpty {
-                        emptyStateView
-                    } else {
-                        diaryPostsGrid
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        HStack {
-                            Text("나의 일기")
-                                .font(.headline)
-                                .padding(.leading, 20)
-                            Spacer()
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                }
-                
-                floatingActionButton
-                    .padding(16)
+				GeometryReader { geometry in
+					VStack {
+						if vm.diaryPosts.isEmpty {
+							emptyStateView
+						} else {
+							diaryPostsGrid
+						}
+					}
+					.toolbar {
+						ToolbarItem {
+							HStack {
+								Text("나의 일기")
+									.font(.system(size: 20))
+									.bold()
+									.padding(.leading, 16)
+								Spacer()
+							}
+							.frame(width: geometry.size.width, height: 45)
+							.background(.white)
+						}
+					}
+				}
+				
+				floatingActionButton
+					.padding(16)
             }
         }
     }
 
-    
     private var emptyStateView: some View {
         Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
             .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.offset(y: -20)
+			.background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
     }
     
     private var diaryPostsGrid: some View {
@@ -73,5 +78,8 @@ struct DiaryView: View {
                 .shadow(color: .gray, radius: 3, x: 1, y: 1)
         }
     }
+}
 
+#Preview {
+	DiaryView(vm: DiaryViewModel())
 }

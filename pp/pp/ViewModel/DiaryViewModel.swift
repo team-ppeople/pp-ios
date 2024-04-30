@@ -11,25 +11,22 @@ import SwiftUI
 
 class DiaryViewModel: ObservableObject {
 	@Published var diaryPosts: [DiaryPost] = []
-    @Published var images2: [UIImage] = []
+    @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos:[PhotosPickerItem] = []
 
-   
-  
-	let dataService = PersistenceController.shared
+	let persistence = PersistenceController.shared
 
 	@Published var title: String = ""
 	@Published var contents: String = ""
-	@Published var images: [Data] = []
-    
-	
+	@Published var imagesData: [Data] = []
+
 	init() {
 		getDiaryPosts()
 	}
 
     @MainActor
     func convertDataToImage() {
-        images2.removeAll()
+        uiImages.removeAll()
         
         if !selectedPhotos.isEmpty {
             for eachItem in selectedPhotos {
@@ -37,10 +34,10 @@ class DiaryViewModel: ObservableObject {
                     if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
                         if let image = UIImage(data: imageData),
                            let compressedImageData = image.jpegData(compressionQuality: 0.5) {
-                            images.append(compressedImageData)
+                            imagesData.append(compressedImageData)
                             
                             if let compressedImage = UIImage(data: compressedImageData) {
-                                images2.append(compressedImage)
+                                uiImages.append(compressedImage)
                             }
                         }
                     }
@@ -50,29 +47,27 @@ class DiaryViewModel: ObservableObject {
  
         selectedPhotos.removeAll()
     }
-
-	
     
 	func getDiaryPosts() {
-		self.diaryPosts = dataService.read()
+		self.diaryPosts = persistence.read()
 	}
 	
 	func createDiaryPost() {
-		dataService.create(title: title, contents: contents, images: images)
+		persistence.create(title: title, contents: contents, images: imagesData)
 		getDiaryPosts()
        
         print("diary object is \(diaryPosts)")
 	}
 	
 	func deleteDiaryPost(_ diaryPost: DiaryPost) {
-		dataService.delete(diaryPost)
+		persistence.delete(diaryPost)
 		getDiaryPosts()
 	}
 	
 	func clearStates() {
 		title = ""
 		contents = ""
-		images = []
-        images2 = []
+		imagesData = []
+        uiImages = []
 	}
 }

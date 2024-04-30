@@ -9,9 +9,10 @@ import PhotosUI
 
 struct DiaryUploadView: View {
     @ObservedObject var vm: DiaryViewModel
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+	@State private var contents: String = ""
+	@Environment(\.dismiss) private var dismiss
+	
     let maxPhotosToSelect = 10
-    @State private var contents: String = ""
 
     var body: some View {
 
@@ -21,28 +22,29 @@ struct DiaryUploadView: View {
                 
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)
-                
-                Spacer()
 
                 HStack {
                     Spacer()
                     Button("작성 완료") {
                         vm.createDiaryPost()
                         vm.clearStates()
-                        presentationMode.wrappedValue.dismiss()
+						dismiss()
                     }
+					.tint(.white)
                     .frame(width: 120, height: 40)
-                    .background(Color.sub)
+					.background(.accent)
                     .cornerRadius(5)
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 20)
+				.padding(.top, 20)
                 
+				Spacer()
             }
            
             .onTapGesture {
                 hideKeyboard()
             }
+			.padding(.top, 24)
         }
         .navigationBarTitle("업로드", displayMode: .inline)
     }
@@ -79,19 +81,18 @@ struct PhotoPickerView: View {
                 .overlay(RoundedRectangle(cornerRadius: 5).stroke(.sub, lineWidth: 1))
                 
                 LazyHGrid(rows: [GridItem(.fixed(65))]) {
-                    ForEach(0..<vm.images2.count, id: \.self) { index in
-                        NavigationLink(destination: ImageDetailView(image: vm.images2[index])) {
-                            Image(uiImage: vm.images2[index])
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 91, height: 65)
-                                .cornerRadius(5)
-                                .background(.sub)
-                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray, lineWidth: 1))
-                        }
-                    }
-                }
-            }
+					ForEach(0..<vm.uiImages.count, id: \.self) { index in
+						NavigationLink(destination: ImageCropView(vm: vm, index: index)) {
+							Image(uiImage: vm.uiImages[index])
+								.resizable()
+								.scaledToFit()
+								.frame(width: 91, height: 65)
+								.background(Color("#F3F3F3"))
+								.cornerRadius(5)
+						}
+					}
+				}
+			}
             .frame(height: 65)
             .padding(.leading, 20)
             .padding(.vertical, 5)
@@ -100,14 +101,15 @@ struct PhotoPickerView: View {
     }
 }
 
-
 struct TextInputView: View {
     @Binding var title: String
     @Binding var contents: String
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("제목").bold()
+            Text("제목")
+				.font(.system(size: 16))
+				.fontWeight(.medium)
             TextField("제목", text: $title)
                 .padding(.vertical, 8)
                 .background(.white)
@@ -115,20 +117,25 @@ struct TextInputView: View {
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(.sub, lineWidth: 0.5)
                 )
-                .padding(.horizontal, 0)
 
-            Text("내용").bold()
+            Text("내용")
+				.font(.system(size: 16))
+				.fontWeight(.medium)
+				.padding(.top, 30)
             TextEditor(text: $contents)
-                .frame(minHeight: 100)
+                .frame(height: 280)
                 .padding(.vertical, 8)
                 .background(.white)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(.sub, lineWidth: 0.5)
                 )
-                .padding(.horizontal, 0)
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
     }
+}
+
+#Preview {
+	DiaryUploadView(vm: DiaryViewModel())
 }
