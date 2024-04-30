@@ -22,7 +22,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            DiaryView(vm: vm)
+            DiaryView()
                 .tabItem {
                     VStack {
                         Image(systemName: "folder.badge.person.crop")

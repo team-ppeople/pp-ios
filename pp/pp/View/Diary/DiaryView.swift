@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct DiaryView: View {
-    @ObservedObject var vm: DiaryViewModel
+    
+    //stateobject 로 변경
+    @ObservedObject var vm =  DiaryViewModel()
 
     var body: some View {
         NavigationStack {
