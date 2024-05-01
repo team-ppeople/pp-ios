@@ -4,12 +4,16 @@
 //
 //  Created by Financial CB on 2024/04/03.
 //
+
 import SwiftUI
 import PhotosUI
+import Mantis
 
 struct DiaryUploadView: View {
     @ObservedObject var vm: DiaryViewModel
 	@State private var contents: String = ""
+	@State private var selectedIndex: Int = 0
+	@State private var isShownSheet = false
 	@Environment(\.dismiss) private var dismiss
 	
     let maxPhotosToSelect = 10
@@ -18,7 +22,7 @@ struct DiaryUploadView: View {
 
         NavigationView {
             VStack {
-                PhotoPickerView(selectedPhotos: $vm.selectedPhotos, maxPhotosToSelect: maxPhotosToSelect, vm: vm)
+				PhotoPickerView(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
                 
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)
@@ -47,19 +51,24 @@ struct DiaryUploadView: View {
 			.padding(.top, 24)
         }
         .navigationBarTitle("업로드", displayMode: .inline)
+		.sheet(isPresented: $isShownSheet, content: {
+			ImageCropper(image: $vm.uiImages[selectedIndex])
+		})
     }
 
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-
     }
 }
 
 struct PhotoPickerView: View {
+	@ObservedObject var vm: DiaryViewModel
     @Binding var selectedPhotos: [PhotosPickerItem]
-    var maxPhotosToSelect: Int
-    @ObservedObject var vm: DiaryViewModel
+	@Binding var selectedIndex: Int
+	@Binding var isShownSheet: Bool
 
+    var maxPhotosToSelect: Int
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .center, spacing: 10) {
@@ -82,7 +91,10 @@ struct PhotoPickerView: View {
                 
                 LazyHGrid(rows: [GridItem(.fixed(65))]) {
 					ForEach(0..<vm.uiImages.count, id: \.self) { index in
-						NavigationLink(destination: ImageCropView(vm: vm, index: index)) {
+						Button(action: {
+							isShownSheet = true
+							selectedIndex = index
+						}) {
 							Image(uiImage: vm.uiImages[index])
 								.resizable()
 								.scaledToFit()
@@ -90,6 +102,7 @@ struct PhotoPickerView: View {
 								.background(Color("#F3F3F3"))
 								.cornerRadius(5)
 						}
+						
 					}
 				}
 			}
