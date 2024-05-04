@@ -13,7 +13,7 @@ class PostViewModel: ObservableObject {
     @Published var posts: [Post] = []
     @Published var postDetail: PostDetail?
     
-    // 작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
+    //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     func submitPost(title: String, content: String, imageIds: [Int]) {
         let post = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
         CommunityService.shared.createPost(post: post)
@@ -28,12 +28,12 @@ class PostViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // 새로고침 or 데이터 불러오오면 동작 -> 서버에서 데이터 가져옴
+    //MARK: - 새로고침 or 데이터 불러오오면 동작 -> 서버에서 데이터 가져옴
     func loadPosts(limit: Int = 20, lastId: Int?) {
         CommunityService.shared.fetchPosts(limit: limit, lastId: lastId)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print("Error fetching posts: \(error)")
+                    print("[loadPosts]\(error.status):Error \(error.title) occurs because : \(error.detail)")
                 }
             }, receiveValue: { response in
                 self.posts = response.data.posts
@@ -41,17 +41,33 @@ class PostViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    
+    //MARK: - 게시물 상세 불러오기
     func loadDetailPosts(postId: Int) {
-           CommunityService.shared.fetchDetailPosts(postId: postId)
-               .sink(receiveCompletion: { completion in
-                   if case .failure(let error) = completion {
-                       print("\(error.status):Error \(error.title) occurs because : \(error.detail)")
-                   }
-               }, receiveValue: { response in
-                   self.postDetail = response.data.post
-               })
-               .store(in: &cancellables)
-       }
+        CommunityService.shared.fetchDetailPosts(postId: postId)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print("[loadDetailPost]\(error.status):Error \(error.title) occurs because : \(error.detail)")
+                }
+            }, receiveValue: { response in
+                self.postDetail = response.data.post
+            })
+            .store(in: &cancellables)
+    }
+    
+    //MARK: - 게시물 신고
+    
+    func reportPost(postId:Int) {
+        CommunityService.shared.reportPost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Report was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
+    
     
 }
