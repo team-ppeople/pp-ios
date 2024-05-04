@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DiaryDetailView: View {
 	@ObservedObject var vm: DiaryViewModel
+	@Environment(\.dismiss) private var dismiss
 	
 	let diaryPost: DiaryPost
 	let images: [Image]
@@ -38,6 +39,19 @@ struct DiaryDetailView: View {
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 25)
+		.toolbar {
+			ToolbarItem {
+				Menu {
+					Button("삭제") {
+						vm.deleteDiaryPost(diaryPost)
+						dismiss()
+					}
+				} label: {
+					Image("menu.icon")
+						.frame(width: 22, height: 30)
+				}
+			}
+		}
 		.toolbar(.hidden, for: .tabBar)
     }
 }

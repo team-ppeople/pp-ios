@@ -104,7 +104,6 @@ struct PhotoPickerView: View {
 								.background(Color("#F3F3F3"))
 								.cornerRadius(5)
 						}
-						
 					}
 				}
 			}
