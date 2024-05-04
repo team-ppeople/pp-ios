@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		466B92882BCB5DB200DA1213 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B92872BCB5DB200DA1213 /* ImageCropView.swift */; };
 		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
 		46D334BF2BCF595100C11178 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* PostViewModel.swift */; };
 		6A407C53AC36ECF0FB190C42 /* Pods_pp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */; };
@@ -61,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		466B92872BCB5DB200DA1213 /* ImageCropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropView.swift; sourceTree = "<group>"; };
 		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
 		46D334BE2BCF595100C11178 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,7 +231,6 @@
 				A91019742BBD24DA00046A62 /* DiaryView.swift */,
 				A91019762BBD24E300046A62 /* DiaryDetailView.swift */,
 				A91019782BBD24EE00046A62 /* DiaryUploadView.swift */,
-				466B92872BCB5DB200DA1213 /* ImageCropView.swift */,
 				46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */,
 				9AF367BE2BE1D840003493E3 /* ImageCropper.swift */,
 			);
@@ -415,7 +412,6 @@
 			files = (
 				9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */,
 				9AF367BF2BE1D840003493E3 /* ImageCropper.swift in Sources */,
-				466B92882BCB5DB200DA1213 /* ImageCropView.swift in Sources */,
 				9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */,
 				9A73F56F2BBFCA3D00FFB0B7 /* TermsView.swift in Sources */,
 				A910197B2BBD24F900046A62 /* CommunityDetailView.swift in Sources */,

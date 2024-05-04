@@ -61,10 +61,8 @@ struct DiaryView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 24)
-            .background(Color("#EBEBF4"))
-            
         }
-        .offset(y: -20)
+		.background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
     }
     
     private var floatingActionButton: some View {
