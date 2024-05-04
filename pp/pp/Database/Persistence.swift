@@ -13,7 +13,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "DiaryPostModel")
+        container = NSPersistentContainer(name: "DiaryPost")
         
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -49,8 +49,8 @@ struct PersistenceController {
         entity.contents = contents
         entity.images = images
         entity.date = Date()
-        print("entity 생성 \(entity.id),\(entity.title)")
-        print("entity 생성 \(entity.contents),\(entity.images),\(entity.date)")
+		
+        print("entity 생성 \(entity.id),\(entity.title),\(entity.contents),\(entity.images),\(entity.date)")
         saveChanges()
     }
     
@@ -66,8 +66,6 @@ struct PersistenceController {
         do {
             results = try container.viewContext.fetch(request)
             print("나의 일기 조회 성공! \(results.count)개")
-            
-            
         } catch {
             print("나의 일기 조회 실패!")
         }
@@ -80,5 +78,4 @@ struct PersistenceController {
         container.viewContext.delete(entity)
         saveChanges()
     }
- 
 }

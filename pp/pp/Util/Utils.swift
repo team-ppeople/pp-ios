@@ -9,27 +9,19 @@ import SwiftUI
 import UIKit
 
 class Utils {
-    static func createImage(_ value: Data?) -> Image {
-#if canImport(UIKit)
-        
-        
-        if let value = value {
-            let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
-            return Image(uiImage: uiImage)
-               
-        } else {
-            return Image(uiImage: (UIImage(named: "emty.image") ?? UIImage(named: "emty.image"))!)
-        }
-    
-       
-           
-       
-#elseif canImport(AppKit)
-        let songArtwork: NSImage = NSImage(data: value) ?? NSImage()
-        return Image(nsImage: songArtwork)
-#else
-        return Image("emty.image")
-#endif
-    }
-    
+	static func createImage(_ value: Data?) -> Image {
+		if let value = value {
+			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
+			return Image(uiImage: uiImage)
+			
+		} else {
+			return Image(uiImage: (UIImage(named: "emty.image") ?? UIImage(named: "emty.image"))!)
+		}
+	}
+	
+	static func toString(_ date: Date?) -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd"
+		return dateFormatter.string(from: date ?? Date())
+	}
 }
