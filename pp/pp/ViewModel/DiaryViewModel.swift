@@ -12,7 +12,7 @@ import SwiftUI
 class DiaryViewModel: ObservableObject {
 	@Published var diaryPosts: [DiaryPost] = []
     @Published var uiImages: [UIImage] = []
-    @Published var selectedPhotos:[PhotosPickerItem] = []
+    @Published var selectedPhotos: [PhotosPickerItem] = []
 
 	let persistence = PersistenceController.shared
 
@@ -25,20 +25,15 @@ class DiaryViewModel: ObservableObject {
 	}
 
     @MainActor
-    func convertDataToImage() {
+    func addSelectedPhotos() {
         uiImages.removeAll()
         
         if !selectedPhotos.isEmpty {
             for eachItem in selectedPhotos {
                 Task {
                     if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
-                        if let image = UIImage(data: imageData),
-                           let compressedImageData = image.jpegData(compressionQuality: 0.5) {
-                            imagesData.append(compressedImageData)
-                            
-                            if let compressedImage = UIImage(data: compressedImageData) {
-                                uiImages.append(compressedImage)
-                            }
+						if let image = UIImage(data: imageData) {
+							uiImages.append(image)
                         }
                     }
                 }
@@ -47,6 +42,16 @@ class DiaryViewModel: ObservableObject {
  
         selectedPhotos.removeAll()
     }
+	
+	@MainActor
+	func convertImageToData(completionHandler: @escaping () -> Void) {
+		for image in uiImages {
+			if let compressedImageData = image.jpegData(compressionQuality: 0.5) {
+				imagesData.append(compressedImageData)
+			}
+		}
+		completionHandler()
+	}
     
 	func getDiaryPosts() {
 		self.diaryPosts = persistence.read()

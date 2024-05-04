@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct DiaryPostPreview: View {
-    let diaryPost: DiaryPost
-
+    let vm: DiaryViewModel
+	let diaryPost: DiaryPost
+	
 	var body: some View {
-		NavigationLink(destination: DiaryDetailView(diaryPost: diaryPost)) {
+		NavigationLink(destination: DiaryDetailView(vm: vm, diaryPost: diaryPost, images: diaryPost.images?.map({ Utils.createImage($0) }) ?? [])) {
 			VStack(alignment: .leading) {
 				Utils.createImage(diaryPost.images?.first)
 					.resizable()
 					.scaledToFill()
 					.frame(height: 121, alignment: .center)
-					.clipped()
 					.clipShape(
 						.rect(
 							topLeadingRadius: 10,
@@ -28,6 +28,7 @@ struct DiaryPostPreview: View {
 				
 				Text(diaryPost.title ?? "")
 					.font(.system(size: 15))
+					.tint(.black)
 					.lineLimit(1)
 					.frame(height: 18)
 					.padding(.horizontal, 10)

@@ -56,7 +56,7 @@ struct DiaryView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
                 ForEach(vm.diaryPosts, id: \.self) { diaryPost in
-                    DiaryPostPreview(diaryPost: diaryPost)
+					DiaryPostPreview(vm: vm, diaryPost: diaryPost)
                 }
             }
             .padding(.horizontal, 16)

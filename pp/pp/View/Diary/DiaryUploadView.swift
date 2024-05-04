@@ -30,9 +30,11 @@ struct DiaryUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
-                        vm.createDiaryPost()
-                        vm.clearStates()
-						dismiss()
+						vm.convertImageToData {
+							vm.createDiaryPost()
+							vm.clearStates()
+							dismiss()
+						}
                     }
 					.tint(.white)
                     .frame(width: 120, height: 40)
@@ -82,7 +84,7 @@ struct PhotoPickerView: View {
                 }
                 .onChange(of: selectedPhotos) { _ in
                     Task {
-                        vm.convertDataToImage()
+                        vm.addSelectedPhotos()
                     }
                 }
                 .frame(width: 65, height: 65)
