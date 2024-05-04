@@ -46,7 +46,7 @@ class PostViewModel: ObservableObject {
            CommunityService.shared.fetchDetailPosts(postId: postId)
                .sink(receiveCompletion: { completion in
                    if case .failure(let error) = completion {
-                       print("Error fetching post detail: \(error)")
+                       print("\(error.status):Error \(error.title) occurs because : \(error.detail)")
                    }
                }, receiveValue: { response in
                    self.postDetail = response.data.post
