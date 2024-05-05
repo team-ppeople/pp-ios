@@ -94,20 +94,47 @@ class PostViewModel: ObservableObject {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-    
+    //MARK: - 게시물 댓글 불러오기
     func loadComments(postId:Int,limit:Int,lastId:Int?) {
         CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
             .sink(receiveCompletion: { completion in
-                   switch completion {
-                   case .finished:
-                       print("Successfully fetched comments")
-                   case .failure(let error):
-                       print("Failed to fetch comments: \(error)")
-                   }
-               }, receiveValue: { commentsResponse in
-                   print("Comments: \(commentsResponse.data.comments)")
-               })
-               .store(in: &cancellables)
+                switch completion {
+                case .finished:
+                    print("Successfully fetched comments")
+                case .failure(let error):
+                    print("Failed to fetch comments: \(error)")
+                }
+            }, receiveValue: { commentsResponse in
+                print("Comments: \(commentsResponse.data.comments)")
+            })
+            .store(in: &cancellables)
     }
+    //MARK: - 게시물 댓글 작성
+    func submitComments(postId:Int,content:String) {
+        let comments = CommentRequest(content: content)
+        CommunityService.shared.writeComment(postId: postId, comment: comments)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Comments was successfully created")
+                case .failure(let error):
+                    print("Error creating post: \(error)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
+    //MARK: - 게시물 댓글 신고
     
+    func reportComment(commentId:Int) {
+        CommunityService.shared.reportComments(commentId: commentId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Report Comments were successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
 }

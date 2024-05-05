@@ -83,6 +83,12 @@ struct Comment: Codable {
     let createDate: String
 }
 
+//MARK: - 댓글 작성
+struct CommentRequest: Codable {
+    var content: String
+   
+}
+
 //MARK: - APIError Type
 
 struct APIError: Decodable, Error {

@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import Moya
 
-
 //MARK: - Moya 정의
 enum CommunityAPI {
     // Todo: createPost 에 image id 값으로 변경해서 같이 송신해야함
@@ -20,8 +19,8 @@ enum CommunityAPI {
     case thumbsUp(postId: Int)
     case thumbs_sideways(postId:Int)
     case fetchComments(postId:Int,limit:Int,lastId:Int?)
-    // case writeComments
-    // case reportComment
+    case writeComments(postId:Int,comment:CommentRequest)
+    case reportComment(commentId:Int)
     
 }
 
@@ -38,17 +37,19 @@ extension CommunityAPI: TargetType {
             return "posts/\(postId)/thumbs-up"
         case .thumbs_sideways(let postId):
             return "posts/\(postId)/thumbs_sideways"
-        case .fetchComments(let postId,_,_):
+        case .fetchComments(let postId,_,_),.writeComments(let postId,_):
             return "posts/\(postId)/comments"
+        case .reportComment(let commentId):
+            return "comments/\(commentId)/report"
         }
     }
     
     var method: Moya.Method {
         switch self {
             
-        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways:
+        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments:
             return .post
-        case .fetchPostsLists,.fetchDetailPosts,.fetchComments:
+        case .fetchPostsLists,.fetchDetailPosts,.fetchComments,.reportComment:
             return .get
             
         }
@@ -60,15 +61,15 @@ extension CommunityAPI: TargetType {
         case .createPost(let post):
             return .requestJSONEncodable(post)
         case .fetchPostsLists(let limit, let lastId):
-               let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
-               var parameters: [String: Any] = ["limit": adjustedLimit]
-               if let lastId = lastId {
-                   parameters["lastId"] = lastId - 1
-               }
-               return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case .fetchDetailPosts, .reportPost,.thumbsUp,.thumbs_sideways:
+            let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
+            var parameters: [String: Any] = ["limit": adjustedLimit]
+            if let lastId = lastId {
+                parameters["lastId"] = lastId - 1
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .fetchDetailPosts, .reportPost,.thumbsUp,.thumbs_sideways,.reportComment:
             return .requestPlain
-        
+            
             
         case .fetchComments(let postId, let limit, let lastId):
             let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
@@ -77,7 +78,11 @@ extension CommunityAPI: TargetType {
                 parameters["lastId"] = lastId - 1
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        }
+            
+        case .writeComments(_, let comment):
+                return .requestJSONEncodable(comment)
+            }
+   
     }
     
     var headers: [String : String]? {
@@ -174,21 +179,41 @@ class CommunityService {
     
     // MARK: - 게시글 댓글 목록 조회
     
-       func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
-           return provider
-               .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
-               .mapError(handleError)
-               .tryMap { response -> CommentsResponse in
-                   guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-                       let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-                       throw apiError
-                   }
-                   return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
-               }
-               .mapError(handleError)
-               .eraseToAnyPublisher()
-       }
+    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
+        return provider
+            .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
+            .mapError(handleError)
+            .tryMap { response -> CommentsResponse in
+                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                    let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
+                    throw apiError
+                }
+                return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
+            }
+            .mapError(handleError)
+            .eraseToAnyPublisher()
+    }
+    //MARK: - 커뮤니티 댓글 작성
+    func writeComment(postId:Int,comment: CommentRequest) -> AnyPublisher<Void , APIError > {
+        
+        return provider
+            .requestPublisher(.writeComments(postId: postId, comment: comment))
+            .mapError (handleError)
+            .map {_ in}
+            .mapError (handleError)
+            .eraseToAnyPublisher()
+        
+    }
+    //MARK: - 댓글 신고
     
+    func reportComments(commentId:Int) -> AnyPublisher<Void,APIError> {
+        return provider
+            .requestPublisher(.reportComment(commentId: commentId))
+            .mapError (handleError)
+            .map { _ in }
+            .mapError (handleError)
+            .eraseToAnyPublisher()
+    }
 }
 
 //MARK: - Error 핸들링 함수 정의
