@@ -6,3 +6,25 @@
 //
 
 import Foundation
+
+//MARK: - 토큰 발급 요청 구조체
+struct TokenRequest {
+	var grantType: String?
+	var clientId: String?
+	var clientAssertion: String?
+	var authorizationCode: String?
+	var refreshToken: String?
+}
+
+//MARK: - 토큰 발급 응답 구조체
+struct TokenResponse: Codable {
+	var accessToken: String
+	var refreshToken: String
+	var expiresIn: String
+	
+	enum CodingKeys: String, CodingKey {
+		case accessToken = "access_token"
+		case refreshToken = "refresh_token"
+		case expiresIn = "expires_in"
+	}
+}
