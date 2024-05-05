@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @State private var isLoggedIn: Bool = true
+    @State private var isLoggedIn: Bool = false
 	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()

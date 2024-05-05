@@ -33,8 +33,9 @@ class LoginViewModel: ObservableObject {
 					print("카카오톡 인증 에러 - \(error)")
 					self?.showAlert = true
 				} else {
-					print("카카오톡 인증 성공 - \(oauthToken?.accessToken ?? "")")
-                    self?.requestKakaoUserProfile(accessToken: oauthToken?.accessToken)
+					print("카카오톡 인증 성공 - \(oauthToken?.idToken ?? "")")
+					self?.idToken = oauthToken?.idToken ?? ""
+                    self?.requestKakaoUserProfile()
 				}
 			}
 		} else {
@@ -44,22 +45,20 @@ class LoginViewModel: ObservableObject {
 					print("카카오계정 인증 에러 - \(error)")
 					self?.showAlert = true
 				} else {
-					print("카카오계정 인증 성공 - \(oauthToken?.accessToken ?? "")")
-					self?.requestKakaoUserProfile(accessToken: oauthToken?.accessToken)
+					print("카카오계정 인증 성공 - \(oauthToken?.idToken ?? "")")
+					self?.idToken = oauthToken?.idToken ?? ""
+					self?.requestKakaoUserProfile()
 				}
 			}
 		}
 	}
 	
 	// MARK: - kakao 유저 정보
-    func requestKakaoUserProfile(accessToken: String?) {
+    func requestKakaoUserProfile() {
 		UserApi.shared.me { [weak self] User, Error in
 			let email = User?.kakaoAccount?.email ?? ""
 			print("이메일 - \(email)")
-			
 			self?.clientId = email
-			self?.idToken = accessToken ?? ""
-			
             self?.checkRegisteredUser(client: .kakao)
 		}
 	}
@@ -111,7 +110,6 @@ class LoginViewModel: ObservableObject {
 					self?.showAlert = true
                 case .finished:
                     print("회원 등록 여부 확인 Finished")
-					self?.showAlert = true
                 }
             } receiveValue: { [weak self] recievedValue in
 				guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else {
@@ -122,7 +120,7 @@ class LoginViewModel: ObservableObject {
                 print("회원 등록 여부 확인 Success")
                 print(JSON(recievedValue.data))
 				
-				guard let isRegistered = responseData.registered else {
+				guard let isRegistered = responseData.data.isRegistered else {
 					self?.showAlert = true
 					return
 				}
@@ -150,7 +148,6 @@ class LoginViewModel: ObservableObject {
 					self?.showAlert = true
 				case .finished:
 					print("피피 토큰 발급 Finished")
-					self?.showAlert = true
 				}
 			} receiveValue: { [weak self] recievedValue in
 				guard let responseData = try? recievedValue.map(TokenResponse.self) else {
