@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		460298512BE766A000B93B71 /* CommunityPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460298502BE766A000B93B71 /* CommunityPostPreview.swift */; };
+		460298532BE7A55200B93B71 /* PhotoPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460298522BE7A55200B93B71 /* PhotoPickerViewModel.swift */; };
 		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
 		46D334BF2BCF595100C11178 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* PostViewModel.swift */; };
 		6A407C53AC36ECF0FB190C42 /* Pods_pp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */; };
@@ -60,6 +62,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		460298502BE766A000B93B71 /* CommunityPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPreview.swift; sourceTree = "<group>"; };
+		460298522BE7A55200B93B71 /* PhotoPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewModel.swift; sourceTree = "<group>"; };
 		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
 		46D334BE2BCF595100C11178 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,6 +206,7 @@
 				A91019662BBD247000046A62 /* DiaryViewModel.swift */,
 				9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */,
 				46D334BE2BCF595100C11178 /* PostViewModel.swift */,
+				460298522BE7A55200B93B71 /* PhotoPickerViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 				A910197A2BBD24F900046A62 /* CommunityDetailView.swift */,
 				A910197C2BBD250400046A62 /* CommunityUploadView.swift */,
 				A910197E2BBD252F00046A62 /* PostReplyView.swift */,
+				460298502BE766A000B93B71 /* CommunityPostPreview.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -420,8 +426,10 @@
 				A91019502BBCFE2A00046A62 /* DiaryPost.xcdatamodeld in Sources */,
 				9A73F56D2BBFCA2E00FFB0B7 /* TermsAgreementView.swift in Sources */,
 				A910197F2BBD252F00046A62 /* PostReplyView.swift in Sources */,
+				460298532BE7A55200B93B71 /* PhotoPickerViewModel.swift in Sources */,
 				9A73F5732BBFD42F00FFB0B7 /* Utils.swift in Sources */,
 				A91019592BBD243300046A62 /* AuthModel.swift in Sources */,
+				460298512BE766A000B93B71 /* CommunityPostPreview.swift in Sources */,
 				9AF0F3942BBBF8C800964E75 /* ContentView.swift in Sources */,
 				A910197D2BBD250400046A62 /* CommunityUploadView.swift in Sources */,
 				A91019652BBD246200046A62 /* PostModel.swift in Sources */,
@@ -580,9 +588,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
-
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
@@ -619,9 +625,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
-
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;

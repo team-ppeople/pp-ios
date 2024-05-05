@@ -7,11 +7,39 @@
 
 import SwiftUI
 import Combine
+import PhotosUI
 
-class PostViewModel: ObservableObject {
+class PostViewModel: PhotoPickerViewModel {
+   
     private var cancellables = Set<AnyCancellable>()
-    @Published var posts: [Post] = []
+    @Published var communityPosts: [Post] = []
     @Published var postDetail: PostDetail?
+    @Published var title: String = ""
+    @Published var contents: String = ""
+    @Published var uiImages: [UIImage] = []
+    @Published var selectedPhotos: [PhotosPickerItem] = []
+    
+    
+    
+    @MainActor
+    func addSelectedPhotos() {
+        uiImages.removeAll()
+        
+        if !selectedPhotos.isEmpty {
+            for eachItem in selectedPhotos {
+                Task {
+                    if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
+                        if let image = UIImage(data: imageData) {
+                            uiImages.append(image)
+                        }
+                    }
+                }
+            }
+        }
+ 
+        selectedPhotos.removeAll()
+    }
+    
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     func submitPost(title: String, content: String, imageIds: [Int]) {
@@ -36,7 +64,7 @@ class PostViewModel: ObservableObject {
                     print("[loadPosts]\(error.status):Error \(error.title) occurs because : \(error.detail)")
                 }
             }, receiveValue: { response in
-                self.posts = response.data.posts
+                self.communityPosts = response.data.posts
             })
             .store(in: &cancellables)
     }
