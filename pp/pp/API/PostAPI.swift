@@ -17,10 +17,9 @@ enum CommunityAPI {
     case fetchPostsLists(limit: Int, lastId: Int?)
     case fetchDetailPosts(postId:Int)
     case reportPost(postId: Int)
-    // case likesPost
     case thumbsUp(postId: Int)
-    // case thumbs_sideways
-    // case fetchComments
+    case thumbs_sideways(postId:Int)
+    case fetchComments(postId:Int,limit:Int,lastId:Int?)
     // case writeComments
     // case reportComment
     
@@ -37,15 +36,19 @@ extension CommunityAPI: TargetType {
             return "posts/\(postId)/report"
         case .thumbsUp(let postId):
             return "posts/\(postId)/thumbs-up"
+        case .thumbs_sideways(let postId):
+            return "posts/\(postId)/thumbs_sideways"
+        case .fetchComments(let postId,_,_):
+            return "posts/\(postId)/comments"
         }
     }
     
     var method: Moya.Method {
         switch self {
             
-        case .createPost,.reportPost:
+        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways:
             return .post
-        case .fetchPostsLists,.fetchDetailPosts,.thumbsUp:
+        case .fetchPostsLists,.fetchDetailPosts,.fetchComments:
             return .get
             
         }
@@ -57,14 +60,23 @@ extension CommunityAPI: TargetType {
         case .createPost(let post):
             return .requestJSONEncodable(post)
         case .fetchPostsLists(let limit, let lastId):
-            var parameters: [String: Any] = ["limit": limit]
+               let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
+               var parameters: [String: Any] = ["limit": adjustedLimit]
+               if let lastId = lastId {
+                   parameters["lastId"] = lastId - 1
+               }
+               return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .fetchDetailPosts, .reportPost,.thumbsUp,.thumbs_sideways:
+            return .requestPlain
+        
+            
+        case .fetchComments(let postId, let limit, let lastId):
+            let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
+            var parameters: [String: Any] = ["limit": adjustedLimit]
             if let lastId = lastId {
                 parameters["lastId"] = lastId - 1
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case .fetchDetailPosts, .reportPost,.thumbsUp:
-            return .requestPlain
-            
         }
     }
     
@@ -149,6 +161,34 @@ class CommunityService {
             .mapError(handleError)
             .eraseToAnyPublisher()
     }
+    
+    // MARK: - 게시글 좋아요 취소
+    func thumbsSidewayPost(postId:Int) -> AnyPublisher<Void,APIError> {
+        return provider
+            .requestPublisher(.thumbs_sideways(postId: postId))
+            .mapError(handleError)
+            .map {_ in}
+            .mapError(handleError)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - 게시글 댓글 목록 조회
+    
+       func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
+           return provider
+               .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
+               .mapError(handleError)
+               .tryMap { response -> CommentsResponse in
+                   guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                       let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
+                       throw apiError
+                   }
+                   return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
+               }
+               .mapError(handleError)
+               .eraseToAnyPublisher()
+       }
+    
 }
 
 //MARK: - Error 핸들링 함수 정의

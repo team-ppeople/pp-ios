@@ -96,7 +96,7 @@ struct TermsAgreementView: View {
                 
             }
             .background(.accent)
-            NavigationLink("", destination: CommunityView(), isActive: $navigateToCommunityView) // 활성화 상태에 따라 화면 전환
+           /* NavigationLink("", destination: CommunityView(), isActive: $navigateToCommunityView)*/ // 활성화 상태에 따라 화면 전환
         }
         .navigationTitle("약관동의")
         .toolbar {

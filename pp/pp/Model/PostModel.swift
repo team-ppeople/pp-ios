@@ -68,8 +68,22 @@ struct UserActionHistory: Codable {
     let reported: Bool
 }
 
+//MARK: - 게시글 댓글 조회
+struct CommentsResponse: Codable {
+    let data: CommentsData
+}
 
+struct CommentsData: Codable {
+    let comments: [Comment]
+}
 
+struct Comment: Codable {
+    let id: Int
+    let content: String
+    let createDate: String
+}
+
+//MARK: - APIError Type
 
 struct APIError: Decodable, Error {
     let type: String

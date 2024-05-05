@@ -71,15 +71,43 @@ class PostViewModel: ObservableObject {
     //MARK: - 게시물 좋아요
     func likePost(postId:Int) {
         CommunityService.shared.thumbsUpPost(postId: postId)
-        .sink(receiveCompletion: { completion in
-            switch completion {
-            case .finished:
-                print("Report was successfully created")
-            case .failure(let error):
-                print("Error reporting post: \(error.detail)")
-            }
-        }, receiveValue: { })
-        .store(in: &cancellables)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("like Post was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
+    //MARK: - 게시물 좋아요 취소
+    func dislikePost(postId:Int) {
+        CommunityService.shared.thumbsSidewayPost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("dislike Post was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
+    
+    func loadComments(postId:Int,limit:Int,lastId:Int?) {
+        CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
+            .sink(receiveCompletion: { completion in
+                   switch completion {
+                   case .finished:
+                       print("Successfully fetched comments")
+                   case .failure(let error):
+                       print("Failed to fetch comments: \(error)")
+                   }
+               }, receiveValue: { commentsResponse in
+                   print("Comments: \(commentsResponse.data.comments)")
+               })
+               .store(in: &cancellables)
     }
     
 }
