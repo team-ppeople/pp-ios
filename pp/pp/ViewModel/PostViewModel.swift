@@ -68,6 +68,18 @@ class PostViewModel: ObservableObject {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-    
+    //MARK: - 게시물 좋아요
+    func likePost(postId:Int) {
+        CommunityService.shared.thumbsUpPost(postId: postId)
+        .sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                print("Report was successfully created")
+            case .failure(let error):
+                print("Error reporting post: \(error.detail)")
+            }
+        }, receiveValue: { })
+        .store(in: &cancellables)
+    }
     
 }

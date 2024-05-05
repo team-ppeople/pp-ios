@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import Moya
 
+
+//MARK: - Moya 정의
 enum CommunityAPI {
     // Todo: createPost 에 image id 값으로 변경해서 같이 송신해야함
     case createPost(post: PostRequest)
@@ -16,7 +18,7 @@ enum CommunityAPI {
     case fetchDetailPosts(postId:Int)
     case reportPost(postId: Int)
     // case likesPost
-    // case thumbsUp
+    case thumbsUp(postId: Int)
     // case thumbs_sideways
     // case fetchComments
     // case writeComments
@@ -33,6 +35,8 @@ extension CommunityAPI: TargetType {
             return "posts/\(postId)"
         case .reportPost(let postId):
             return "posts/\(postId)/report"
+        case .thumbsUp(let postId):
+            return "posts/\(postId)/thumbs-up"
         }
     }
     
@@ -41,9 +45,9 @@ extension CommunityAPI: TargetType {
             
         case .createPost,.reportPost:
             return .post
-        case .fetchPostsLists,.fetchDetailPosts:
+        case .fetchPostsLists,.fetchDetailPosts,.thumbsUp:
             return .get
-      
+            
         }
     }
     
@@ -58,7 +62,7 @@ extension CommunityAPI: TargetType {
                 parameters["lastId"] = lastId - 1
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case .fetchDetailPosts, .reportPost:
+        case .fetchDetailPosts, .reportPost,.thumbsUp:
             return .requestPlain
             
         }
@@ -69,12 +73,13 @@ extension CommunityAPI: TargetType {
     }
     
     var baseURL: URL {
-        return URL(string: "https://pp-api-kro.kr/api/v1")!
+        return URL(string: BaseUrl.server.rawValue)!
     }
     
 }
 
 
+//MARK: - Community API 통신
 class CommunityService {
     static let shared = CommunityService()
     private let provider = MoyaProvider<CommunityAPI>()
@@ -82,11 +87,13 @@ class CommunityService {
     private init() {}
     
     //MARK: - 커뮤니티 게시글 작성
-    func createPost(post: PostRequest) -> AnyPublisher<Void , MoyaError > {
+    func createPost(post: PostRequest) -> AnyPublisher<Void , APIError > {
         
         return provider
             .requestPublisher(.createPost(post: post))
+            .mapError (handleError)
             .map {_ in}
+            .mapError (handleError)
             .eraseToAnyPublisher()
         
     }
@@ -130,25 +137,34 @@ class CommunityService {
             .requestPublisher(.reportPost(postId: postId))
             .mapError (handleError)
             .map { _ in }
+            .mapError (handleError)
             .eraseToAnyPublisher()
     }
-   
+    // MARK: - 게시글 좋아요
+    func thumbsUpPost(postId: Int) -> AnyPublisher<Void,APIError> {
+        return provider
+            .requestPublisher(.thumbsUp(postId: postId))
+            .mapError(handleError)
+            .map { _ in}
+            .mapError(handleError)
+            .eraseToAnyPublisher()
+    }
 }
 
 //MARK: - Error 핸들링 함수 정의
 extension CommunityService {
     private func handleError(_ error: Error) -> APIError {
-            if let moyaError = error as? MoyaError {
-                switch moyaError {
-                case .statusCode(let response):
-                    if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
-                        return apiError
-                    }
-                    return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
-                default:
-                    return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
+        if let moyaError = error as? MoyaError {
+            switch moyaError {
+            case .statusCode(let response):
+                if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
+                    return apiError
                 }
+                return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
+            default:
+                return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
             }
-            return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
         }
+        return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
+    }
 }
