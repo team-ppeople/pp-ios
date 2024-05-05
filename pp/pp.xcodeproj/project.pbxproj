@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		466B92882BCB5DB200DA1213 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466B92872BCB5DB200DA1213 /* ImageDetailView.swift */; };
 		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
 		46D334BF2BCF595100C11178 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* PostViewModel.swift */; };
 		6A407C53AC36ECF0FB190C42 /* Pods_pp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */; };
@@ -25,7 +24,9 @@
 		9AF0F3962BBBF8CA00964E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */; };
 		9AF0F3992BBBF8CA00964E75 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3982BBBF8CA00964E75 /* Preview Assets.xcassets */; };
 		9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F39A2BBBF8CA00964E75 /* Persistence.swift */; };
-		A91019502BBCFE2A00046A62 /* DiaryPostModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A910194E2BBCFE2A00046A62 /* DiaryPostModel.xcdatamodeld */; };
+		9AF367BD2BE1D39A003493E3 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF367BC2BE1D39A003493E3 /* StringExtension.swift */; };
+		9AF367BF2BE1D840003493E3 /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF367BE2BE1D840003493E3 /* ImageCropper.swift */; };
+		A91019502BBCFE2A00046A62 /* DiaryPost.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A910194E2BBCFE2A00046A62 /* DiaryPost.xcdatamodeld */; };
 		A91019552BBD242400046A62 /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019542BBD242400046A62 /* AuthAPI.swift */; };
 		A91019592BBD243300046A62 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91019582BBD243300046A62 /* AuthModel.swift */; };
 		A910195B2BBD243F00046A62 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910195A2BBD243F00046A62 /* UserAPI.swift */; };
@@ -59,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		466B92872BCB5DB200DA1213 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
 		46D334BE2BCF595100C11178 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +82,8 @@
 		9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AF0F3982BBBF8CA00964E75 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9AF0F39A2BBBF8CA00964E75 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		9AF367BC2BE1D39A003493E3 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		9AF367BE2BE1D840003493E3 /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		A910194F2BBCFE2A00046A62 /* DiaryPost.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DiaryPost.xcdatamodel; sourceTree = "<group>"; };
 		A91019542BBD242400046A62 /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
 		A91019582BBD243300046A62 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				9A73F5642BBE237E00FFB0B7 /* ColorExtension.swift */,
 				9A73F5662BBE238D00FFB0B7 /* ViewExtension.swift */,
 				9A73F5702BBFD31500FFB0B7 /* ImageExtension.swift */,
+				9AF367BC2BE1D39A003493E3 /* StringExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -216,7 +219,7 @@
 		A910194D2BBCFDF100046A62 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				A910194E2BBCFE2A00046A62 /* DiaryPostModel.xcdatamodeld */,
+				A910194E2BBCFE2A00046A62 /* DiaryPost.xcdatamodeld */,
 				9AF0F39A2BBBF8CA00964E75 /* Persistence.swift */,
 			);
 			path = Database;
@@ -228,8 +231,8 @@
 				A91019742BBD24DA00046A62 /* DiaryView.swift */,
 				A91019762BBD24E300046A62 /* DiaryDetailView.swift */,
 				A91019782BBD24EE00046A62 /* DiaryUploadView.swift */,
-				466B92872BCB5DB200DA1213 /* ImageDetailView.swift */,
 				46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */,
+				9AF367BE2BE1D840003493E3 /* ImageCropper.swift */,
 			);
 			path = Diary;
 			sourceTree = "<group>";
@@ -408,12 +411,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */,
-				466B92882BCB5DB200DA1213 /* ImageDetailView.swift in Sources */,
+				9AF367BF2BE1D840003493E3 /* ImageCropper.swift in Sources */,
 				9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */,
 				9A73F56F2BBFCA3D00FFB0B7 /* TermsView.swift in Sources */,
 				A910197B2BBD24F900046A62 /* CommunityDetailView.swift in Sources */,
+				9AF367BD2BE1D39A003493E3 /* StringExtension.swift in Sources */,
 				9A73F5712BBFD31500FFB0B7 /* ImageExtension.swift in Sources */,
-				A91019502BBCFE2A00046A62 /* DiaryPostModel.xcdatamodeld in Sources */,
+				A91019502BBCFE2A00046A62 /* DiaryPost.xcdatamodeld in Sources */,
 				9A73F56D2BBFCA2E00FFB0B7 /* TermsAgreementView.swift in Sources */,
 				A910197F2BBD252F00046A62 /* PostReplyView.swift in Sources */,
 				9A73F5732BBFD42F00FFB0B7 /* Utils.swift in Sources */,
@@ -576,7 +580,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+
+				DEVELOPMENT_TEAM = 6RZ3FF956G;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
@@ -613,7 +619,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24040902;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+
+				DEVELOPMENT_TEAM = 6RZ3FF956G;
+
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pp/Info.plist;
@@ -664,13 +672,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		A910194E2BBCFE2A00046A62 /* DiaryPostModel.xcdatamodeld */ = {
+		A910194E2BBCFE2A00046A62 /* DiaryPost.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				A910194F2BBCFE2A00046A62 /* DiaryPost.xcdatamodel */,
 			);
 			currentVersion = A910194F2BBCFE2A00046A62 /* DiaryPost.xcdatamodel */;
-			path = DiaryPostModel.xcdatamodeld;
+			path = DiaryPost.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -10,7 +10,6 @@ import CoreData
 
 struct ContentView: View {
     @State private var isLoggedIn: Bool = false
-    @ObservedObject private var vm: DiaryViewModel = DiaryViewModel()
 	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()

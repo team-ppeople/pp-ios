@@ -67,16 +67,6 @@ struct LoginView: View {
 					.frame(height: 44)
 					.blendMode(.overlay)
 			}
-			
-			Button {} label: {
-				NavigationLink {
-					TermsAgreementView()
-				} label: {
-					HStack {
-						Text("임시버튼 -> 약관동의로 이동")
-					}
-				}
-			}
 		}
 	}
 }
