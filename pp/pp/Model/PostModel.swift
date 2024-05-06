@@ -7,6 +7,28 @@
 
 import Foundation
 
+//MARK: - 사진 업로드 가능 ID 요청
+struct PresignedIdRequest: Codable {
+    let fileUploadRequestType: String
+    let fileContentLength: Int
+    let fileContentType: String
+}
+
+//MARK: - 사진 업로드 가능 결과 수신
+struct PresignedIdResponse: Codable {
+    let data: PresignedIdData
+}
+
+struct PresignedIdData: Codable {
+    let presignedUploadUrlResponses: [PresignedUploadIdResponse]
+}
+
+struct PresignedUploadIdResponse: Codable {
+    let fileUploadId: Int
+    let presignedUploadUrl: String
+    let fileUrl: String
+}
+
 //MARK: - 작성한 글 서버에 올리는 구조체
 struct PostRequest: Codable {
     var title: String

@@ -21,6 +21,7 @@ struct CommunityUploadView: View {
 
         NavigationView {
             VStack {
+      
                 PhotoPickerView<PostViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
                 
                 TextInputView(title: $vm.title, contents: $vm.contents)
@@ -29,12 +30,14 @@ struct CommunityUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
-                        print("작성완료")
-                        print("photo community\($vm.uiImages)")
-//                        vm.convertImageToData {
+                       // print("작성완료")
+                        vm.writePost(title: vm.title, content: vm.contents, imageData: vm.presignedRequests)
+                        //vm.presignedId(imageData: vm.presignedRequests)
+
+//                           vm.convertImageToData {
 //                            vm.createDiaryPost()
 //                            vm.clearStates()
-//                            dismiss()
+                           dismiss()
 //                        }
                     }
                     .tint(.white)

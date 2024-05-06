@@ -11,7 +11,8 @@ import Moya
 
 //MARK: - Moya 정의
 enum CommunityAPI {
-    // Todo: createPost 에 image id 값으로 변경해서 같이 송신해야함
+    
+    case getPresignedId(requestData: [PresignedIdRequest])
     case createPost(post: PostRequest)
     case fetchPostsLists(limit: Int, lastId: Int?)
     case fetchDetailPosts(postId:Int)
@@ -41,13 +42,15 @@ extension CommunityAPI: TargetType {
             return "posts/\(postId)/comments"
         case .reportComment(let commentId):
             return "comments/\(commentId)/report"
+        case .getPresignedId:
+                return "/api/v1/presigned/upload-urls"
         }
     }
     
     var method: Moya.Method {
         switch self {
             
-        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments:
+        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments,.getPresignedId:
             return .post
         case .fetchPostsLists,.fetchDetailPosts,.fetchComments,.reportComment:
             return .get
@@ -58,6 +61,8 @@ extension CommunityAPI: TargetType {
     
     var task: Moya.Task {
         switch self {
+        case .getPresignedId(let requestData):
+            return .requestJSONEncodable(requestData)
         case .createPost(let post):
             return .requestJSONEncodable(post)
         case .fetchPostsLists(let limit, let lastId):
@@ -100,12 +105,42 @@ extension CommunityAPI: TargetType {
 class CommunityService {
     static let shared = CommunityService()
     private let provider = MoyaProvider<CommunityAPI>()
+    private var cancellables = Set<AnyCancellable>()
     
     private init() {}
     
+    func uploadPostWithImages(title: String, content: String, imageData: [PresignedIdRequest]) -> AnyPublisher<Void, APIError> {
+        // 먼저 사진 업로드 가능 ID를 얻습니다.
+        return getPresignedId(requestData: imageData)
+            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
+                // 응답으로 받은 파일 ID들을 추출합니다.
+                let imageIds = presignedResponse.data.presignedUploadUrlResponses.map { $0.fileUploadId }
+                // 추출된 ID들을 게시글 요청에 포함시킵니다.
+                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
+                return self.createPost(post: postRequest)
+            }
+            .eraseToAnyPublisher()
+    }
+   
+
+    //MARK: - 사진 업로드 가능 ID 검증
+   
+    func getPresignedId(requestData: [PresignedIdRequest]) -> AnyPublisher<PresignedIdResponse, APIError> {
+        return provider
+            .requestPublisher(.getPresignedId(requestData: requestData))
+            .mapError(handleError)
+            .tryMap { response in
+                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                    let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
+                    throw apiError
+                }
+                return try JSONDecoder().decode(PresignedIdResponse.self, from: response.data)
+            }
+            .mapError(handleError)
+            .eraseToAnyPublisher()
+    }
     //MARK: - 커뮤니티 게시글 작성
     func createPost(post: PostRequest) -> AnyPublisher<Void , APIError > {
-        
         return provider
             .requestPublisher(.createPost(post: post))
             .mapError (handleError)
