@@ -39,11 +39,15 @@ struct PostRequest: Codable {
 
 //MARK: - 서버에서 글 받아오는 구조체
 
-struct Post: Codable, Identifiable {
+struct Post: Codable, Identifiable,Hashable {
     let id: Int
     let thumbnailUrl: String
     let title: String
     let createDate: String
+    
+    var thumbnailURLs: URL? {
+        return  URL(string: "\(thumbnailUrl)")
+    }
 }
 
 struct PostsResponse: Codable {
@@ -77,6 +81,13 @@ struct PostDetail: Codable {
     let thumbsUpCount: Int
     let commentCount: Int
     let userActionHistory: UserActionHistory
+    
+    
+    var imageUrls: [URL] {
+           postImageUrls.compactMap { URL(string: $0) }
+       }
+    
+    
 }
 
 struct CreatedUser: Codable {
@@ -120,3 +131,5 @@ struct APIError: Decodable, Error {
     let detail: String
     let instance: String
 }
+
+
