@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DiaryView: View {
 
+    
     @ObservedObject var vm: DiaryViewModel = DiaryViewModel()
 
 
