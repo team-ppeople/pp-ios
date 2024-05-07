@@ -38,7 +38,7 @@ extension AuthAPI : TargetType {
 	var task: Task {
 		switch self {
 		case let .getToken(parameter):
-			return .requestParameters(parameters: ["grant_type": parameter.grantType ?? "", "client_id": parameter.clientId ?? "", "client_assertion": parameter.clientAssertion ?? "", "authorization_code": parameter.authorizationCode ?? "", "refresh_token": parameter.refreshToken ?? ""], encoding: JSONEncoding.default)
+			return .requestParameters(parameters: ["grant_type": parameter.grantType ?? "", "client_id": parameter.clientId ?? "", "client_assertion": parameter.clientAssertion ?? "", "client_assertion_type": parameter.clientAssertionType, "authorization_code": parameter.authorizationCode ?? "", "refresh_token": parameter.refreshToken ?? "", "scope": parameter.scope], encoding: URLEncoding.httpBody)
 		case let .revokeToken(clientId, token, tokenTypeHint):
 			return .requestParameters(parameters: ["client_id": clientId, "token": token, "token_type_hint": tokenTypeHint], encoding: JSONEncoding.default)
 		}

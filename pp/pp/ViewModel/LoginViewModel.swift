@@ -12,14 +12,14 @@ import _AuthenticationServices_SwiftUI
 import SwiftyJSON
 
 class LoginViewModel: ObservableObject {
-    private let authProvider = MoyaProvider<AuthAPI>()
+	private let authService = AuthService.shared
     private let userProvider = MoyaProvider<UserAPI>()
-    private var subscription = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     
 	@Published var isLinkActive: Bool = false
     @Published var showAlert: Bool = false
-	
-	private var clientId: String = ""
+
+	private var client: Client = .kakao
 	private var authCode: String = ""
 	private var idToken: String = ""
 	var destination: Destination?
@@ -35,7 +35,8 @@ class LoginViewModel: ObservableObject {
 				} else {
 					print("카카오톡 인증 성공 - \(oauthToken?.idToken ?? "")")
 					self?.idToken = oauthToken?.idToken ?? ""
-                    self?.requestKakaoUserProfile()
+					self?.client = .kakao
+					self?.checkRegisteredUser()
 				}
 			}
 		} else {
@@ -47,19 +48,10 @@ class LoginViewModel: ObservableObject {
 				} else {
 					print("카카오계정 인증 성공 - \(oauthToken?.idToken ?? "")")
 					self?.idToken = oauthToken?.idToken ?? ""
-					self?.requestKakaoUserProfile()
+					self?.client = .kakao
+					self?.checkRegisteredUser()
 				}
 			}
-		}
-	}
-	
-	// MARK: - kakao 유저 정보
-    func requestKakaoUserProfile() {
-		UserApi.shared.me { [weak self] User, Error in
-			let email = User?.kakaoAccount?.email ?? ""
-			print("이메일 - \(email)")
-			self?.clientId = email
-            self?.checkRegisteredUser(client: .kakao)
 		}
 	}
 	
@@ -77,16 +69,14 @@ class LoginViewModel: ObservableObject {
 					case let appleIDCredential as ASAuthorizationAppleIDCredential:
 						let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) ?? ""
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8) ?? ""
-						let email = appleIDCredential.email ?? ""
-						
-						self?.clientId = email
 						
 						print("애플 인증 성공 - id_token: \(identityToken), auth_code: \(authorizationCode)")
 						
 						self?.authCode = authorizationCode
 						self?.idToken = identityToken
+						self?.client = .apple
 						
-                        self?.checkRegisteredUser(client: .apple)
+                        self?.checkRegisteredUser()
 					default:
 						break
 					}
@@ -99,9 +89,9 @@ class LoginViewModel: ObservableObject {
 	}
     
 	// MARK: - 회원여부 체크
-    func checkRegisteredUser(client: Client) {
+    func checkRegisteredUser() {
 		// MARK: - 회원여부 체크 API 요청
-		userProvider.requestPublisher(.checkRegisteredUser(client: client, idToken: self.idToken))
+		userProvider.requestPublisher(.checkRegisteredUser(client: self.client, idToken: self.idToken))
             .sink { [weak self] completion in
                 print(completion)
                 switch completion {
@@ -131,42 +121,45 @@ class LoginViewModel: ObservableObject {
 					self?.isLinkActive = true
 					self?.destination = .termsAgreement
 				}
-            }.store(in : &subscription)
+            }.store(in : &cancellables)
     }
     
 	// MARK: - 로그인
 	func login() {
-		let tokenRequest = TokenRequest(grantType: "client_credentials", clientId: self.clientId, clientAssertion: self.idToken, authorizationCode: self.authCode)
+		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, authorizationCode: self.authCode)
+		
+		switch self.client {
+		case .kakao:
+			tokenRequest.clientId = "kauth.kakao.com"
+		case .apple:
+			tokenRequest.clientId = "appleid.apple.com"
+		}
 		
 		// MARK: - 피피 토큰 발급 API 요청
-		authProvider.requestPublisher(.getToken(parameter: tokenRequest))
-			.sink { [weak self] completion in
-				print(completion)
+		authService
+			.getToken(tokenRequest: tokenRequest)
+			.sink(receiveCompletion: { completion in
 				switch completion {
-				case let .failure(error):
-					print("피피 토큰 발급 Fail - \(error.localizedDescription)")
-					self?.showAlert = true
 				case .finished:
-					print("피피 토큰 발급 Finished")
+					print("토큰 발급 완료")
+				case .failure(let error):
+					print("토큰 발급 Error")
+					dump(error)
+					self.showAlert = true
 				}
-			} receiveValue: { [weak self] recievedValue in
-				guard let responseData = try? recievedValue.map(TokenResponse.self) else {
-					self?.showAlert = true
-					return
-				}
+			}, receiveValue: { recievedValue in
+				dump(recievedValue)
 				
-				print("피피 토큰 발급 Success")
-				print(JSON(recievedValue.data))
-				
-				let accessToken = responseData.accessToken
-				let refreshToken = responseData.refreshToken
+				let accessToken = recievedValue.accessToken
+				let refreshToken = recievedValue.refreshToken
 				
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
 				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
 				
-				self?.isLinkActive = true
-				self?.destination = .community
-			}.store(in : &subscription)
+				self.isLinkActive = true
+				self.destination = .community
+			})
+			.store(in: &cancellables)
 	}
 }
 
