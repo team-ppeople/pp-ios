@@ -31,7 +31,14 @@ struct LoginView: View {
 				.frame(maxWidth: .infinity)
 				.frame(height: 50)
 				.navigationDestination(isPresented: $vm.isLinkActive) {
-					TermsAgreementView()
+					switch vm.destination {
+					case .community:
+						CommunityView()
+					case .termsAgreement:
+						TermsAgreementView(vm: vm)
+					case .none:
+						TermsAgreementView(vm: vm)
+					}
 				}
 				.alert(isPresented: $vm.showAlert) {
 					return Alert(title: Text(""), message: Text("로그인에 실패하였습니다."))
@@ -51,7 +58,14 @@ struct LoginView: View {
 				.frame(maxWidth: .infinity)
 				.frame(height: 50)
 				.navigationDestination(isPresented: $vm.isLinkActive) {
-					TermsAgreementView()
+					switch vm.destination {
+					case .community:
+						CommunityView()
+					case .termsAgreement:
+						TermsAgreementView(vm: vm)
+					case .none:
+						TermsAgreementView(vm: vm)
+					}
 				}
 				.alert(isPresented: $vm.showAlert) {
 					return Alert(title: Text(""), message: Text("로그인에 실패하였습니다."))
