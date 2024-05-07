@@ -7,14 +7,16 @@
 
 import Foundation
 
-// 작성한 글 서버에 올리는 구조체
+//MARK: - 작성한 글 서버에 올리는 구조체
 struct PostRequest: Codable {
     var title: String
     var content: String
     var postImageFileUploadIds: [Int]
 }
 
-// 서버에서 글 받아오는 구조체
+
+//MARK: - 서버에서 글 받아오는 구조체
+
 struct Post: Codable, Identifiable {
     let id: Int
     let thumbnailUrl: String
@@ -28,4 +30,51 @@ struct PostsResponse: Codable {
 
 struct PostsData: Codable {
     let posts: [Post]
+}
+
+
+
+
+//MARK: - 게시글 상세 조회
+
+struct PostDetailResponse: Codable {
+    let data: PostDetailData
+}
+
+struct PostDetailData: Codable {
+    let post: PostDetail
+}
+
+struct PostDetail: Codable {
+    let createdUser: CreatedUser
+    let id: Int
+    let postImageUrls: [String]
+    let title: String
+    let content: String
+    let createDate: String
+    let thumbsUpCount: Int
+    let commentCount: Int
+    let userActionHistory: UserActionHistory
+}
+
+struct CreatedUser: Codable {
+    let id: Int
+    let nickname: String
+    let profileImageUrl: String
+}
+
+struct UserActionHistory: Codable {
+    let thumbsUpped: Bool
+    let reported: Bool
+}
+
+
+
+
+struct APIError: Decodable, Error {
+    let type: String
+    let title: String
+    let status: Int
+    let detail: String
+    let instance: String
 }

@@ -28,15 +28,16 @@ extension Color {
 // MARK: - Color Asset 사용하기 (SwiftUI - Color)
 extension Color {
 	static let subColor = Color("SubColor")
+	static let darkSubColor = Color("DarkSubColor")
 	static let kakaoColor = Color("KakaoColor")
 }
 
 // MARK: - Color Asset 사용하기 (UIKit - UIColor)
 extension UIColor {
-	class var grayColor: UIColor {
-		return UIColor(named: "GrayColor")!
+	class var subColor: UIColor {
+		return UIColor(named: "SubColor") ?? UIColor.gray
 	}
 	class var darkSubColor: UIColor {
-        return UIColor(named: "DarkSubColor") ?? UIColor.white
+        return UIColor(named: "DarkSubColor") ?? UIColor.darkGray
 	}
 }
