@@ -9,7 +9,7 @@ import Foundation
 import PhotosUI
 import SwiftUI
 
-class DiaryViewModel: ObservableObject {
+class DiaryViewModel: PhotoPickerViewModel {
 	@Published var diaryPosts: [DiaryPost] = []
     @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos: [PhotosPickerItem] = []

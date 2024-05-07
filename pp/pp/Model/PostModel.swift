@@ -7,6 +7,28 @@
 
 import Foundation
 
+//MARK: - 사진 업로드 가능 ID 요청
+struct PresignedIdRequest: Codable {
+    let fileUploadRequestType: String
+    let fileContentLength: Int
+    let fileContentType: String
+}
+
+//MARK: - 사진 업로드 가능 결과 수신
+struct PresignedIdResponse: Codable {
+    let data: PresignedIdData
+}
+
+struct PresignedIdData: Codable {
+    let presignedUploadUrlResponses: [PresignedUploadIdResponse]
+}
+
+struct PresignedUploadIdResponse: Codable {
+    let fileUploadId: Int
+    let presignedUploadUrl: String
+    let fileUrl: String
+}
+
 //MARK: - 작성한 글 서버에 올리는 구조체
 struct PostRequest: Codable {
     var title: String
@@ -17,11 +39,15 @@ struct PostRequest: Codable {
 
 //MARK: - 서버에서 글 받아오는 구조체
 
-struct Post: Codable, Identifiable {
+struct Post: Codable, Identifiable,Hashable {
     let id: Int
     let thumbnailUrl: String
     let title: String
     let createDate: String
+    
+    var thumbnailURLs: URL? {
+        return  URL(string: "\(thumbnailUrl)")
+    }
 }
 
 struct PostsResponse: Codable {
@@ -55,6 +81,13 @@ struct PostDetail: Codable {
     let thumbsUpCount: Int
     let commentCount: Int
     let userActionHistory: UserActionHistory
+    
+    
+    var imageUrls: [URL] {
+           postImageUrls.compactMap { URL(string: $0) }
+       }
+    
+    
 }
 
 struct CreatedUser: Codable {
@@ -68,13 +101,27 @@ struct UserActionHistory: Codable {
     let reported: Bool
 }
 
-
-
-
-struct APIError: Decodable, Error {
-    let type: String
-    let title: String
-    let status: Int
-    let detail: String
-    let instance: String
+//MARK: - 게시글 댓글 조회
+struct CommentsResponse: Codable {
+    let data: CommentsData
 }
+
+struct CommentsData: Codable {
+    let comments: [Comment]
+}
+
+struct Comment: Codable {
+    let id: Int
+    let content: String
+    let createDate: String
+}
+
+//MARK: - 댓글 작성
+struct CommentRequest: Codable {
+    var content: String
+   
+}
+
+
+
+

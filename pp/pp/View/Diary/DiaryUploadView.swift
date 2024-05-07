@@ -22,7 +22,7 @@ struct DiaryUploadView: View {
 
         NavigationView {
             VStack {
-				PhotoPickerView(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
+				PhotoPickerView<DiaryViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
                 
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)
@@ -30,6 +30,7 @@ struct DiaryUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
+                        print("photoDiary\($vm.uiImages)")
 						vm.convertImageToData {
 							vm.createDiaryPost()
 							vm.clearStates()
@@ -63,8 +64,8 @@ struct DiaryUploadView: View {
     }
 }
 
-struct PhotoPickerView: View {
-	@ObservedObject var vm: DiaryViewModel
+struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
+	@ObservedObject var vm: ViewModel
     @Binding var selectedPhotos: [PhotosPickerItem]
 	@Binding var selectedIndex: Int
 	@Binding var isShownSheet: Bool

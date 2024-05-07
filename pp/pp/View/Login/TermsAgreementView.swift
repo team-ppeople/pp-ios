@@ -92,29 +92,29 @@ struct TermsAgreementView: View {
             }
            
             Button("필수 약관 동의 완료") {
-				vm.login()
-            }
-			.background(color)
-			.tint(.white)
-			.onChange(of: allTermsToggleIsOn) { isOn in
-				if isOn {
-					color = .accentColor
-				} else {
-					color = .sub
-				}
-			}
-        }
-        .navigationTitle("약관동의")
-		.navigationDestination(isPresented: $vm.isLinkActive) {
-			switch vm.destination {
-			case .community:
-				CommunityView()
-			default:
-				CommunityView()
-			}
-		}
-    }
-}
+                           vm.login()
+                       }
+                       .background(color)
+                       .tint(.white)
+                       .onChange(of: allTermsToggleIsOn) { isOn in
+                           if isOn {
+                               color = .accentColor
+                           } else {
+                               color = .sub
+                           }
+                       }
+                   }
+                   .navigationTitle("약관동의")
+                   .navigationDestination(isPresented: $vm.isLinkActive) {
+                       switch vm.destination {
+                       case .community:
+                           CommunityView()
+                       default:
+                           CommunityView()
+                       }
+                   }
+               }
+           }
 #Preview {
 	TermsAgreementView(vm: LoginViewModel())
 }
