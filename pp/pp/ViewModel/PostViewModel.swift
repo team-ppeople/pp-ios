@@ -10,7 +10,7 @@ import Combine
 import PhotosUI
 
 class PostViewModel: PhotoPickerViewModel {
-
+    
     private var cancellables = Set<AnyCancellable>()
     @Published var communityPosts: [Post] = []
     @Published var postDetail: PostDetail?
@@ -19,10 +19,10 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var presignedRequests = [PresignedIdRequest]()
-
+    
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
-
+    
     func writePost(title:String,content:String,imageData:[PresignedIdRequest]) {
         CommunityService.shared.uploadPostWithImages(title: title, content: content, imageData: presignedRequests)
             .sink(receiveCompletion: { completion in
@@ -33,25 +33,25 @@ class PostViewModel: PhotoPickerViewModel {
                     print("게시글이 성공적으로 생성되었습니다.")
                 case .failure(let error):
                     print("게시글 생성 중 오류 발생: \(error.status),\(error.title)")
+                    if error.status == 400{
+                        print("인증 오류, 재로그인 필요")
+                        
+                    }
                     
                 }
             }, receiveValue: {
-                // 성공적으로 게시글을 생성했을 때 실행
+                
                 print("게시글 생성 완료")
-              
+                
             })
             .store(in: &cancellables)
-           
-            
     }
     
-    
-    
     func getPresignedId(imageData:[PresignedIdRequest]) {
-       
+        
         CommunityService.shared.getPresignedId(requestData: imageData)
-                       .sink { completion in
-                           
+            .sink { completion in
+                
                 switch completion {
                 case .finished:
                     break
@@ -59,7 +59,7 @@ class PostViewModel: PhotoPickerViewModel {
                     print("Error getting presigned IDs: \(error)")
                 }
             } receiveValue: { response in
-  
+                
                 print("Presigned URLs received: \(response)")
             }.store(in: &cancellables)
     }
@@ -189,40 +189,11 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-//MARK: - PhotoPicker에서 이미지 선택
-//    @MainActor
-//    func addSelectedPhotos() {
-//        uiImages.removeAll()
-//        
-//        if !selectedPhotos.isEmpty {
-//            for eachItem in selectedPhotos {
-//                Task {
-//                    if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
-//                        print("imageData\(imageData)")
-//                        if let image = UIImage(data: imageData) {
-//                            uiImages.append(image)
-//                            let fileContentLength = imageData.count
-//                                                    // MIME 타입 설정 예제
-//                                                    let fileContentType = imageData.containsPNGData() ? "image/png" : "image/jpeg"
-//                                                    // 파일 업로드 요청 유형 설정
-//                                                    let fileUploadRequestType = "POST_IMAGE"
-//                            let imageInfo = ImageInfo(fileContentLength: fileContentLength, fileContentType: fileContentType, fileUploadRequestType: fileUploadRequestType)
-//                                   imageInfos.append(imageInfo)
-//                            print("Len\(fileContentLength),type\(fileContentType),\(fileContentType)")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-// 
-//        selectedPhotos.removeAll()
-//    }
-    
+    //MARK: - PhotoPicker에서 이미지 선택
     
     @MainActor
     func addSelectedPhotos() {
         uiImages.removeAll()
-        
         
         if !selectedPhotos.isEmpty {
             for eachItem in selectedPhotos {
@@ -247,14 +218,6 @@ class PostViewModel: PhotoPickerViewModel {
             
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
 }
 extension Data {
     func containsPNGData() -> Bool {
