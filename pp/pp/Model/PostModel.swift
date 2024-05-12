@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 //MARK: - 사진 업로드 가능 ID 요청
 struct PresignedIdRequest: Codable {
@@ -125,3 +126,10 @@ struct CommentRequest: Codable {
 
 
 
+struct CommunityPostSample:Hashable,Identifiable{
+    var id = UUID()
+    let image:UIImage
+    let title:String
+    let contents:String
+    let createDate:String
+}

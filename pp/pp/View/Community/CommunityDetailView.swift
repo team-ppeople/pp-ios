@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CommunityDetailView: View {
     @ObservedObject var vm: PostViewModel
+    var postDetail: CommunityPostSample
     @Environment(\.dismiss) private var dismiss
     
     let imageURLs: [URL?]
@@ -20,19 +21,20 @@ struct CommunityDetailView: View {
             AutoScroller2(imageURLs: imageURLs.compactMap { $0 })
                     .frame(height: 258)
             }
-        
-            Text(vm.postDetail?.title ?? "")
+            
+            Text(postDetail.title)
+            //Text(vm.postDetail?.title ?? "")
             //Text("제목")
                 .font(.system(size: 18))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 25)
-            
-            Text(vm.postDetail?.createDate ?? "")
+            Text(postDetail.createDate)
+                //  Text(vm.postDetail?.createDate ?? "")
             //Text("날짜")
                 .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Text(vm.postDetail?.content ?? "")
+            Text(postDetail.contents)
+            //Text(vm.postDetail?.content ?? "")
             //Text("날짜")
                 .font(.system(size: 15))
                 .frame(maxWidth: .infinity, alignment: .leading)

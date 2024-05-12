@@ -11,17 +11,19 @@ import SwiftUI
 
 struct CommunityPostPreview: View {
     let vm: PostViewModel
-    //let communityPost: PostDetail
+    let communityPost: CommunityPostSample
     
     var body: some View {
-        NavigationLink(destination: CommunityDetailView(vm: vm, imageURLs: vm.postDetail?.imageUrls ?? [])) {
+        NavigationLink(destination: CommunityDetailView(vm: vm, postDetail: communityPost, imageURLs: vm.postDetail?.imageUrls ?? [])) {
             VStack(alignment: .leading) {
                 
                // let imageURL =  vm.communityPosts.first?.thumbnailUrl
             
                  
                // AsyncImage(url: vm.communityPosts.first?.thumbnailURLs)
-                Image(systemName: "pencil")
+             
+                Image(uiImage:communityPost.image)
+                   // Image(systemName: "pencil")
                 //Utils.createImage(vm.images?.first)
                     .resizable()
                     .scaledToFill()
@@ -34,7 +36,7 @@ struct CommunityPostPreview: View {
                             topTrailingRadius: 10
                         ))
                 
-                Text("제목제목")
+                Text(communityPost.title)
                // Text(diaryPost.title ?? "")
                     .font(.system(size: 15))
                     .tint(.black)
@@ -42,7 +44,7 @@ struct CommunityPostPreview: View {
                     .frame(height: 18)
                     .padding(.horizontal, 10)
                 
-                Text("2024-05-06")
+                Text(communityPost.createDate)
                 //Text(Utils.toString(diaryPost.date))
                     .font(.system(size: 12))
                     .lineLimit(2)

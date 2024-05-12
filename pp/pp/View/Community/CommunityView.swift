@@ -22,10 +22,10 @@ struct CommunityView: View {
             ZStack(alignment: .bottomTrailing) {
                 GeometryReader { geometry in
                     VStack {
-                        if vm.communityPosts.isEmpty {
+                        if vm.communityPostSample.isEmpty {
                             emptyStateView
                         } else {
-                           communityPostsGrid
+                           communityPostsGrid2
                         }
                     }
                     .toolbar {
@@ -57,11 +57,24 @@ struct CommunityView: View {
             .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
     }
     
-    private var communityPostsGrid: some View {
+//    private var communityPostsGrid: some View {
+//        ScrollView {
+//            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+//                ForEach(vm.communityPosts, id: \.self) { communityPost in
+//                    CommunityPostPreview(vm: vm /*diaryPost: communityPost*/)
+//                }
+//            }
+//            .padding(.horizontal, 16)
+//            .padding(.vertical, 24)
+//        }
+//        .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
+//    }
+    
+    private var communityPostsGrid2: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-                ForEach(vm.communityPosts, id: \.self) { communityPost in
-                    CommunityPostPreview(vm: vm /*diaryPost: communityPost*/)
+                ForEach(vm.communityPostSample, id: \.self) { communityPost in
+                    CommunityPostPreview(vm: vm, communityPost: communityPost /*diaryPost: communityPost*/)
                 }
             }
             .padding(.horizontal, 16)
@@ -81,9 +94,6 @@ struct CommunityView: View {
                 .shadow(color: .gray, radius: 3, x: 1, y: 1)
         }
     }
-    
-    
-    
     
 }
 //

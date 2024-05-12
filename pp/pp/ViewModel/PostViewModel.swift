@@ -19,7 +19,17 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var presignedRequests = [PresignedIdRequest]()
+  
+    @Published var communityPostSample: [CommunityPostSample] = [
     
+        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요1", contents: "안녕안녕안녕안녕1", createDate: "2024-05-01"),
+        CommunityPostSample(image:UIImage(named: "launch.icon")!, title: "안녕하세요2", contents: "안녕안녕안녕안녕2", createDate: "2024-05-02"),
+        CommunityPostSample(image:UIImage(named: "apple.login.icon")!, title: "안녕하세요3", contents: "안녕안녕안녕안녕3", createDate: "2024-05-03"),
+        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요4", contents: "안녕안녕안녕안녕4", createDate: "2024-05-04")
+        
+    ]
+    
+    @Published var selectedPost: CommunityPostSample?
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
