@@ -22,7 +22,7 @@ class PostViewModel: PhotoPickerViewModel {
   
     @Published var communityPostSample: [CommunityPostSample] = [
     
-        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요1", contents: "안녕안녕안녕안녕1", createDate: "2024-05-01"),
+        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요1", contents: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. Mi eget mauris pharetra et. Non tellus orci ac auctor augue. Elit at imperdiet dui accumsan sit. Ornare arcu dui vivamus arcu felis. Egestas integer eget aliquet nibh praesent. In hac habitasse platea dictumst quisque sagittis purus. Pulvinar elementum integer enim neque volutpat ac.", createDate: "2024-05-01"),
         CommunityPostSample(image:UIImage(named: "launch.icon")!, title: "안녕하세요2", contents: "안녕안녕안녕안녕2", createDate: "2024-05-02"),
         CommunityPostSample(image:UIImage(named: "apple.login.icon")!, title: "안녕하세요3", contents: "안녕안녕안녕안녕3", createDate: "2024-05-03"),
         CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요4", contents: "안녕안녕안녕안녕4", createDate: "2024-05-04")

@@ -26,7 +26,7 @@ struct ppApp: App {
 //						_ = AuthController.handleOpenUrl(url: url)
 //					}
 //				})
-         CommunityView()
+            LikeAndReplyView()
         }
     }
 }

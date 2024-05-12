@@ -99,3 +99,53 @@ struct AutoScroller2: View {
         }
     }
 }
+
+
+struct LikeAndReplyView: View {
+    
+    @State var isLiked:Bool = false
+    @State var likeCounts:Int = 0
+    @State var replyCounts:Int = 0
+    
+    var body: some View {
+        
+        HStack {
+            
+            Button {
+                self.isLiked.toggle()
+                
+                if isLiked {
+                    print("좋아요")
+                    likeCounts += 1
+                } else {
+                    print("좋아요 취소")
+                    likeCounts -= 1
+                }
+                
+            } label: {
+               
+                HStack {
+                    Text("좋아요")
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(isLiked ? .red : .black)
+            
+                }
+            }
+
+            Text("\(likeCounts)")
+
+            Button {
+                print("comment click")
+            } label: {
+               
+                HStack {
+                    Text("댓글")
+                    Image(systemName: "bubble")
+                }
+            }
+            
+            Text("\(replyCounts)")
+        }
+        
+    }
+}
