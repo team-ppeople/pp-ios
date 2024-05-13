@@ -10,6 +10,8 @@ import SwiftUI
 
 struct PostReplyView: View {
    
+    @ObservedObject var vm: PostViewModel
+    
     // sampleData -> 추후 PostDetails의 Comments로 대체
     let sampleComment: [SampleComments] = [ SampleComments(username: "111", comments: "안녕하세요 반가워요"),
                                             SampleComments(username: "222", comments: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"),
@@ -25,12 +27,13 @@ struct PostReplyView: View {
     var body: some View {
         NavigationStack {
             List(sampleComment, id: \.self) { item in
-                CustomCellView(username: item.username, comments: item.comments)
+                ReplyCellView(username: item.username, comments: item.comments)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             reportItem() // 신고 처리 함수 호출
                         } label: {
                             Label("신고", systemImage: "exclamationmark.circle.fill")
+                           //Text("신고")
                         }
                     }
             }
@@ -49,10 +52,12 @@ struct PostReplyView: View {
     func reportItem() {
         // 실제 신고 로직을 구현하는 곳 -> reportComments 함수 실행
         print("신고 처리")
+        //ToDo: - commentId 받아와서 신고할때 그 Id로 게시물 신고
+   //     vm.reportComment(commentId: <#T##Int#>)
         showAlert = true // 신고 완료 후 Alert를 표시
     }
 }
-struct CustomCellView: View {
+struct ReplyCellView: View {
     let username: String
     let comments: String
     

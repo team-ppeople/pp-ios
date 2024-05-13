@@ -11,52 +11,48 @@ struct CommunityDetailView: View {
     @ObservedObject var vm: PostViewModel
     var postDetail: CommunityPostSample
     @Environment(\.dismiss) private var dismiss
-    
+    @State private var showAlert = false
+    @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
     let imageURLs: [URL?]
-    let images: [Image] = [Image(uiImage: UIImage(named: "AppIcon")!),
-                           Image(uiImage: UIImage(named: "emty.image")!),
-                           Image(uiImage: UIImage(named: "AppIcon")!),
-                           Image(uiImage: UIImage(named: "apple.login.icon")!),
-                           Image(uiImage: UIImage(named: "AppIcon")!)]
+    let images: [Image] = [
+        Image(uiImage: UIImage(named: "AppIcon")!),
+        Image(uiImage: UIImage(named: "emty.image")!),
+        Image(uiImage: UIImage(named: "AppIcon")!),
+        Image(uiImage: UIImage(named: "apple.login.icon")!),
+        Image(uiImage: UIImage(named: "AppIcon")!)
+    ]
     
     var body: some View {
-        VStack(alignment:.leading) {
-//            if !imageURLs.compactMap({ $0 }).isEmpty {
-//            AutoScroller2(imageURLs: imageURLs.compactMap { $0 })
-//                    .frame(height: 258)
-//            }
-//            
-            if images.count != 0 {
+        VStack(alignment: .leading) {
+            if !images.isEmpty {
                 AutoScroller(images: images)
                     .frame(height: 258)
             }
             
-            
             Text(postDetail.title)
                 .font(.system(size: 18))
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 25)
             Text(postDetail.createDate)
                 .font(.system(size: 12))
-                .frame(maxWidth: .infinity, alignment: .leading)
             Text(postDetail.contents)
                 .font(.system(size: 15))
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 20)
             
             LikeAndReplyView()
-            
             Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 25)
+        
         .toolbar {
             ToolbarItem {
                 Menu {
-                    Button("신고") {
-                        //Todd: -  신고하기 버튼 
-//                        vm.deleteDiaryPost(diaryPost)
-                        dismiss()
+                    Button(role: .destructive) {
+                        showAlert = true
+                    } label: {
+                      Label("신고", systemImage: "exclamationmark.circle")
+                      //  Text("신고")
+                            .frame(width: 22, height: 30)
                     }
                 } label: {
                     Image("menu.icon")
@@ -64,9 +60,28 @@ struct CommunityDetailView: View {
                 }
             }
         }
-        .toolbar(.hidden, for: .tabBar)
+        .alert("신고 확인", isPresented: $showAlert) {
+            Button("확인", role: .destructive) {
+                showReportConfirmation = true
+                
+                // ToDo: - fetchPost에서 각 게시글 Id 받아와서 가지고 있다 신고할때 이 Id 값으로 신고
+//                vm.reportPost(postId: <#T##Int#>)
+            }
+            Button("취소", role: .cancel) {}
+        } message: {
+            Text("이 게시물을 신고하시겠습니까?")
+        }
+        .alert("신고 완료", isPresented: $showReportConfirmation) {
+            Button("확인", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text("신고가 처리되었습니다.")
+        }
     }
 }
+
+
 
 struct AutoScroller2: View {
     var imageURLs: [URL]
@@ -151,8 +166,6 @@ struct LikeAndReplyView: View {
                 Text("\(replyCounts)")
             }
         }
-        
-
-        
+       
     }
 }
