@@ -61,9 +61,7 @@ struct CommunityDetailView: View {
         .toolbar(.hidden, for: .tabBar)
     }
 }
-////#Preview {
-////    CommunityDetailView()
-////}
+
 struct AutoScroller2: View {
     var imageURLs: [URL]
 
@@ -109,43 +107,46 @@ struct LikeAndReplyView: View {
     
     var body: some View {
         
-        HStack {
-            
-            Button {
-                self.isLiked.toggle()
+        NavigationStack {
+            HStack {
                 
-                if isLiked {
-                    print("좋아요")
-                    likeCounts += 1
-                } else {
-                    print("좋아요 취소")
-                    likeCounts -= 1
-                }
+                Button {
+                    self.isLiked.toggle()
+                    
+                    if isLiked {
+                        print("좋아요")
+                        likeCounts += 1
+                    } else {
+                        print("좋아요 취소")
+                        likeCounts -= 1
+                    }
+                    
+                } label: {
+                   
+                    HStack {
+                        Text("좋아요")
+                        Image(systemName: isLiked ? "heart.fill" : "heart")
+                            .foregroundColor(isLiked ? .red : .black)
                 
-            } label: {
-               
-                HStack {
-                    Text("좋아요")
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
-                        .foregroundColor(isLiked ? .red : .black)
-            
+                    }
                 }
-            }
 
-            Text("\(likeCounts)")
+                Text("\(likeCounts)")
 
-            Button {
-                print("comment click")
-            } label: {
-               
-                HStack {
-                    Text("댓글")
-                    Image(systemName: "bubble")
+                
+                NavigationLink(destination: PostReplyView()) {
+                   
+                    HStack {
+                        Text("댓글")
+                        Image(systemName: "bubble")
+                    }
+                  
                 }
+                Text("\(replyCounts)")
             }
-            
-            Text("\(replyCounts)")
         }
+        
+
         
     }
 }
