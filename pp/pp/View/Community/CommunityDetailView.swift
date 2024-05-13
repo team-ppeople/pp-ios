@@ -13,32 +13,38 @@ struct CommunityDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     let imageURLs: [URL?]
-   // let images: [Image]
+    let images: [Image] = [Image(uiImage: UIImage(named: "AppIcon")!),
+                           Image(uiImage: UIImage(named: "emty.image")!),
+                           Image(uiImage: UIImage(named: "AppIcon")!),
+                           Image(uiImage: UIImage(named: "apple.login.icon")!),
+                           Image(uiImage: UIImage(named: "AppIcon")!)]
     
     var body: some View {
-        VStack {
-            if !imageURLs.compactMap({ $0 }).isEmpty {
-            AutoScroller2(imageURLs: imageURLs.compactMap { $0 })
+        VStack(alignment:.leading) {
+//            if !imageURLs.compactMap({ $0 }).isEmpty {
+//            AutoScroller2(imageURLs: imageURLs.compactMap { $0 })
+//                    .frame(height: 258)
+//            }
+//            
+            if images.count != 0 {
+                AutoScroller(images: images)
                     .frame(height: 258)
             }
             
+            
             Text(postDetail.title)
-            //Text(vm.postDetail?.title ?? "")
-            //Text("제목")
                 .font(.system(size: 18))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 25)
             Text(postDetail.createDate)
-                //  Text(vm.postDetail?.createDate ?? "")
-            //Text("날짜")
                 .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(postDetail.contents)
-            //Text(vm.postDetail?.content ?? "")
-            //Text("날짜")
                 .font(.system(size: 15))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 20)
+            
+            LikeAndReplyView()
             
             Spacer()
         }
