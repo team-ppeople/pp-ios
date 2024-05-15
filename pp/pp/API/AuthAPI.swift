@@ -13,7 +13,7 @@ enum AuthAPI {
 }
 
 extension AuthAPI : TargetType {
-	var baseURL: URL { URL(string: BaseUrl.server.rawValue)! }
+	var baseURL: URL { URL(string: Url.server.rawValue)! }
 	
 	var path: String {
 		switch self {
