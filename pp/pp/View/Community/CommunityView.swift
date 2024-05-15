@@ -10,24 +10,26 @@ import SwiftUI
 
 struct CommunityView: View {
     
-    
     @ObservedObject var vm: PostViewModel = PostViewModel()
     
     
     var body: some View {
 
-   
-        
                 NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 GeometryReader { geometry in
                     VStack {
-                        if vm.communityPostSample.isEmpty {
+                        if vm.communityPosts.isEmpty {
                             emptyStateView
+                       
                         } else {
-                           communityPostsGrid2
+                           communityPostsGrid
+                          
                         }
                     }
+                    .onAppear {
+                                   print("CommunityView appeared on screen")
+                               }
                     .toolbar {
                         ToolbarItem {
                             HStack {
@@ -45,8 +47,12 @@ struct CommunityView: View {
                 
                 floatingActionButton
                     .padding(16)
+                
             }
         }
+                .task {
+                    vm.loadPosts(lastId: 1)
+                }
     }
     
     private var emptyStateView: some View {
@@ -57,24 +63,11 @@ struct CommunityView: View {
             .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
     }
     
-//    private var communityPostsGrid: some View {
-//        ScrollView {
-//            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-//                ForEach(vm.communityPosts, id: \.self) { communityPost in
-//                    CommunityPostPreview(vm: vm /*diaryPost: communityPost*/)
-//                }
-//            }
-//            .padding(.horizontal, 16)
-//            .padding(.vertical, 24)
-//        }
-//        .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
-//    }
-    
-    private var communityPostsGrid2: some View {
+    private var communityPostsGrid: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-                ForEach(vm.communityPostSample, id: \.self) { communityPost in
-                    CommunityPostPreview(vm: vm, communityPost: communityPost /*diaryPost: communityPost*/)
+                ForEach(vm.communityPosts, id: \.self) { communityPost in
+                    CommunityPostPreview(vm: vm,communityPost: communityPost )
                 }
             }
             .padding(.horizontal, 16)
@@ -82,7 +75,7 @@ struct CommunityView: View {
         }
         .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
     }
-    
+
     private var floatingActionButton: some View {
         NavigationLink(destination: CommunityUploadView(vm: vm)) {
             Image(systemName: "pencil")
@@ -95,5 +88,9 @@ struct CommunityView: View {
         }
     }
     
+    
 }
-//
+
+
+
+

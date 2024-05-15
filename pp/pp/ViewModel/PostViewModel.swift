@@ -19,17 +19,6 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var presignedRequests = [PresignedIdRequest]()
-  
-    @Published var communityPostSample: [CommunityPostSample] = [
-    
-        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요1", contents: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. Mi eget mauris pharetra et. Non tellus orci ac auctor augue. Elit at imperdiet dui accumsan sit. Ornare arcu dui vivamus arcu felis. Egestas integer eget aliquet nibh praesent. In hac habitasse platea dictumst quisque sagittis purus. Pulvinar elementum integer enim neque volutpat ac.", createDate: "2024-05-01"),
-        CommunityPostSample(image:UIImage(named: "launch.icon")!, title: "안녕하세요2", contents: "안녕안녕안녕안녕2", createDate: "2024-05-02"),
-        CommunityPostSample(image:UIImage(named: "apple.login.icon")!, title: "안녕하세요3", contents: "안녕안녕안녕안녕3", createDate: "2024-05-03"),
-        CommunityPostSample(image:UIImage(named: "emty.image")!, title: "안녕하세요4", contents: "안녕안녕안녕안녕4", createDate: "2024-05-04")
-        
-    ]
-    
-    @Published var selectedPost: CommunityPostSample?
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
@@ -41,6 +30,7 @@ class PostViewModel: PhotoPickerViewModel {
                 switch completion {
                 case .finished:
                     print("게시글이 성공적으로 생성되었습니다.")
+                    
                 case .failure(let error):
                     print("게시글 생성 중 오류 발생: \(error.status),\(error.title)")
                     if error.status == 400{
@@ -200,35 +190,47 @@ class PostViewModel: PhotoPickerViewModel {
             .store(in: &cancellables)
     }
     //MARK: - PhotoPicker에서 이미지 선택
+
     
     @MainActor
     func addSelectedPhotos() {
         uiImages.removeAll()
-        
+        presignedRequests.removeAll()
+
         if !selectedPhotos.isEmpty {
-            for eachItem in selectedPhotos {
+            for (index, eachItem) in selectedPhotos.enumerated() {
                 Task {
                     if let imageData = try? await eachItem.loadTransferable(type: Data.self) {
                         if let image = UIImage(data: imageData) {
                             uiImages.append(image)
+
                             let contentLength = imageData.count
                             let contentType = imageData.containsPNGData() ? "image/png" : "image/jpeg"
+
+                            
+                            let fileName = "image_\(index + 1).\(contentType == "image/png" ? "png" : "jpg")"
+
                             let requestType = "POST_IMAGE"
                             let presignedRequest = PresignedIdRequest(
                                 fileUploadRequestType: requestType,
                                 fileContentLength: contentLength,
-                                fileContentType: contentType
+                                fileContentType: contentType,
+                                fileName: fileName
                             )
                             presignedRequests.append(presignedRequest)
+                            print("photos\(presignedRequest)")
                         }
                     }
                 }
             }
             selectedPhotos.removeAll()
-            
         }
     }
+    
 }
+    
+    
+    
 extension Data {
     func containsPNGData() -> Bool {
         let pngSignatureBytes: [UInt8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]

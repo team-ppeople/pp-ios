@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
 	@ObservedObject var vm: LoginViewModel = LoginViewModel()
+
 	
     var body: some View {
 		NavigationStack {
@@ -30,10 +31,10 @@ struct LoginView: View {
 				}
 				.frame(maxWidth: .infinity)
 				.frame(height: 50)
-				.navigationDestination(isPresented: $vm.isLinkActive) {
+				.navigationDestination(isPresented: $vm.isKaKaoLinkActive) {
 					switch vm.destination {
 					case .community:
-						CommunityView()
+                        CommunityView()
 					case .termsAgreement:
 						TermsAgreementView(vm: vm)
 					case .none:
@@ -57,10 +58,10 @@ struct LoginView: View {
 				}
 				.frame(maxWidth: .infinity)
 				.frame(height: 50)
-				.navigationDestination(isPresented: $vm.isLinkActive) {
+				.navigationDestination(isPresented: $vm.isAppleLinkActive) {
 					switch vm.destination {
 					case .community:
-						CommunityView()
+                        CommunityView()
 					case .termsAgreement:
 						TermsAgreementView(vm: vm)
 					case .none:

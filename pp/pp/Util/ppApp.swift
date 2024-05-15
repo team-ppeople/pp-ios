@@ -10,7 +10,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 @main
-struct ppApp: App {
+    struct ppApp: App {
 	init() {
 		// Kakao SDK 초기화
 		KakaoSDK.initSDK(appKey: Secrets().kakaoAppKey)
@@ -20,14 +20,13 @@ struct ppApp: App {
     var body: some Scene {
         WindowGroup {
 			// onOpenURL()을 사용해 커스텀 URL 스킴 처리
-//			ContentView()
-//				.onOpenURL(perform: { url in
-//					if (AuthApi.isKakaoTalkLoginUrl(url)) {
-//						_ = AuthController.handleOpenUrl(url: url)
-//					}
-//				})
-          //  LikeAndReplyView()
-            CommunityView()
+			ContentView()
+				.onOpenURL(perform: { url in
+					if (AuthApi.isKakaoTalkLoginUrl(url)) {
+						_ = AuthController.handleOpenUrl(url: url)
+					}
+				})
+
         }
     }
 }

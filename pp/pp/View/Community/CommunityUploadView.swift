@@ -30,15 +30,13 @@ struct CommunityUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
-                       // print("작성완료")
-                        vm.writePost(title: vm.title, content: vm.contents, imageData: vm.presignedRequests)
-                        //vm.presignedId(imageData: vm.presignedRequests)
-
-//                           vm.convertImageToData {
-//                            vm.createDiaryPost()
-//                            vm.clearStates()
+ 
+                      
+                         print("작성완료")
+//                        vm.writePost(title: vm.title, content: vm.contents, imageData: vm.presignedRequests)
+                      
                            dismiss()
-//                        }
+
                     }
                     .tint(.white)
                     .frame(width: 120, height: 40)
@@ -54,6 +52,9 @@ struct CommunityUploadView: View {
             .onTapGesture {
                 hideKeyboard()
             }
+            .onAppear {
+                           print("CommunityUploadView appeared on screen")
+                       }
             .padding(.top, 24)
         }
         .navigationBarTitle("업로드", displayMode: .inline)
@@ -66,11 +67,3 @@ struct CommunityUploadView: View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
-    
-
-//
-//#Preview {
-// //   CommunityUploadView()
-//}
-
-

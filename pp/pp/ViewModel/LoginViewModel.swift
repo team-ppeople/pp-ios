@@ -17,6 +17,10 @@ class LoginViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
 	@Published var isLinkActive: Bool = false
+    @Published var isAppleLinkActive: Bool = false
+    @Published var isKaKaoLinkActive: Bool = false
+    
+    
     @Published var showAlert: Bool = false
 
 	private var client: Client = .kakao
@@ -71,7 +75,8 @@ class LoginViewModel: ObservableObject {
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8) ?? ""
 						
 						print("애플 인증 성공 - id_token: \(identityToken), auth_code: \(authorizationCode)")
-						
+						//print("유저권한\()")
+                    
 						self?.authCode = authorizationCode
 						self?.idToken = identityToken
 						self?.client = .apple
@@ -156,7 +161,7 @@ class LoginViewModel: ObservableObject {
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
 				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
 				
-				self.isLinkActive = true
+				self.isAppleLinkActive = true
 				self.destination = .community
 			})
 			.store(in: &cancellables)

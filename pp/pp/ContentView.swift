@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @State private var isLoggedIn: Bool = true
+    @State private var isLoggedIn: Bool = false
 	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()
@@ -19,11 +19,11 @@ struct ContentView: View {
 		UITabBar.appearance().scrollEdgeAppearance = appearance
 		
 		// MARK: - 로그인 여부 체크
-//		if let _ = UserDefaults.standard.string(forKey: "AccessToken") {
-//			isLoggedIn = true
-//		} else {
-//			isLoggedIn = false
-//		}
+		if let _ = UserDefaults.standard.string(forKey: "AccessToken") {
+			isLoggedIn = true
+		} else {
+			isLoggedIn = false
+		}
 	}
     
     var body: some View {

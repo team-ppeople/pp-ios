@@ -9,10 +9,12 @@ import SwiftUI
 
 struct CommunityDetailView: View {
     @ObservedObject var vm: PostViewModel
-    var postDetail: CommunityPostSample
     @Environment(\.dismiss) private var dismiss
     @State private var showAlert = false
     @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
+   
+    
+     let postDetail: Post
     let imageURLs: [URL?]
     let images: [Image] = [
         Image(uiImage: UIImage(named: "AppIcon")!),
@@ -34,11 +36,12 @@ struct CommunityDetailView: View {
                 .padding(.top, 25)
             Text(postDetail.createDate)
                 .font(.system(size: 12))
-            Text(postDetail.contents)
+            Text("hihi")
+           // Text(postDetail.content)
                 .font(.system(size: 15))
                 .padding(.top, 20)
             
-            LikeAndReplyView()
+            LikeAndReplyView(vm: vm)
             Spacer()
         }
         .padding(.horizontal, 16)
@@ -122,6 +125,8 @@ struct AutoScroller2: View {
 
 struct LikeAndReplyView: View {
     
+    @ObservedObject var vm: PostViewModel
+    
     @State var isLiked:Bool = false
     @State var likeCounts:Int = 0
     @State var replyCounts:Int = 0
@@ -155,7 +160,7 @@ struct LikeAndReplyView: View {
                 Text("\(likeCounts)")
 
                 
-                NavigationLink(destination: PostReplyView()) {
+                NavigationLink(destination: PostReplyView(vm: vm)) {
                    
                     HStack {
                         Text("댓글")

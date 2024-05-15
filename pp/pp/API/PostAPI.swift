@@ -29,21 +29,21 @@ extension CommunityAPI: TargetType {
     var path: String {
         switch self {
         case .createPost, .fetchPostsLists:
-            return "posts"
+            return "/posts"
         case .fetchDetailPosts(let postId):
-            return "posts/\(postId)"
+            return "/posts/\(postId)"
         case .reportPost(let postId):
-            return "posts/\(postId)/report"
+            return "/posts/\(postId)/report"
         case .thumbsUp(let postId):
-            return "posts/\(postId)/thumbs-up"
+            return "/posts/\(postId)/thumbs-up"
         case .thumbs_sideways(let postId):
-            return "posts/\(postId)/thumbs_sideways"
+            return "/posts/\(postId)/thumbs_sideways"
         case .fetchComments(let postId,_,_),.writeComments(let postId,_):
-            return "posts/\(postId)/comments"
+            return "/posts/\(postId)/comments"
         case .reportComment(let commentId):
-            return "comments/\(commentId)/report"
+            return "/comments/\(commentId)/report"
         case .getPresignedId:
-                return "/api/v1/presigned/upload-urls"
+                return "/api/v1/presigned-urls/upload"
         }
     }
     
@@ -91,7 +91,10 @@ extension CommunityAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        return ["Content-Type": "application/json"]
+        let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
+        return ["Content-Type": "application/json",
+                "Authorization": "Bearer \(accessToken)"]
+        
     }
     
     var baseURL: URL {

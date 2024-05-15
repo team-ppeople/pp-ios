@@ -13,6 +13,7 @@ struct PresignedIdRequest: Codable {
     let fileUploadRequestType: String
     let fileContentLength: Int
     let fileContentType: String
+    let fileName:String
 }
 
 //MARK: - 사진 업로드 가능 결과 수신
@@ -121,15 +122,4 @@ struct Comment: Codable {
 struct CommentRequest: Codable {
     var content: String
    
-}
-
-
-
-
-struct CommunityPostSample:Hashable,Identifiable{
-    var id = UUID()
-    let image:UIImage
-    let title:String
-    let contents:String
-    let createDate:String
 }
