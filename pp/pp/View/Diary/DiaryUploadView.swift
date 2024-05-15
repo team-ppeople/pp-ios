@@ -19,7 +19,6 @@ struct DiaryUploadView: View {
     let maxPhotosToSelect = 10
 
     var body: some View {
-
         NavigationView {
             VStack {
 				PhotoPickerView<DiaryViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)

@@ -16,11 +16,9 @@ class LoginViewModel: ObservableObject {
     private let userProvider = MoyaProvider<UserAPI>()
     private var cancellables = Set<AnyCancellable>()
     
-	@Published var isLinkActive: Bool = false
+	@Published var isTermsLinkActive: Bool = false
     @Published var isAppleLinkActive: Bool = false
     @Published var isKaKaoLinkActive: Bool = false
-    
-    
     @Published var showAlert: Bool = false
 
 	private var client: Client = .kakao
@@ -75,7 +73,6 @@ class LoginViewModel: ObservableObject {
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8) ?? ""
 						
 						print("애플 인증 성공 - id_token: \(identityToken), auth_code: \(authorizationCode)")
-						//print("유저권한\()")
                     
 						self?.authCode = authorizationCode
 						self?.idToken = identityToken
@@ -123,7 +120,15 @@ class LoginViewModel: ObservableObject {
 				if isRegistered {
 					self?.login()
 				} else {
-					self?.isLinkActive = true
+					switch self?.client {
+					case .kakao:
+						self?.isKaKaoLinkActive = true
+					case .apple:
+						self?.isAppleLinkActive = true
+					case .none:
+						break
+					}
+					
 					self?.destination = .termsAgreement
 				}
             }.store(in : &cancellables)
@@ -152,7 +157,7 @@ class LoginViewModel: ObservableObject {
 					dump(error)
 					self.showAlert = true
 				}
-			}, receiveValue: { recievedValue in
+			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
 				
 				let accessToken = recievedValue.accessToken
@@ -161,8 +166,21 @@ class LoginViewModel: ObservableObject {
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
 				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
 				
-				self.isAppleLinkActive = true
-				self.destination = .community
+				let userId = Utils.decode(accessToken)["sub"] as? String ?? ""
+				print("유저 아이디 - \(userId)")
+				
+				UserDefaults.standard.set(userId, forKey: "UserId")
+				
+				switch self?.client {
+				case .kakao:
+					self?.isKaKaoLinkActive = true
+				case .apple:
+					self?.isAppleLinkActive = true
+				case .none:
+					break
+				}
+				self?.isTermsLinkActive = true
+				self?.destination = .community
 			})
 			.store(in: &cancellables)
 	}
