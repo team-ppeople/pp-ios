@@ -9,12 +9,16 @@ import Foundation
 import UIKit
 
 //MARK: - 사진 업로드 가능 ID 요청
-struct PresignedIdRequest: Codable {
+struct PresignedUploadUrlRequests: Codable {
     let fileType: String
     let fileName:String
     let fileContentLength: Int
     let fileContentType: String
     
+}
+
+struct PresignedUploadUrlRequestData: Codable {
+    let presignedUploadUrlRequests: [PresignedUploadUrlRequests]
 }
 
 //MARK: - 사진 업로드 가능 결과 수신
@@ -23,14 +27,15 @@ struct PresignedIdResponse: Codable {
 }
 
 struct PresignedIdData: Codable {
-    let presignedUploadUrlResponses: [PresignedUploadIdResponse]
+    let presignedUploadFiles: [PresignedUploadIdResponse]
 }
 
 struct PresignedUploadIdResponse: Codable {
     let fileUploadId: Int
+    let fileName:String
     let presignedUploadUrl: String
     let fileUrl: String
-    let fileName:String
+   
 }
 
 //MARK: - 작성한 글 서버에 올리는 구조체

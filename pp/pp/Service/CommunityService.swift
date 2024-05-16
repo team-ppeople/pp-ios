@@ -12,49 +12,67 @@ import Combine
 //MARK: - Community API 통신
 class CommunityService {
     static let shared = CommunityService()
-    private let provider = MoyaProvider<CommunityAPI>()
+    //private let provider = MoyaProvider<CommunityAPI>()
     private var cancellables = Set<AnyCancellable>()
     
+    lazy var provider = MoyaProvider<CommunityAPI>(plugins: [networkLogger])
+    lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
     private init() {}
     
-    func uploadPostWithImages(title: String, content: String, imageData: [PresignedIdRequest]) -> AnyPublisher<Void, APIError> {
-        //  사진 업로드 가능 ID를 획득
-        return getPresignedId(requestData: imageData)
-            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
-                // 응답으로 받은 파일 ID들을 추출
-                let imageIds = presignedResponse.data.presignedUploadUrlResponses.map { $0.fileUploadId }
-                // 추출된 ID들을 게시글 요청에 포함
-                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
-                return self.createPost(post: postRequest)
-            }
-            .eraseToAnyPublisher()
-    }
+//    func uploadPostWithImages(title: String, content: String, imageData: [PresignedIdRequest]) -> AnyPublisher<Void, APIError> {
+//           //  사진 업로드 가능 ID를 획득
+//        return getPresignedId(requestData: imageData)
+//            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
+//                // 응답으로 받은 파일 ID들을 추출
+//                let imageIds = presignedResponse.data.presignedUploadUrlResponses.map { $0.fileUploadId }
+//                // 추출된 ID들을 게시글 요청에 포함
+//                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
+//                return self.createPost(post: postRequest)
+//            }
+//            .eraseToAnyPublisher()
+//    }
    
 
-    //MARK: - 사진 업로드 가능 ID 검증
-    func getPresignedId(requestData: [PresignedIdRequest]) -> AnyPublisher<PresignedIdResponse, APIError> {
-        return provider
-            .requestPublisher(.getPresignedId(requestData: requestData))
-            .tryMap { response in
-                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
-                }
-                return try JSONDecoder().decode(PresignedIdResponse.self, from: response.data)
-            }
-            .catch { error -> AnyPublisher<PresignedIdResponse, APIError> in
-                self.handleError(error, retry: { self.getPresignedId(requestData: requestData) })
-            }
-            .eraseToAnyPublisher()
-    }
-    //MARK: - 커뮤니티 게시글 작성
+    //MARK: - 사진 업로드 가능 ID 검증\
     
-    func createPost(post: PostRequest) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.createPost(post: post))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.createPost(post: post) }) }
-            .eraseToAnyPublisher()
-    }
+    
+    func getPresignedId(requestData: [PresignedUploadUrlRequests]) -> AnyPublisher<PresignedIdResponse, APIError> {
+           return provider
+               .requestPublisher(.getPresignedId(requestData: requestData))
+               .tryMap { response in
+                   guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                       throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+                   }
+                   return try JSONDecoder().decode(PresignedIdResponse.self, from: response.data)
+               }
+               .catch { error -> AnyPublisher<PresignedIdResponse, APIError> in
+                   self.handleError(error, retry: { self.getPresignedId(requestData: requestData) })
+               }
+               .eraseToAnyPublisher()
+       }
+//    func getPresignedId(requestData: [PresignedUploadUrlRequests]) -> AnyPublisher<PresignedIdResponse, APIError> {
+//        return provider
+//            .requestPublisher(.getPresignedId(requestData: requestData))
+//            .mapError(handleError2)
+//            .tryMap { response in
+//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+//                    let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
+//                    throw apiError
+//                }
+//                return try JSONDecoder().decode(PresignedIdResponse.self, from: response.data)
+//            }
+//            .mapError(handleError2)
+//            .eraseToAnyPublisher()
+//    }
+    //MARK: - 커뮤니티 게시글 작성
+//    
+//    func createPost(post: PostRequest) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.createPost(post: post))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.createPost(post: post) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     //MARK: - 커뮤니티 게시글 목록 조회
     func fetchPosts(limit: Int = 20, lastId: Int?) -> AnyPublisher<PostsResponse, APIError> {
@@ -71,77 +89,77 @@ class CommunityService {
     }
 
     //MARK: - 커뮤니티 게시글 상세 조회
-    func fetchDetailPosts(postId: Int) -> AnyPublisher<PostDetailResponse, APIError> {
-        return provider
-            .requestPublisher(.fetchDetailPosts(postId: postId))
-            .tryMap { response -> PostDetailResponse in
-                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
-                }
-                return try JSONDecoder().decode(PostDetailResponse.self, from: response.data)
-            }
-            .catch { error in self.handleError(error, retry: { self.fetchDetailPosts(postId: postId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func fetchDetailPosts(postId: Int) -> AnyPublisher<PostDetailResponse, APIError> {
+//        return provider
+//            .requestPublisher(.fetchDetailPosts(postId: postId))
+//            .tryMap { response -> PostDetailResponse in
+//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+//                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+//                }
+//                return try JSONDecoder().decode(PostDetailResponse.self, from: response.data)
+//            }
+//            .catch { error in self.handleError(error, retry: { self.fetchDetailPosts(postId: postId) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     // MARK: - 게시글 신고
-    func reportPost(postId: Int) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.reportPost(postId: postId))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.reportPost(postId: postId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func reportPost(postId: Int) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.reportPost(postId: postId))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.reportPost(postId: postId) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     // MARK: - 게시글 좋아요
-    func thumbsUpPost(postId: Int) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.thumbsUp(postId: postId))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.thumbsUpPost(postId: postId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func thumbsUpPost(postId: Int) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.thumbsUp(postId: postId))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.thumbsUpPost(postId: postId) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     // MARK: - 게시글 좋아요 취소
-    func thumbsSidewayPost(postId: Int) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.thumbs_sideways(postId: postId))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.thumbsSidewayPost(postId: postId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func thumbsSidewayPost(postId: Int) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.thumbs_sideways(postId: postId))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.thumbsSidewayPost(postId: postId) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     // MARK: - 게시글 댓글 목록 조회
-    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
-        return provider
-            .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
-            .tryMap { response -> CommentsResponse in
-                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
-                }
-                return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
-            }
-            .catch { error in self.handleError(error, retry: { self.fetchComments(postId: postId, limit: limit, lastId: lastId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
+//        return provider
+//            .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
+//            .tryMap { response -> CommentsResponse in
+//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+//                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+//                }
+//                return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
+//            }
+//            .catch { error in self.handleError(error, retry: { self.fetchComments(postId: postId, limit: limit, lastId: lastId) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     //MARK: - 커뮤니티 댓글 작성
-    func writeComment(postId: Int, comment: CommentRequest) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.writeComments(postId: postId, comment: comment))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.writeComment(postId: postId, comment: comment) }) }
-            .eraseToAnyPublisher()
-    }
+//    func writeComment(postId: Int, comment: CommentRequest) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.writeComments(postId: postId, comment: comment))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.writeComment(postId: postId, comment: comment) }) }
+//            .eraseToAnyPublisher()
+//    }
 
     //MARK: - 댓글 신고
-    func reportComments(commentId: Int) -> AnyPublisher<Void, APIError> {
-        return provider
-            .requestPublisher(.reportComment(commentId: commentId))
-            .map { _ in Void() }
-            .catch { error in self.handleError(error, retry: { self.reportComments(commentId: commentId) }) }
-            .eraseToAnyPublisher()
-    }
+//    func reportComments(commentId: Int) -> AnyPublisher<Void, APIError> {
+//        return provider
+//            .requestPublisher(.reportComment(commentId: commentId))
+//            .map { _ in Void() }
+//            .catch { error in self.handleError(error, retry: { self.reportComments(commentId: commentId) }) }
+//            .eraseToAnyPublisher()
+//    }
 }
 
 //MARK: - Error 핸들링 함수 정의
@@ -150,6 +168,7 @@ extension CommunityService {
         if let moyaError = error as? MoyaError {
             switch moyaError {
             case .statusCode(let response):
+                dump(response)
                 if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
                     if apiError.status == 400 {
                         // 토큰 갱신 시도
@@ -232,7 +251,22 @@ extension CommunityService {
 
 
 
-
+extension CommunityService {
+    private func handleError2(_ error: Error) -> APIError {
+        if let moyaError = error as? MoyaError {
+            switch moyaError {
+            case .statusCode(let response):
+                if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
+                    return apiError
+                }
+                return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
+            default:
+                return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
+            }
+        }
+        return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
+    }
+}
 
 
 

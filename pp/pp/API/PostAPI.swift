@@ -12,7 +12,9 @@ import Moya
 //MARK: - Moya 정의
 enum CommunityAPI {
     
-    case getPresignedId(requestData: [PresignedIdRequest])
+    
+    
+    case getPresignedId(requestData: [PresignedUploadUrlRequests])
     case createPost(post: PostRequest)
     case fetchPostsLists(limit: Int, lastId: Int?)
     case fetchDetailPosts(postId:Int)
@@ -26,22 +28,24 @@ enum CommunityAPI {
 }
 
 extension CommunityAPI: TargetType {
+   var baseURL: URL {return URL(string: Url.server.rawValue)!}
+    
     var path: String {
         switch self {
         case .createPost, .fetchPostsLists:
-            return "/posts"
+            return "/api/v1/posts"
         case .fetchDetailPosts(let postId):
-            return "/posts/\(postId)"
+            return "/api/v1/posts/\(postId)"
         case .reportPost(let postId):
-            return "/posts/\(postId)/report"
+            return "/api/v1/posts/\(postId)/report"
         case .thumbsUp(let postId):
-            return "/posts/\(postId)/thumbs-up"
+            return "/api/v1/posts/\(postId)/thumbs-up"
         case .thumbs_sideways(let postId):
-            return "/posts/\(postId)/thumbs_sideways"
+            return "/api/v1//posts/\(postId)/thumbs_sideways"
         case .fetchComments(let postId,_,_),.writeComments(let postId,_):
-            return "/posts/\(postId)/comments"
+            return "/api/v1//posts/\(postId)/comments"
         case .reportComment(let commentId):
-            return "/comments/\(commentId)/report"
+            return "/api/v1/comments/\(commentId)/report"
         case .getPresignedId:
                 return "/api/v1/presigned-urls/upload"
         }
@@ -49,9 +53,10 @@ extension CommunityAPI: TargetType {
     
     var method: Moya.Method {
         switch self {
-            
+     
         case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments,.getPresignedId:
             return .post
+       
         case .fetchPostsLists,.fetchDetailPosts,.fetchComments,.reportComment:
             return .get
             
@@ -62,7 +67,8 @@ extension CommunityAPI: TargetType {
     var task: Moya.Task {
         switch self {
         case .getPresignedId(let requestData):
-            return .requestJSONEncodable(requestData)
+               let requestDataObject = PresignedUploadUrlRequestData(presignedUploadUrlRequests: requestData)
+               return .requestJSONEncodable(requestDataObject)
        
         case .createPost(let post):
             return .requestJSONEncodable(post)
@@ -92,20 +98,17 @@ extension CommunityAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
-        
-        print("accessToken is \(accessToken)")
+       
+    let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
+
         return ["accept": "application/json",
                 "Authorization": "Bearer \(accessToken)",
                 "Content-Type": "application/json"
-                ]
+               ]
         
     }
-    
-    var baseURL: URL {
-        return URL(string: Url.server.rawValue)!
-    }
-    
+   
+    var validationType: ValidationType { .successCodes }
 }
 
 

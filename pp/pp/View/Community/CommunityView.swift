@@ -50,9 +50,9 @@ struct CommunityView: View {
                 
             }
         }
-                .task {
-                    vm.loadPosts(lastId: 1)
-                }
+//                .task {
+//                    vm.loadPosts( lastId: nil)
+//                }
     }
     
     private var emptyStateView: some View {
