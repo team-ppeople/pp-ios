@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LoginView: View {
 	@ObservedObject var vm: LoginViewModel = LoginViewModel()
-
 	
     var body: some View {
 		NavigationStack {

@@ -49,7 +49,7 @@
 		A910197B2BBD24F900046A62 /* CommunityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910197A2BBD24F900046A62 /* CommunityDetailView.swift */; };
 		A910197D2BBD250400046A62 /* CommunityUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910197C2BBD250400046A62 /* CommunityUploadView.swift */; };
 		A910197F2BBD252F00046A62 /* PostReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910197E2BBD252F00046A62 /* PostReplyView.swift */; };
-		A97FD49F2BCF8C42009D2758 /* BaseUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FD49E2BCF8C42009D2758 /* BaseUrl.swift */; };
+		A97FD49F2BCF8C42009D2758 /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FD49E2BCF8C42009D2758 /* Url.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -113,7 +113,7 @@
 		A910197A2BBD24F900046A62 /* CommunityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityDetailView.swift; sourceTree = "<group>"; };
 		A910197C2BBD250400046A62 /* CommunityUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityUploadView.swift; sourceTree = "<group>"; };
 		A910197E2BBD252F00046A62 /* PostReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostReplyView.swift; sourceTree = "<group>"; };
-		A97FD49E2BCF8C42009D2758 /* BaseUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseUrl.swift; sourceTree = "<group>"; };
+		A97FD49E2BCF8C42009D2758 /* Url.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Url.swift; sourceTree = "<group>"; };
 		A99B433D2BC3A5B40096A4AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -145,7 +145,7 @@
 				9AF0F3912BBBF8C800964E75 /* ppApp.swift */,
 				9A73F5722BBFD42F00FFB0B7 /* Utils.swift */,
 				9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */,
-				A97FD49E2BCF8C42009D2758 /* BaseUrl.swift */,
+				A97FD49E2BCF8C42009D2758 /* Url.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -461,7 +461,7 @@
 				A91019772BBD24E300046A62 /* DiaryDetailView.swift in Sources */,
 				A910195B2BBD243F00046A62 /* UserAPI.swift in Sources */,
 				9A4B13012BE9B92400F7D1C7 /* UserService.swift in Sources */,
-				A97FD49F2BCF8C42009D2758 /* BaseUrl.swift in Sources */,
+				A97FD49F2BCF8C42009D2758 /* Url.swift in Sources */,
 				A91019552BBD242400046A62 /* AuthAPI.swift in Sources */,
 				A910195F2BBD244C00046A62 /* UserModel.swift in Sources */,
 				46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */,

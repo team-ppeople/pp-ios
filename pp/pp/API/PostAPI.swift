@@ -103,7 +103,7 @@ extension CommunityAPI: TargetType {
     }
     
     var baseURL: URL {
-        return URL(string: BaseUrl.server.rawValue)!
+        return URL(string: Url.server.rawValue)!
     }
     
 }
