@@ -63,6 +63,7 @@ extension CommunityAPI: TargetType {
         switch self {
         case .getPresignedId(let requestData):
             return .requestJSONEncodable(requestData)
+       
         case .createPost(let post):
             return .requestJSONEncodable(post)
         case .fetchPostsLists(let limit, let lastId):
@@ -92,8 +93,12 @@ extension CommunityAPI: TargetType {
     
     var headers: [String : String]? {
         let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
-        return ["Content-Type": "application/json",
-                "Authorization": "Bearer \(accessToken)"]
+        
+        print("accessToken is \(accessToken)")
+        return ["accept": "application/json",
+                "Authorization": "Bearer \(accessToken)",
+                "Content-Type": "application/json"
+                ]
         
     }
     

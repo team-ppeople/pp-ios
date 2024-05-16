@@ -146,7 +146,6 @@ class CommunityService {
 
 //MARK: - Error 핸들링 함수 정의
 extension CommunityService {
-
     func handleError<T>(_ error: Error, retry: @escaping () -> AnyPublisher<T, APIError>) -> AnyPublisher<T, APIError> {
         if let moyaError = error as? MoyaError {
             switch moyaError {
@@ -155,27 +154,56 @@ extension CommunityService {
                     if apiError.status == 400 {
                         // 토큰 갱신 시도
                         return refreshTokenIfNeeded()
-                            .flatMap { _ in
-                        // 토큰 갱신 성공 후 재시도
-                                return retry()
-                            }
+                            .flatMap { _ in retry() }
                             .eraseToAnyPublisher()
                     } else {
                         // 다른 에러는 그대로 반환
                         return Fail(error: apiError).eraseToAnyPublisher()
                     }
                 } else {
-                        // 디코딩 실패 시 기본 에러 반환
+                    // 디코딩 실패 시 기본 에러 반환
                     return Fail(error: APIError(type: "about:blank", title: "Decoding Error", status: 500, detail: "Error decoding error response", instance: response.request?.url?.absoluteString ?? "")).eraseToAnyPublisher()
                 }
             default:
-                        // MoyaError가 statusCode 외의 경우
-                return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")).eraseToAnyPublisher()
+                return Fail(error: APIError(type: "about:blank", title: "Moya Error", status: 500, detail: "A Moya error occurred.", instance: "/error")).eraseToAnyPublisher()
             }
+        } else {
+            print("Received non-Moya error: \(type(of: error)) - \(error.localizedDescription)")
+            // MoyaError가 아닌 경우
+            return Fail(error: APIError(type: "about:blank", title: "Non-Moya Error", status: 500, detail: error.localizedDescription, instance: "/error-non-moya")).eraseToAnyPublisher()
         }
-        // MoyaError가 아닌 경우
-        return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")).eraseToAnyPublisher()
     }
+//    func handleError<T>(_ error: Error, retry: @escaping () -> AnyPublisher<T, APIError>) -> AnyPublisher<T, APIError> {
+//        if let moyaError = error as? MoyaError {
+//            switch moyaError {
+//            case .statusCode(let response):
+//                if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
+//                
+//                    if apiError.status == 400 {
+//                        // 토큰 갱신 시도
+//                        return refreshTokenIfNeeded()
+//                            .flatMap { _ in
+//                        // 토큰 갱신 성공 후 재시도
+//                                return retry()
+//                            }
+//                            .eraseToAnyPublisher()
+//                    } else {
+//                        // 다른 에러는 그대로 반환
+//                        return Fail(error: apiError).eraseToAnyPublisher()
+//                    }
+//                } else {
+//                        // 디코딩 실패 시 기본 에러 반환
+//                    return Fail(error: APIError(type: "about:blank", title: "Decoding Error", status: 500, detail: "Error decoding error response", instance: response.request?.url?.absoluteString ?? "")).eraseToAnyPublisher()
+//                }
+//            default:
+//                        // MoyaError가 statusCode 외의 경우
+//                return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")).eraseToAnyPublisher()
+//                print("Received error type: \(type(of: error))")
+//            }
+//        }
+//        // MoyaError가 아닌 경우
+//        return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error2222")).eraseToAnyPublisher()
+//    }
     
     //MARK: - 토큰 재발급 요청 
     func refreshTokenIfNeeded() -> AnyPublisher<Void, APIError> {

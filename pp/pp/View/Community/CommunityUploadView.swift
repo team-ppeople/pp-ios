@@ -34,7 +34,10 @@ struct CommunityUploadView: View {
                       
                          print("작성완료")
 //                        vm.writePost(title: vm.title, content: vm.contents, imageData: vm.presignedRequests)
-                      
+                        print("vm.requset\(vm.presignedRequests)")
+                        vm.getPresignedId(imageData: vm.presignedRequests)
+                        
+                        
                            dismiss()
 
                     }

@@ -54,6 +54,7 @@ class PostViewModel: PhotoPickerViewModel {
                 
                 switch completion {
                 case .finished:
+                    print("finished")
                     break
                 case .failure(let error):
                     print("Error getting presigned IDs: \(error)")
@@ -212,10 +213,7 @@ class PostViewModel: PhotoPickerViewModel {
 
                             let requestType = "POST_IMAGE"
                             let presignedRequest = PresignedIdRequest(
-                                fileUploadRequestType: requestType,
-                                fileContentLength: contentLength,
-                                fileContentType: contentType,
-                                fileName: fileName
+                               fileType: requestType, fileName: fileName, fileContentLength: contentLength, fileContentType: contentType
                             )
                             presignedRequests.append(presignedRequest)
                             print("photos\(presignedRequest)")
