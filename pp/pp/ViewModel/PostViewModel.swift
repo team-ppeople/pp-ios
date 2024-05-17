@@ -22,30 +22,30 @@ class PostViewModel: PhotoPickerViewModel {
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
-//    func writePost(title:String,content:String,imageData:[PresignedIdRequest]) {
-//        CommunityService.shared.uploadPostWithImages(title: title, content: content, imageData: presignedRequests)
-//            .sink(receiveCompletion: { completion in
-//                // 완료 상태를 확인
-//                print("completion\(completion)")
-//                switch completion {
-//                case .finished:
-//                    print("게시글이 성공적으로 생성되었습니다.")
-//                    
-//                case .failure(let error):
-//                    print("게시글 생성 중 오류 발생: \(error.status),\(error.title)")
-//                    if error.status == 400{
-//                        print("인증 오류, 재로그인 필요")
-//                        
-//                    }
-//                    
-//                }
-//            }, receiveValue: {
-//                
-//                print("게시글 생성 완료")
-//                
-//            })
-//            .store(in: &cancellables)
-//    }
+    func writePost(title:String,content:String,imageData:[PresignedUploadUrlRequests]) {
+        CommunityService.shared.uploadPostWithImages(title: title, content: content, imageData: presignedRequests)
+            .sink(receiveCompletion: { completion in
+                // 완료 상태를 확인
+                print("completion\(completion)")
+                switch completion {
+                case .finished:
+                    print("게시글이 성공적으로 생성되었습니다.")
+                    
+                case .failure(let error):
+                    print("게시글 생성 중 오류 발생: \(error.status),\(error.title)")
+                    if error.status == 400{
+                        print("인증 오류, 재로그인 필요")
+                        
+                    }
+                    
+                }
+            }, receiveValue: {
+                
+                print("게시글 생성 완료")
+                
+            })
+            .store(in: &cancellables)
+    }
     
     func getPresignedId(imageData:[PresignedUploadUrlRequests]) {
         
@@ -61,7 +61,7 @@ class PostViewModel: PhotoPickerViewModel {
                    // dump(error)
                 }
             } receiveValue: { response in
-                   dump("\(response) - error occurs")
+//                   dump("\(response) - error occurs")
               //  print("Presigned URLs received: \(response)")
             }.store(in: &cancellables)
     }

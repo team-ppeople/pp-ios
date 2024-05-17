@@ -18,23 +18,27 @@ class CommunityService {
     lazy var provider = MoyaProvider<CommunityAPI>(plugins: [networkLogger])
     lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
     private init() {}
+
+  
     
-//    func uploadPostWithImages(title: String, content: String, imageData: [PresignedIdRequest]) -> AnyPublisher<Void, APIError> {
-//           //  사진 업로드 가능 ID를 획득
-//        return getPresignedId(requestData: imageData)
-//            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
-//                // 응답으로 받은 파일 ID들을 추출
-//                let imageIds = presignedResponse.data.presignedUploadUrlResponses.map { $0.fileUploadId }
-//                // 추출된 ID들을 게시글 요청에 포함
-//                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
-//                return self.createPost(post: postRequest)
-//            }
-//            .eraseToAnyPublisher()
-//    }
+    //MARK: - 사진 업로드 ID + 커뮤니티 게시글 작성
+    func uploadPostWithImages(title: String, content: String, imageData: [PresignedUploadUrlRequests]) -> AnyPublisher<Void, APIError> {
+        return getPresignedId(requestData: imageData)
+            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
+                let imageIds = presignedResponse.data.presignedUploadFiles.map { $0.fileUploadId }
+                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
+                return self.createPost(post: postRequest)
+            }
+            .catch { error -> AnyPublisher<Void, APIError> in
+                // 전체 프로세스 에러 핸들링
+                print("Error in uploading post with images: \(error.status):\(error.title)")
+                return Fail(error: APIError(type: "about:blank", title: "Comprehensive Error", status: 500, detail: "Failed at upload Post", instance: "/error")).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
    
 
-    //MARK: - 사진 업로드 가능 ID 검증\
-    
+    //MARK: - 사진 업로드 가능 ID 검증
     
     func getPresignedId(requestData: [PresignedUploadUrlRequests]) -> AnyPublisher<PresignedIdResponse, APIError> {
            return provider
@@ -50,29 +54,15 @@ class CommunityService {
                }
                .eraseToAnyPublisher()
        }
-//    func getPresignedId(requestData: [PresignedUploadUrlRequests]) -> AnyPublisher<PresignedIdResponse, APIError> {
-//        return provider
-//            .requestPublisher(.getPresignedId(requestData: requestData))
-//            .mapError(handleError2)
-//            .tryMap { response in
-//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-//                    let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-//                    throw apiError
-//                }
-//                return try JSONDecoder().decode(PresignedIdResponse.self, from: response.data)
-//            }
-//            .mapError(handleError2)
-//            .eraseToAnyPublisher()
-//    }
+
     //MARK: - 커뮤니티 게시글 작성
-//    
-//    func createPost(post: PostRequest) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.createPost(post: post))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.createPost(post: post) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func createPost(post: PostRequest) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.createPost(post: post))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.createPost(post: post) }) }
+            .eraseToAnyPublisher()
+    }
 
     //MARK: - 커뮤니티 게시글 목록 조회
     func fetchPosts(limit: Int = 20, lastId: Int?) -> AnyPublisher<PostsResponse, APIError> {
@@ -192,38 +182,7 @@ extension CommunityService {
             return Fail(error: APIError(type: "about:blank", title: "Non-Moya Error", status: 500, detail: error.localizedDescription, instance: "/error-non-moya")).eraseToAnyPublisher()
         }
     }
-//    func handleError<T>(_ error: Error, retry: @escaping () -> AnyPublisher<T, APIError>) -> AnyPublisher<T, APIError> {
-//        if let moyaError = error as? MoyaError {
-//            switch moyaError {
-//            case .statusCode(let response):
-//                if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
-//                
-//                    if apiError.status == 400 {
-//                        // 토큰 갱신 시도
-//                        return refreshTokenIfNeeded()
-//                            .flatMap { _ in
-//                        // 토큰 갱신 성공 후 재시도
-//                                return retry()
-//                            }
-//                            .eraseToAnyPublisher()
-//                    } else {
-//                        // 다른 에러는 그대로 반환
-//                        return Fail(error: apiError).eraseToAnyPublisher()
-//                    }
-//                } else {
-//                        // 디코딩 실패 시 기본 에러 반환
-//                    return Fail(error: APIError(type: "about:blank", title: "Decoding Error", status: 500, detail: "Error decoding error response", instance: response.request?.url?.absoluteString ?? "")).eraseToAnyPublisher()
-//                }
-//            default:
-//                        // MoyaError가 statusCode 외의 경우
-//                return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")).eraseToAnyPublisher()
-//                print("Received error type: \(type(of: error))")
-//            }
-//        }
-//        // MoyaError가 아닌 경우
-//        return Fail(error: APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error2222")).eraseToAnyPublisher()
-//    }
-    
+
     //MARK: - 토큰 재발급 요청 
     func refreshTokenIfNeeded() -> AnyPublisher<Void, APIError> {
         guard let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") else {
@@ -231,7 +190,7 @@ extension CommunityService {
             return Fail(error: APIError(type: "about:blank", title: "Token Error", status: 401, detail: "No refresh token available.", instance: "/token-error")).eraseToAnyPublisher()
         }
 
-        var tokenRequest = TokenRequest(refreshToken: refreshToken)
+        let tokenRequest = TokenRequest(refreshToken: refreshToken)
         return AuthService.shared.refreshToken(tokenRequest: tokenRequest)
             .map { tokenResponse -> Void in
                 // 성공적으로 토큰을 갱신했을 때 필요한 처리
