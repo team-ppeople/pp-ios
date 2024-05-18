@@ -37,7 +37,7 @@ extension CommunityAPI: TargetType {
         case .thumbsUp(let postId):
             return "/api/v1/posts/\(postId)/thumbs-up"
         case .thumbs_sideways(let postId):
-            return "/api/v1//posts/\(postId)/thumbs_sideways"
+            return "/api/v1/posts/\(postId)/thumbs-sideways"
         case .fetchComments(let postId,_,_),.writeComments(let postId,_):
             return "/api/v1//posts/\(postId)/comments"
         case .reportComment(let commentId):

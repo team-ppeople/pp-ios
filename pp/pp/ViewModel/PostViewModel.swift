@@ -19,6 +19,9 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var uiImages: [UIImage] = []
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var presignedRequests = [PresignedUploadUrlRequests]()
+    @Published var isLiked: Bool = false
+    @Published var likeCounts: Int = 0
+    @Published var commentCounts: Int = 0
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
@@ -106,50 +109,53 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { response in
               
                 self.postDetail = response.data
+                self.isLiked = response.data.userActionHistory.thumbsUpped
+                self.likeCounts = response.data.thumbsUpCount
+                self.commentCounts = response.data.commentCount
+                
             })
             .store(in: &cancellables)
     }
 //    
 //    //MARK: - 게시물 신고
-//    
-//    func reportPost(postId:Int) {
-//        CommunityService.shared.reportPost(postId: postId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("Report was successfully created")
-//                case .failure(let error):
-//                    print("Error reporting post: \(error.detail)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
+    func reportPost(postId:Int) {
+        CommunityService.shared.reportPost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Report was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
 //    //MARK: - 게시물 좋아요
-//    func likePost(postId:Int) {
-//        CommunityService.shared.thumbsUpPost(postId: postId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("like Post was successfully created")
-//                case .failure(let error):
-//                    print("Error reporting post: \(error.detail)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
+    func likePost(postId:Int) {
+        CommunityService.shared.thumbsUpPost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("like Post was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
 //    //MARK: - 게시물 좋아요 취소
-//    func dislikePost(postId:Int) {
-//        CommunityService.shared.thumbsSidewayPost(postId: postId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("dislike Post was successfully created")
-//                case .failure(let error):
-//                    print("Error reporting post: \(error.detail)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
+    func dislikePost(postId:Int) {
+        CommunityService.shared.thumbsSidewayPost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("dislike Post was successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
 //    //MARK: - 게시물 댓글 불러오기
 //    func loadComments(postId:Int,limit:Int,lastId:Int?) {
 //        CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)

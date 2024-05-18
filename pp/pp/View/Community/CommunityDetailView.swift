@@ -39,7 +39,7 @@ struct CommunityDetailView: View {
                 .font(.system(size: 15))
                 .padding(.top, 20)
             
-            LikeAndReplyView(vm: vm)
+            LikeAndReplyView(vm: vm,postId:postId)
             Spacer()
         }
         .onAppear {
@@ -69,7 +69,8 @@ struct CommunityDetailView: View {
                 showReportConfirmation = true
                 
                 // ToDo: - fetchPost에서 각 게시글 Id 받아와서 가지고 있다 신고할때 이 Id 값으로 신고
-//                vm.reportPost(postId: <#T##Int#>)
+                vm.reportPost(postId: self.postId)
+                print("신고 postId\(postId)")
             }
             Button("취소", role: .cancel) {}
         } message: {
@@ -123,53 +124,38 @@ struct AutoScroller2: View {
 }
 
 struct LikeAndReplyView: View {
-    
     @ObservedObject var vm: PostViewModel
-    
-    @State var isLiked:Bool = false
-    @State var likeCounts:Int = 0
-    @State var replyCounts:Int = 0
-    
+    let postId: Int
+
     var body: some View {
-        
-        NavigationStack {
-            HStack {
-                
-                Button {
-                    self.isLiked.toggle()
-                    
-                    if isLiked {
-                        print("좋아요")
-                        likeCounts += 1
-                    } else {
-                        print("좋아요 취소")
-                        likeCounts -= 1
-                    }
-                    
-                } label: {
-                   
-                    HStack {
-                        Text("좋아요")
-                        Image(systemName: isLiked ? "heart.fill" : "heart")
-                            .foregroundColor(isLiked ? .red : .black)
-                
-                    }
+        HStack {
+            Button {
+                vm.isLiked.toggle()  // 좋아요 상태 토글
+                if vm.isLiked {
+                    vm.likeCounts += 1
+                    vm.likePost(postId: postId)
+                    print("postid\(postId)")
+                } else {
+                    vm.likeCounts -= 1
+                    vm.dislikePost(postId: postId)
+                    print("postid\(postId)")
                 }
-
-                Text("\(likeCounts)")
-
-                
-                NavigationLink(destination: PostReplyView(vm: vm)) {
-                   
-                    HStack {
-                        Text("댓글")
-                        Image(systemName: "bubble")
-                    }
-                  
+            } label: {
+                HStack {
+                    Text("좋아요")
+                    Image(systemName: vm.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(vm.isLiked ? .red : .black)
                 }
-                Text("\(replyCounts)")
             }
+            Text("\(vm.likeCounts)")
+
+            NavigationLink(destination: PostReplyView(vm: vm)) {
+                HStack {
+                    Text("댓글")
+                    Image(systemName: "bubble")
+                }
+            }
+            Text("\(vm.commentCounts)")
         }
-       
     }
 }

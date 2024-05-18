@@ -111,31 +111,31 @@ class CommunityService {
 
 
     // MARK: - 게시글 신고
-//    func reportPost(postId: Int) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.reportPost(postId: postId))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.reportPost(postId: postId) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func reportPost(postId: Int) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.reportPost(postId: postId))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.reportPost(postId: postId) }) }
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - 게시글 좋아요
-//    func thumbsUpPost(postId: Int) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.thumbsUp(postId: postId))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.thumbsUpPost(postId: postId) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func thumbsUpPost(postId: Int) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.thumbsUp(postId: postId))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.thumbsUpPost(postId: postId) }) }
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - 게시글 좋아요 취소
-//    func thumbsSidewayPost(postId: Int) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.thumbs_sideways(postId: postId))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.thumbsSidewayPost(postId: postId) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func thumbsSidewayPost(postId: Int) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.thumbs_sideways(postId: postId))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.thumbsSidewayPost(postId: postId) }) }
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - 게시글 댓글 목록 조회
 //    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
