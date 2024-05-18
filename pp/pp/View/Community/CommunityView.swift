@@ -50,9 +50,9 @@ struct CommunityView: View {
                 
             }
         }
-//                .task {
-//                    vm.loadPosts( lastId: nil)
-//                }
+                .task {
+                    vm.loadPosts(lastId: nil)
+                }
     }
     
     private var emptyStateView: some View {
@@ -67,7 +67,7 @@ struct CommunityView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
                 ForEach(vm.communityPosts, id: \.self) { communityPost in
-                    CommunityPostPreview(vm: vm,communityPost: communityPost )
+                    CommunityPostPreview(vm: vm,communityPost: communityPost)
                 }
             }
             .padding(.horizontal, 16)

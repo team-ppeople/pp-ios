@@ -73,11 +73,7 @@ struct PostsData: Codable {
 //MARK: - 게시글 상세 조회
 
 struct PostDetailResponse: Codable {
-    let data: PostDetailData
-}
-
-struct PostDetailData: Codable {
-    let post: PostDetail
+    let data: PostDetail
 }
 
 struct PostDetail: Codable {
@@ -86,18 +82,17 @@ struct PostDetail: Codable {
     let postImageUrls: [String]
     let title: String
     let content: String
-    let createDate: String
+    let createdDate: String
     let thumbsUpCount: Int
     let commentCount: Int
     let userActionHistory: UserActionHistory
-    
-    
+
     var imageUrls: [URL] {
-           postImageUrls.compactMap { URL(string: $0) }
-       }
-    
-    
+        postImageUrls.compactMap(URL.init)
+    }
+
 }
+
 
 struct CreatedUser: Codable {
     let id: Int

@@ -9,41 +9,43 @@ import SwiftUI
 
 struct CommunityDetailView: View {
     @ObservedObject var vm: PostViewModel
+    let postId: Int
+    
     @Environment(\.dismiss) private var dismiss
+  
     @State private var showAlert = false
     @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
-   
-    
-     let postDetail: Post
-    let imageURLs: [URL?]
-    let images: [Image] = [
-        Image(uiImage: UIImage(named: "AppIcon")!),
-        Image(uiImage: UIImage(named: "emty.image")!),
-        Image(uiImage: UIImage(named: "AppIcon")!),
-        Image(uiImage: UIImage(named: "apple.login.icon")!),
-        Image(uiImage: UIImage(named: "AppIcon")!)
-    ]
-    
+ 
     var body: some View {
         VStack(alignment: .leading) {
-            if !images.isEmpty {
-                AutoScroller(images: images)
-                    .frame(height: 258)
-            }
+
+            if let imageUrls = vm.postDetail?.imageUrls, !imageUrls.isEmpty {
+                           AutoScroller2(imageURLs: imageUrls)
+                               .frame(height: 258)
+                       } else {
+                           // Placeholder for when there are no images or while loading
+                           ProgressView()
+                               .frame(height: 258)
+                       }
             
-            Text(postDetail.title)
+            Text(vm.postDetail?.title ?? "title")
                 .font(.system(size: 18))
                 .padding(.top, 25)
-            Text(postDetail.createDate)
+            
+            Text(vm.postDetail?.createdDate ?? "date")
                 .font(.system(size: 12))
-            Text("hihi")
-           // Text(postDetail.content)
+            
+            Text(vm.postDetail?.content ?? "content")
                 .font(.system(size: 15))
                 .padding(.top, 20)
             
             LikeAndReplyView(vm: vm)
             Spacer()
         }
+        .onAppear {
+            print("Loading post details for postId: \(postId)")
+                   vm.loadDetailPosts(postId: postId)
+               }
         .padding(.horizontal, 16)
         .padding(.vertical, 25)
         
@@ -54,7 +56,6 @@ struct CommunityDetailView: View {
                         showAlert = true
                     } label: {
                       Label("신고", systemImage: "exclamationmark.circle")
-                      //  Text("신고")
                             .frame(width: 22, height: 30)
                     }
                 } label: {
@@ -83,7 +84,6 @@ struct CommunityDetailView: View {
         }
     }
 }
-
 
 
 struct AutoScroller2: View {
@@ -121,7 +121,6 @@ struct AutoScroller2: View {
         }
     }
 }
-
 
 struct LikeAndReplyView: View {
     

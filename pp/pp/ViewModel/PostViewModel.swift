@@ -90,24 +90,25 @@ class PostViewModel: PhotoPickerViewModel {
                     print("[loadPosts]\(error.status):Error \(error.title) occurs because : \(error.detail)")
                 }
             }, receiveValue: { response in
-                dump(response)
+               // dump(response)
                 self.communityPosts = response.data.posts
             })
             .store(in: &cancellables)
     }
-//    
+   
 //    //MARK: - 게시물 상세 불러오기
-//    func loadDetailPosts(postId: Int) {
-//        CommunityService.shared.fetchDetailPosts(postId: postId)
-//            .sink(receiveCompletion: { completion in
-//                if case .failure(let error) = completion {
-//                    print("[loadDetailPost]\(error.status):Error \(error.title) occurs because : \(error.detail)")
-//                }
-//            }, receiveValue: { response in
-//                self.postDetail = response.data.post
-//            })
-//            .store(in: &cancellables)
-//    }
+    func loadDetailPosts(postId: Int) {
+        CommunityService.shared.fetchDetailPosts(postId: postId)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                   print("[loadDetailPost]\(error.status):Error \(error.title) occurs because : \(error.detail)")
+                }
+            }, receiveValue: { response in
+              
+                self.postDetail = response.data
+            })
+            .store(in: &cancellables)
+    }
 //    
 //    //MARK: - 게시물 신고
 //    

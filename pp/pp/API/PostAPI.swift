@@ -11,9 +11,6 @@ import Moya
 
 //MARK: - Moya 정의
 enum CommunityAPI {
-    
-    
-    
     case getPresignedId(requestData: [PresignedUploadUrlRequests])
     case createPost(post: PostRequest)
     case fetchPostsLists(limit: Int, lastId: Int?)
@@ -24,7 +21,6 @@ enum CommunityAPI {
     case fetchComments(postId:Int,limit:Int,lastId:Int?)
     case writeComments(postId:Int,comment:CommentRequest)
     case reportComment(commentId:Int)
-    
 }
 
 extension CommunityAPI: TargetType {
@@ -101,7 +97,7 @@ extension CommunityAPI: TargetType {
        
     let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
 
-        return ["accept": "application/json",
+        return [//"accept": "application/json",
                 "Authorization": "Bearer \(accessToken)",
                 "Content-Type": "application/json"
                ]

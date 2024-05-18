@@ -91,6 +91,24 @@ class CommunityService {
 //            .catch { error in self.handleError(error, retry: { self.fetchDetailPosts(postId: postId) }) }
 //            .eraseToAnyPublisher()
 //    }
+    
+    func fetchDetailPosts(postId: Int) -> AnyPublisher<PostDetailResponse, APIError> {
+        return provider
+            .requestPublisher(.fetchDetailPosts(postId: postId))
+            .tryMap { response -> PostDetailResponse in
+                // 로그 출력을 추가하여 응답 데이터 확인
+                let responseData = String(data: response.data, encoding: .utf8) ?? "Invalid response data"
+                print("Response data: \(responseData)")
+
+                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+                }
+                return try JSONDecoder().decode(PostDetailResponse.self, from: response.data)
+            }
+            .catch { error in self.handleError(error, retry: { self.fetchDetailPosts(postId: postId) }) }
+            .eraseToAnyPublisher()
+    }
+
 
     // MARK: - 게시글 신고
 //    func reportPost(postId: Int) -> AnyPublisher<Void, APIError> {
@@ -205,26 +223,6 @@ extension CommunityService {
             .eraseToAnyPublisher()
     }
     
-}
-
-
-
-
-extension CommunityService {
-    private func handleError2(_ error: Error) -> APIError {
-        if let moyaError = error as? MoyaError {
-            switch moyaError {
-            case .statusCode(let response):
-                if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
-                    return apiError
-                }
-                return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
-            default:
-                return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
-            }
-        }
-        return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
-    }
 }
 
 
