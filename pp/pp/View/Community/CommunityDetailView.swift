@@ -149,7 +149,7 @@ struct LikeAndReplyView: View {
             }
             Text("\(vm.likeCounts)")
 
-            NavigationLink(destination: PostReplyView(vm: vm)) {
+            NavigationLink(destination: PostReplyView()) {
                 HStack {
                     Text("댓글")
                     Image(systemName: "bubble")

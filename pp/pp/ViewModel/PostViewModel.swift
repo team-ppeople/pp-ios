@@ -11,6 +11,8 @@ import PhotosUI
 
 class PostViewModel: PhotoPickerViewModel {
     
+  
+    
     private var cancellables = Set<AnyCancellable>()
     @Published var communityPosts: [Post] = []
     @Published var postDetail: PostDetail?
@@ -22,6 +24,21 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var isLiked: Bool = false
     @Published var likeCounts: Int = 0
     @Published var commentCounts: Int = 0
+    
+    @Published var sampleComments: [SampleComments] = [
+            SampleComments(username: "111", comments: "안녕하세요 반가워요"),
+            SampleComments(username: "222", comments: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"),
+            SampleComments(username: "333", comments: "하하하하하하"),
+            SampleComments(username: "444", comments: "정말 재밌군요!!"),
+            SampleComments(username: "555", comments: "Hello world!"),
+            SampleComments(username: "666", comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+            SampleComments(username: "777", comments: "swift ios apple"),
+            SampleComments(username: "666", comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
+            SampleComments(username: "111", comments: "안녕하세요 반가워요"),
+            SampleComments(username: "222", comments: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"),
+            SampleComments(username: "333", comments: "하하하하하하"),
+            SampleComments(username: "444", comments: "정말 재밌군요!!")
+        ]
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
