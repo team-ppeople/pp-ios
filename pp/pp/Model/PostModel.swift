@@ -114,7 +114,7 @@ struct CommentsData: Codable {
     let comments: [Comment]
 }
 
-struct Comment: Codable {
+struct Comment: Codable,Identifiable {
     let id: Int
     let content: String
     let createDate: String

@@ -23,7 +23,6 @@ struct CommunityDetailView: View {
                            AutoScroller2(imageURLs: imageUrls)
                                .frame(height: 258)
                        } else {
-                           // Placeholder for when there are no images or while loading
                            ProgressView()
                                .frame(height: 258)
                        }
@@ -149,7 +148,7 @@ struct LikeAndReplyView: View {
             }
             Text("\(vm.likeCounts)")
 
-            NavigationLink(destination: PostReplyView()) {
+            NavigationLink(destination: PostReplyView(vm: vm,postId:postId)) {
                 HStack {
                     Text("댓글")
                     Image(systemName: "bubble")

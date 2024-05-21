@@ -24,22 +24,9 @@ class PostViewModel: PhotoPickerViewModel {
     @Published var isLiked: Bool = false
     @Published var likeCounts: Int = 0
     @Published var commentCounts: Int = 0
-    
-    @Published var sampleComments: [SampleComments] = [
-            SampleComments(username: "111", comments: "안녕하세요 반가워요"),
-            SampleComments(username: "222", comments: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"),
-            SampleComments(username: "333", comments: "하하하하하하"),
-            SampleComments(username: "444", comments: "정말 재밌군요!!"),
-            SampleComments(username: "555", comments: "Hello world!"),
-            SampleComments(username: "666", comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
-            SampleComments(username: "777", comments: "swift ios apple"),
-            SampleComments(username: "666", comments: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
-            SampleComments(username: "111", comments: "안녕하세요 반가워요"),
-            SampleComments(username: "222", comments: "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"),
-            SampleComments(username: "333", comments: "하하하하하하"),
-            SampleComments(username: "444", comments: "정말 재밌군요!!")
-        ]
-    
+    @Published var comments: [Comment] = []
+    @Published  var newComment = ""
+   
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
     
     func writePost(title:String,content:String,imageData:[PresignedUploadUrlRequests]) {
@@ -174,34 +161,36 @@ class PostViewModel: PhotoPickerViewModel {
             .store(in: &cancellables)
     }
 //    //MARK: - 게시물 댓글 불러오기
-//    func loadComments(postId:Int,limit:Int,lastId:Int?) {
-//        CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("Successfully fetched comments")
-//                case .failure(let error):
-//                    print("Failed to fetch comments: \(error)")
-//                }
-//            }, receiveValue: { commentsResponse in
-//                print("Comments: \(commentsResponse.data.comments)")
-//            })
-//            .store(in: &cancellables)
-//    }
+    func loadComments(postId:Int,limit:Int,lastId:Int?) {
+        CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Successfully fetched comments")
+                case .failure(let error):
+                    print("Failed to fetch comments: \(error)")
+                }
+            }, receiveValue: { commentsResponse in
+              
+                self.comments = commentsResponse.data.comments
+                print("Comments: \(commentsResponse.data.comments)")
+            })
+            .store(in: &cancellables)
+    }
 //    //MARK: - 게시물 댓글 작성
-//    func submitComments(postId:Int,content:String) {
-//        let comments = CommentRequest(content: content)
-//        CommunityService.shared.writeComment(postId: postId, comment: comments)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("Comments was successfully created")
-//                case .failure(let error):
-//                    print("Error creating post: \(error)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
+    func submitComments(postId:Int,content:String) {
+        let comments = CommentRequest(content: content)
+        CommunityService.shared.writeComment(postId: postId, comment: comments)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Comments was successfully created")
+                case .failure(let error):
+                    print("Error creating post: \(error)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
 //    //MARK: - 게시물 댓글 신고
 //    
 //    func reportComment(commentId:Int) {

@@ -39,7 +39,7 @@ extension CommunityAPI: TargetType {
         case .thumbs_sideways(let postId):
             return "/api/v1/posts/\(postId)/thumbs-sideways"
         case .fetchComments(let postId,_,_),.writeComments(let postId,_):
-            return "/api/v1//posts/\(postId)/comments"
+            return "/api/v1/posts/\(postId)/comments"
         case .reportComment(let commentId):
             return "/api/v1/comments/\(commentId)/report"
         case .getPresignedId:

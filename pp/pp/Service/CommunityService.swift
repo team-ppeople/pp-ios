@@ -138,27 +138,27 @@ class CommunityService {
     }
 
     // MARK: - 게시글 댓글 목록 조회
-//    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
-//        return provider
-//            .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
-//            .tryMap { response -> CommentsResponse in
-//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-//                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
-//                }
-//                return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
-//            }
-//            .catch { error in self.handleError(error, retry: { self.fetchComments(postId: postId, limit: limit, lastId: lastId) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func fetchComments(postId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<CommentsResponse, APIError> {
+        return provider
+            .requestPublisher(.fetchComments(postId: postId, limit: limit, lastId: lastId))
+            .tryMap { response -> CommentsResponse in
+                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+                }
+                return try JSONDecoder().decode(CommentsResponse.self, from: response.data)
+            }
+            .catch { error in self.handleError(error, retry: { self.fetchComments(postId: postId, limit: limit, lastId: lastId) }) }
+            .eraseToAnyPublisher()
+    }
 
     //MARK: - 커뮤니티 댓글 작성
-//    func writeComment(postId: Int, comment: CommentRequest) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.writeComments(postId: postId, comment: comment))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.writeComment(postId: postId, comment: comment) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func writeComment(postId: Int, comment: CommentRequest) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.writeComments(postId: postId, comment: comment))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.writeComment(postId: postId, comment: comment) }) }
+            .eraseToAnyPublisher()
+    }
 
     //MARK: - 댓글 신고
 //    func reportComments(commentId: Int) -> AnyPublisher<Void, APIError> {
