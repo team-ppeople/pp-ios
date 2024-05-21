@@ -50,10 +50,10 @@ extension CommunityAPI: TargetType {
     var method: Moya.Method {
         switch self {
      
-        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments,.getPresignedId:
+        case .createPost,.reportPost,.thumbsUp,.thumbs_sideways,.writeComments,.getPresignedId,.reportComment:
             return .post
        
-        case .fetchPostsLists,.fetchDetailPosts,.fetchComments,.reportComment:
+        case .fetchPostsLists,.fetchDetailPosts,.fetchComments:
             return .get
             
         }

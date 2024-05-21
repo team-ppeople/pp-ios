@@ -68,28 +68,11 @@ class PostViewModel: PhotoPickerViewModel {
                    // dump(error)
                 }
             } receiveValue: { response in
-//                   dump("\(response) - error occurs")
+            // dump("\(response) - error occurs")
               //  print("Presigned URLs received: \(response)")
             }.store(in: &cancellables)
     }
-    
-    
-    //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
-//    func submitPost(title: String, content: String, imageIds: [Int]) {
-//        let post = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
-//        CommunityService.shared.createPost(post: post)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("Post was successfully created")
-//                case .failure(let error):
-//                    print("Error creating post: \(error)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
-//    
-//    //MARK: - 새로고침 or 데이터 불러오오면 동작 -> 서버에서 데이터 가져옴
+   //MARK: - 새로고침 or 데이터 불러오오면 동작 -> 서버에서 데이터 가져옴
     func loadPosts(limit: Int = 20, lastId: Int?) {
         CommunityService.shared.fetchPosts(limit: limit, lastId: lastId)
             .sink(receiveCompletion: { completion in
@@ -103,7 +86,7 @@ class PostViewModel: PhotoPickerViewModel {
             .store(in: &cancellables)
     }
    
-//    //MARK: - 게시물 상세 불러오기
+   //MARK: - 게시물 상세 불러오기
     func loadDetailPosts(postId: Int) {
         CommunityService.shared.fetchDetailPosts(postId: postId)
             .sink(receiveCompletion: { completion in
@@ -120,8 +103,8 @@ class PostViewModel: PhotoPickerViewModel {
             })
             .store(in: &cancellables)
     }
-//    
-//    //MARK: - 게시물 신고
+   
+    //MARK: - 게시물 신고
     func reportPost(postId:Int) {
         CommunityService.shared.reportPost(postId: postId)
             .sink(receiveCompletion: { completion in
@@ -134,7 +117,7 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-//    //MARK: - 게시물 좋아요
+    //MARK: - 게시물 좋아요
     func likePost(postId:Int) {
         CommunityService.shared.thumbsUpPost(postId: postId)
             .sink(receiveCompletion: { completion in
@@ -147,7 +130,7 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-//    //MARK: - 게시물 좋아요 취소
+  //MARK: - 게시물 좋아요 취소
     func dislikePost(postId:Int) {
         CommunityService.shared.thumbsSidewayPost(postId: postId)
             .sink(receiveCompletion: { completion in
@@ -160,7 +143,7 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-//    //MARK: - 게시물 댓글 불러오기
+   //MARK: - 게시물 댓글 불러오기
     func loadComments(postId:Int,limit:Int,lastId:Int?) {
         CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
             .sink(receiveCompletion: { completion in
@@ -177,7 +160,7 @@ class PostViewModel: PhotoPickerViewModel {
             })
             .store(in: &cancellables)
     }
-//    //MARK: - 게시물 댓글 작성
+    //MARK: - 게시물 댓글 작성
     func submitComments(postId:Int,content:String) {
         let comments = CommentRequest(content: content)
         CommunityService.shared.writeComment(postId: postId, comment: comments)
@@ -191,20 +174,19 @@ class PostViewModel: PhotoPickerViewModel {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
-//    //MARK: - 게시물 댓글 신고
-//    
-//    func reportComment(commentId:Int) {
-//        CommunityService.shared.reportComments(commentId: commentId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("Report Comments were successfully created")
-//                case .failure(let error):
-//                    print("Error reporting post: \(error.detail)")
-//                }
-//            }, receiveValue: { })
-//            .store(in: &cancellables)
-//    }
+    //MARK: - 게시물 댓글 신고
+    func reportComment(commentId:Int) {
+        CommunityService.shared.reportComments(commentId: commentId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("Report Comments were successfully created")
+                case .failure(let error):
+                    print("Error reporting post: \(error.detail)")
+                }
+            }, receiveValue: { })
+            .store(in: &cancellables)
+    }
     //MARK: - PhotoPicker에서 이미지 선택
 
     

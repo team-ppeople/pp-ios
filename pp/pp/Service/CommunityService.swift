@@ -79,19 +79,6 @@ class CommunityService {
     }
 
     //MARK: - 커뮤니티 게시글 상세 조회
-//    func fetchDetailPosts(postId: Int) -> AnyPublisher<PostDetailResponse, APIError> {
-//        return provider
-//            .requestPublisher(.fetchDetailPosts(postId: postId))
-//            .tryMap { response -> PostDetailResponse in
-//                guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-//                    throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
-//                }
-//                return try JSONDecoder().decode(PostDetailResponse.self, from: response.data)
-//            }
-//            .catch { error in self.handleError(error, retry: { self.fetchDetailPosts(postId: postId) }) }
-//            .eraseToAnyPublisher()
-//    }
-    
     func fetchDetailPosts(postId: Int) -> AnyPublisher<PostDetailResponse, APIError> {
         return provider
             .requestPublisher(.fetchDetailPosts(postId: postId))
@@ -161,13 +148,13 @@ class CommunityService {
     }
 
     //MARK: - 댓글 신고
-//    func reportComments(commentId: Int) -> AnyPublisher<Void, APIError> {
-//        return provider
-//            .requestPublisher(.reportComment(commentId: commentId))
-//            .map { _ in Void() }
-//            .catch { error in self.handleError(error, retry: { self.reportComments(commentId: commentId) }) }
-//            .eraseToAnyPublisher()
-//    }
+    func reportComments(commentId: Int) -> AnyPublisher<Void, APIError> {
+        return provider
+            .requestPublisher(.reportComment(commentId: commentId))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.reportComments(commentId: commentId) }) }
+            .eraseToAnyPublisher()
+    }
 }
 
 //MARK: - Error 핸들링 함수 정의
