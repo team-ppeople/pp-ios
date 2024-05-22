@@ -9,6 +9,8 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+	@State var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()
 		appearance.configureWithOpaqueBackground()
@@ -26,14 +28,24 @@ struct ContentView: View {
 						Text("나의 일기")
 					}
 				}
-			LoginView()
-				.tabItem {
-					VStack {
-						Image(systemName: "person.3.fill")
-						Text("커뮤니티")
+			if isLoggedIn {
+				CommunityView()
+					.tabItem {
+						VStack {
+							Image(systemName: "person.3.fill")
+							Text("커뮤니티")
+						}
 					}
-				}
-			SettingView()
+			} else {
+				LoginView()
+					.tabItem {
+						VStack {
+							Image(systemName: "person.3.fill")
+							Text("커뮤니티")
+						}
+					}
+			}
+			SettingView(isLoggedIn: isLoggedIn)
 				.tabItem {
 					VStack {
 						Image(systemName: "gear")
