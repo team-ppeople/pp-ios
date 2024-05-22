@@ -154,7 +154,7 @@ class LoginViewModel: ObservableObject {
 					print("토큰 발급 완료")
 				case .failure(let error):
 					print("토큰 발급 Error")
-					dump(error)
+					//dump(error)
 					self.showAlert = true
 				}
 			}, receiveValue: { [weak self] recievedValue in

@@ -8,12 +8,20 @@
 import Foundation
 import UIKit
 
+
+
+
 //MARK: - 사진 업로드 가능 ID 요청
-struct PresignedIdRequest: Codable {
-    let fileUploadRequestType: String
+struct PresignedUploadUrlRequests: Codable {
+    let fileType: String
+    let fileName:String
     let fileContentLength: Int
     let fileContentType: String
-    let fileName:String
+    
+}
+
+struct PresignedUploadUrlRequestData: Codable {
+    let presignedUploadUrlRequests: [PresignedUploadUrlRequests]
 }
 
 //MARK: - 사진 업로드 가능 결과 수신
@@ -22,13 +30,21 @@ struct PresignedIdResponse: Codable {
 }
 
 struct PresignedIdData: Codable {
-    let presignedUploadUrlResponses: [PresignedUploadIdResponse]
+    let presignedUploadFiles: [PresignedUploadIdResponse]
 }
 
 struct PresignedUploadIdResponse: Codable {
     let fileUploadId: Int
+    let fileName:String
     let presignedUploadUrl: String
     let fileUrl: String
+   
+}
+
+
+//MARK: - AWS 서버에 이미지 업로드
+struct ImageUpload {
+    let imageData: Data
 }
 
 //MARK: - 작성한 글 서버에 올리는 구조체
@@ -60,17 +76,10 @@ struct PostsData: Codable {
     let posts: [Post]
 }
 
-
-
-
 //MARK: - 게시글 상세 조회
 
 struct PostDetailResponse: Codable {
-    let data: PostDetailData
-}
-
-struct PostDetailData: Codable {
-    let post: PostDetail
+    let data: PostDetail
 }
 
 struct PostDetail: Codable {
@@ -79,18 +88,17 @@ struct PostDetail: Codable {
     let postImageUrls: [String]
     let title: String
     let content: String
-    let createDate: String
+    let createdDate: String
     let thumbsUpCount: Int
     let commentCount: Int
     let userActionHistory: UserActionHistory
-    
-    
+
     var imageUrls: [URL] {
-           postImageUrls.compactMap { URL(string: $0) }
-       }
-    
-    
+        postImageUrls.compactMap(URL.init)
+    }
+
 }
+
 
 struct CreatedUser: Codable {
     let id: Int
@@ -112,7 +120,7 @@ struct CommentsData: Codable {
     let comments: [Comment]
 }
 
-struct Comment: Codable {
+struct Comment: Codable,Identifiable {
     let id: Int
     let content: String
     let createDate: String

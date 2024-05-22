@@ -18,25 +18,18 @@ struct CommunityUploadView: View {
     let maxPhotosToSelect = 10
 
     var body: some View {
-
         NavigationView {
             VStack {
-      
                 PhotoPickerView<PostViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
-                
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)
 
                 HStack {
                     Spacer()
                     Button("작성 완료") {
- 
-                      
-                         print("작성완료")
-//                        vm.writePost(title: vm.title, content: vm.contents, imageData: vm.presignedRequests)
-                      
-                           dismiss()
-
+                        vm.writePost(title: vm.title, content: vm.contents)
+                        dismiss()
+                        vm.reset()
                     }
                     .tint(.white)
                     .frame(width: 120, height: 40)
@@ -45,22 +38,17 @@ struct CommunityUploadView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 20)
-                
                 Spacer()
             }
-           
             .onTapGesture {
                 hideKeyboard()
             }
-            .onAppear {
-                           print("CommunityUploadView appeared on screen")
-                       }
             .padding(.top, 24)
         }
         .navigationBarTitle("업로드", displayMode: .inline)
-        .sheet(isPresented: $isShownSheet, content: {
+        .sheet(isPresented: $isShownSheet) {
             ImageCropper(image: $vm.uiImages[selectedIndex])
-        })
+        }
     }
 
     private func hideKeyboard() {
