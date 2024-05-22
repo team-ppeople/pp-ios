@@ -20,23 +20,37 @@ class CommunityService {
     private init() {}
 
   
+    func uploadImageToPresignedURL(presignedURL: String, imageData: Data) -> AnyPublisher<Void, MoyaError> {
+           provider.requestPublisher(.uploadImage(presignedURL: presignedURL, imageData: imageData))
+               .map { _ in Void() }
+               .eraseToAnyPublisher()
+       }
     
     //MARK: - 사진 업로드 ID + 커뮤니티 게시글 작성
-    func uploadPostWithImages(title: String, content: String, imageData: [PresignedUploadUrlRequests]) -> AnyPublisher<Void, APIError> {
-        return getPresignedId(requestData: imageData)
-            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
-                let imageIds = presignedResponse.data.presignedUploadFiles.map { $0.fileUploadId }
-                let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
-                return self.createPost(post: postRequest)
-            }
-            .catch { error -> AnyPublisher<Void, APIError> in
-                // 전체 프로세스 에러 핸들링
-                print("Error in uploading post with images: \(error.status):\(error.title)")
-                return Fail(error: APIError(type: "about:blank", title: "Comprehensive Error", status: 500, detail: "Failed at upload Post", instance: "/error")).eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-   
+    func uploadPostWithImages(title: String, content: String, imageUploads: [ImageUpload], presignedRequests: [PresignedUploadUrlRequests]) -> AnyPublisher<Void, APIError> {
+           return getPresignedId(requestData: presignedRequests)
+               .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
+                   let uploadPublishers = presignedResponse.data.presignedUploadFiles.enumerated().map { (index, file) in
+                       self.uploadImageToPresignedURL(presignedURL: file.presignedUploadUrl, imageData: imageUploads[index].imageData)
+                           .mapError { _ in APIError(type: "about:blank", title: "Upload Error", status: 500, detail: "Failed to upload image", instance: "/error-upload") }
+                   }
+
+                   return Publishers.MergeMany(uploadPublishers)
+                       .collect()
+                       .flatMap { _ -> AnyPublisher<Void, APIError> in
+                           let imageIds = presignedResponse.data.presignedUploadFiles.map { $0.fileUploadId }
+                           let postRequest = PostRequest(title: title, content: content, postImageFileUploadIds: imageIds)
+                           return self.createPost(post: postRequest)
+                       }
+                       .eraseToAnyPublisher()
+               }
+               .catch { error -> AnyPublisher<Void, APIError> in
+                   print("Error in uploading post with images: \(error.status):\(error.title)")
+                   return Fail(error: APIError(type: "about:blank", title: "Comprehensive Error", status: 500, detail: "Failed at upload Post", instance: "/error")).eraseToAnyPublisher()
+               }
+               .eraseToAnyPublisher()
+       }
+    
 
     //MARK: - 사진 업로드 가능 ID 검증
     

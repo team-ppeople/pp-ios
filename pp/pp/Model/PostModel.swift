@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 
+
+
+
 //MARK: - 사진 업로드 가능 ID 요청
 struct PresignedUploadUrlRequests: Codable {
     let fileType: String
@@ -38,6 +41,12 @@ struct PresignedUploadIdResponse: Codable {
    
 }
 
+
+//MARK: - AWS 서버에 이미지 업로드
+struct ImageUpload {
+    let imageData: Data
+}
+
 //MARK: - 작성한 글 서버에 올리는 구조체
 struct PostRequest: Codable {
     var title: String
@@ -66,9 +75,6 @@ struct PostsResponse: Codable {
 struct PostsData: Codable {
     let posts: [Post]
 }
-
-
-
 
 //MARK: - 게시글 상세 조회
 
