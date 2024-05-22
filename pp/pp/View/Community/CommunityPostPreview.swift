@@ -14,11 +14,11 @@ struct CommunityPostPreview: View {
     let communityPost: Post
     
     var body: some View {
-        NavigationLink(destination: CommunityDetailView(vm: vm, postDetail: communityPost , imageURLs: vm.postDetail?.imageUrls ?? [])) {
+        NavigationLink(destination: CommunityDetailView(vm: vm, postId:communityPost.id)) {
             VStack(alignment: .leading) {
                 
-               
-                AsyncImage(url: communityPost.thumbnailURLs) { image in
+                
+               AsyncImage(url:communityPost.thumbnailURLs) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -30,14 +30,14 @@ struct CommunityPostPreview: View {
                                 bottomTrailingRadius: 0,
                                 topTrailingRadius: 10
                             ))
-                        
+                    
                 } placeholder: {
                     ProgressView()
                         .frame(height:121,alignment: .center)
-                        
+                    
                 }
                 
-
+                
                 Text(communityPost.title)
                     .font(.system(size: 15))
                     .tint(.black)
@@ -51,9 +51,17 @@ struct CommunityPostPreview: View {
                     .foregroundColor(.secondary)
                     .frame(height: 15)
                     .padding([.horizontal, .bottom], 10)
-            } 
+            }
             .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
         }
+        
+        .onAppear {
+            if let url = communityPost.thumbnailURLs {
+                print("Thumbnail URL: \(url)")
+            }
+        }
+        
+        
     }
 }
 

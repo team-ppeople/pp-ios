@@ -14,22 +14,22 @@ struct CommunityView: View {
     
     
     var body: some View {
-
-                NavigationStack {
+        
+        NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 GeometryReader { geometry in
                     VStack {
                         if vm.communityPosts.isEmpty {
                             emptyStateView
-                       
+                            
                         } else {
-                           communityPostsGrid
-                          
+                            communityPostsGrid
+                            
                         }
                     }
                     .onAppear {
-                                   print("CommunityView appeared on screen")
-                               }
+                        print("CommunityView appeared on screen")
+                    }
                     .toolbar {
                         ToolbarItem {
                             HStack {
@@ -50,9 +50,12 @@ struct CommunityView: View {
                 
             }
         }
-                .task {
-                    vm.loadPosts(lastId: 1)
-                }
+        .task {
+            vm.loadPosts(lastId: nil)
+        }
+        
+        .navigationBarBackButtonHidden(true)
+        
     }
     
     private var emptyStateView: some View {
@@ -67,7 +70,7 @@ struct CommunityView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
                 ForEach(vm.communityPosts, id: \.self) { communityPost in
-                    CommunityPostPreview(vm: vm,communityPost: communityPost )
+                    CommunityPostPreview(vm: vm,communityPost: communityPost)
                 }
             }
             .padding(.horizontal, 16)

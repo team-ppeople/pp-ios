@@ -9,41 +9,42 @@ import SwiftUI
 
 struct CommunityDetailView: View {
     @ObservedObject var vm: PostViewModel
+    let postId: Int
+    
     @Environment(\.dismiss) private var dismiss
+  
     @State private var showAlert = false
     @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
-   
-    
-     let postDetail: Post
-    let imageURLs: [URL?]
-    let images: [Image] = [
-        Image(uiImage: UIImage(named: "AppIcon")!),
-        Image(uiImage: UIImage(named: "emty.image")!),
-        Image(uiImage: UIImage(named: "AppIcon")!),
-        Image(uiImage: UIImage(named: "apple.login.icon")!),
-        Image(uiImage: UIImage(named: "AppIcon")!)
-    ]
-    
+ 
     var body: some View {
         VStack(alignment: .leading) {
-            if !images.isEmpty {
-                AutoScroller(images: images)
-                    .frame(height: 258)
-            }
+
+            if let imageUrls = vm.postDetail?.imageUrls, !imageUrls.isEmpty {
+                           AutoScroller2(imageURLs: imageUrls)
+                               .frame(height: 258)
+                       } else {
+                           ProgressView()
+                               .frame(height: 258)
+                       }
             
-            Text(postDetail.title)
+            Text(vm.postDetail?.title ?? "title")
                 .font(.system(size: 18))
                 .padding(.top, 25)
-            Text(postDetail.createDate)
+            
+            Text(vm.postDetail?.createdDate ?? "date")
                 .font(.system(size: 12))
-            Text("hihi")
-           // Text(postDetail.content)
+            
+            Text(vm.postDetail?.content ?? "content")
                 .font(.system(size: 15))
                 .padding(.top, 20)
             
-            LikeAndReplyView(vm: vm)
+            LikeAndReplyView(vm: vm,postId:postId)
             Spacer()
         }
+        .onAppear {
+            print("Loading post details for postId: \(postId)")
+                   vm.loadDetailPosts(postId: postId)
+               }
         .padding(.horizontal, 16)
         .padding(.vertical, 25)
         
@@ -54,7 +55,6 @@ struct CommunityDetailView: View {
                         showAlert = true
                     } label: {
                       Label("신고", systemImage: "exclamationmark.circle")
-                      //  Text("신고")
                             .frame(width: 22, height: 30)
                     }
                 } label: {
@@ -68,7 +68,8 @@ struct CommunityDetailView: View {
                 showReportConfirmation = true
                 
                 // ToDo: - fetchPost에서 각 게시글 Id 받아와서 가지고 있다 신고할때 이 Id 값으로 신고
-//                vm.reportPost(postId: <#T##Int#>)
+                vm.reportPost(postId: self.postId)
+                print("신고 postId\(postId)")
             }
             Button("취소", role: .cancel) {}
         } message: {
@@ -83,7 +84,6 @@ struct CommunityDetailView: View {
         }
     }
 }
-
 
 
 struct AutoScroller2: View {
@@ -122,55 +122,39 @@ struct AutoScroller2: View {
     }
 }
 
-
 struct LikeAndReplyView: View {
-    
     @ObservedObject var vm: PostViewModel
-    
-    @State var isLiked:Bool = false
-    @State var likeCounts:Int = 0
-    @State var replyCounts:Int = 0
-    
+    let postId: Int
+
     var body: some View {
-        
-        NavigationStack {
-            HStack {
-                
-                Button {
-                    self.isLiked.toggle()
-                    
-                    if isLiked {
-                        print("좋아요")
-                        likeCounts += 1
-                    } else {
-                        print("좋아요 취소")
-                        likeCounts -= 1
-                    }
-                    
-                } label: {
-                   
-                    HStack {
-                        Text("좋아요")
-                        Image(systemName: isLiked ? "heart.fill" : "heart")
-                            .foregroundColor(isLiked ? .red : .black)
-                
-                    }
+        HStack {
+            Button {
+                vm.isLiked.toggle()  // 좋아요 상태 토글
+                if vm.isLiked {
+                    vm.likeCounts += 1
+                    vm.likePost(postId: postId)
+                    print("postid\(postId)")
+                } else {
+                    vm.likeCounts -= 1
+                    vm.dislikePost(postId: postId)
+                    print("postid\(postId)")
                 }
-
-                Text("\(likeCounts)")
-
-                
-                NavigationLink(destination: PostReplyView(vm: vm)) {
-                   
-                    HStack {
-                        Text("댓글")
-                        Image(systemName: "bubble")
-                    }
-                  
+            } label: {
+                HStack {
+                    Text("좋아요")
+                    Image(systemName: vm.isLiked ? "heart.fill" : "heart")
+                        .foregroundColor(vm.isLiked ? .red : .black)
                 }
-                Text("\(replyCounts)")
             }
+            Text("\(vm.likeCounts)")
+
+            NavigationLink(destination: PostReplyView(vm: vm,postId:postId)) {
+                HStack {
+                    Text("댓글")
+                    Image(systemName: "bubble")
+                }
+            }
+            Text("\(vm.commentCounts)")
         }
-       
     }
 }
