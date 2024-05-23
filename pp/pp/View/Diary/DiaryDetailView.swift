@@ -15,44 +15,47 @@ struct DiaryDetailView: View {
 	let images: [Image]
     
 	var body: some View {
-		VStack {
-			if images.count != 0 {
-				AutoScroller(images: images)
-					.frame(height: 258)
-			}
 		
-			Text(diaryPost.title ?? "")
-				.font(.system(size: 18))
-				.frame(maxWidth: .infinity, alignment: .leading)
-				.padding(.top, 25)
-			
-			Text(Utils.toString(diaryPost.date))
-				.font(.system(size: 12))
-				.frame(maxWidth: .infinity, alignment: .leading)
-			
-			Text(diaryPost.contents ?? "")
-				.font(.system(size: 15))
-				.frame(maxWidth: .infinity, alignment: .leading)
-				.padding(.top, 20)
-			
-			Spacer()
-		}
-		.padding(.horizontal, 16)
-		.padding(.vertical, 25)
-		.toolbar {
-			ToolbarItem {
-				Menu {
-					Button("삭제") {
-						vm.deleteDiaryPost(diaryPost)
-						dismiss()
+			VStack {
+				GeometryReader { geometry in
+				if images.count != 0 {
+					AutoScroller(images: images, size: abs(geometry.size.width - 32))
+						.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
+				}
+				
+				Text(diaryPost.title ?? "")
+					.font(.system(size: 18))
+					.frame(maxWidth: .infinity, alignment: .leading)
+					.padding(.top, 25)
+				
+				Text(Utils.toString(diaryPost.date))
+					.font(.system(size: 12))
+					.frame(maxWidth: .infinity, alignment: .leading)
+				
+				Text(diaryPost.contents ?? "")
+					.font(.system(size: 15))
+					.frame(maxWidth: .infinity, alignment: .leading)
+					.padding(.top, 20)
+				
+				Spacer()
+			}
+			.padding(.horizontal, 16)
+			.padding(.vertical, 25)
+			.toolbar {
+				ToolbarItem {
+					Menu {
+						Button("삭제") {
+							vm.deleteDiaryPost(diaryPost)
+							dismiss()
+						}
+					} label: {
+						Image("menu.icon")
+							.frame(width: 22, height: 30)
 					}
-				} label: {
-					Image("menu.icon")
-						.frame(width: 22, height: 30)
 				}
 			}
+			.toolbar(.hidden, for: .tabBar)
 		}
-		.toolbar(.hidden, for: .tabBar)
     }
 }
 
@@ -61,6 +64,7 @@ struct AutoScroller: View {
 	
     var images: [Image]
     let timer = Timer.publish(every: 2.0, on: .main, in: .common).autoconnect()
+	let size: CGFloat
 
     var body: some View {
         ZStack {
@@ -72,8 +76,9 @@ struct AutoScroller: View {
                     ZStack(alignment: .topLeading) {
 						images[index]
 							.resizable()
-							.scaledToFit()
-							.frame(height: 258)
+							.scaledToFill()
+							.frame(width: size, height: size)
+							.clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
             }
@@ -90,7 +95,7 @@ struct AutoScroller: View {
                         }
                 }
             }
-			.offset(y: 112)
+			.offset(y: size/2 - 20)
         }
         .onReceive(timer) { _ in
             withAnimation(.default) {

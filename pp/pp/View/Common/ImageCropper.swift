@@ -17,7 +17,7 @@ enum ImageCropperType {
 struct ImageCropper: UIViewControllerRepresentable {
 	@Binding var image: UIImage
 	var cropShapeType: Mantis.CropShapeType = .rect
-	var presetFixedRatioType: Mantis.PresetFixedRatioType = .alwaysUsingOnePresetFixedRatio(ratio: 7/5)
+	var presetFixedRatioType: Mantis.PresetFixedRatioType = .alwaysUsingOnePresetFixedRatio(ratio: 1/1)
 	var type: ImageCropperType = .normal
 	
 	@Environment(\.presentationMode) var presentationMode

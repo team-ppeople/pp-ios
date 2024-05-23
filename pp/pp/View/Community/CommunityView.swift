@@ -7,11 +7,8 @@
 
 import SwiftUI
 
-
 struct CommunityView: View {
-    
     @ObservedObject var vm: PostViewModel = PostViewModel()
-    
     
     var body: some View {
         
@@ -24,7 +21,6 @@ struct CommunityView: View {
                             
                         } else {
                             communityPostsGrid
-                            
                         }
                     }
                     .onAppear {
@@ -59,24 +55,25 @@ struct CommunityView: View {
     }
     
     private var emptyStateView: some View {
-        Text("아직 업로드된 글이 없습니다.\n 글쓰기 버튼을 눌러 새로 만드세요.")
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .offset(y: -20)
-            .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
+		VStack(alignment: .center) {
+			Image("no.post")
+		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.offset(y: -30)
     }
     
     private var communityPostsGrid: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-                ForEach(vm.communityPosts, id: \.self) { communityPost in
-                    CommunityPostPreview(vm: vm,communityPost: communityPost)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 24)
-        }
-        .background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
+		GeometryReader { geometry in
+			ScrollView {
+				LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+					ForEach(vm.communityPosts, id: \.self) { communityPost in
+						CommunityPostPreview(vm: vm,communityPost: communityPost, size: (geometry.size.width - 56)/2)
+					}
+				}
+				.padding(.horizontal, 16)
+				.padding(.vertical, 24)
+			}
+		}
     }
 
     private var floatingActionButton: some View {
@@ -90,7 +87,6 @@ struct CommunityView: View {
                 .shadow(color: .gray, radius: 3, x: 1, y: 1)
         }
     }
-    
     
 }
 
