@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityPostPreview: View {
-    let vm: PostViewModel
+    let vm: CommunityViewModel
     let communityPost: Post
 	var size: CGFloat
     

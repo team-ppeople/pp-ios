@@ -9,7 +9,7 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct CommunityUploadView: View {
-    @ObservedObject var vm: PostViewModel
+    @ObservedObject var vm: CommunityViewModel
     @State private var contents: String = ""
     @State private var selectedIndex: Int = 0
     @State private var isShownSheet = false
@@ -20,7 +20,7 @@ struct CommunityUploadView: View {
     var body: some View {
         NavigationView {
             VStack {
-                PhotoPickerView<PostViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
+                PhotoPickerView<CommunityViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)
 

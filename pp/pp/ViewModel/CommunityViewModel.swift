@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 import PhotosUI
 
-class PostViewModel: PhotoPickerViewModel {
+class CommunityViewModel: PhotoPickerViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     @Published var communityPosts: [Post] = []

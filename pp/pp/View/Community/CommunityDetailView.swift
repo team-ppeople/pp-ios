@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityDetailView: View {
-    @ObservedObject var vm: PostViewModel
+    @ObservedObject var vm: CommunityViewModel
     let postId: Int
     
     @Environment(\.dismiss) private var dismiss
@@ -129,7 +129,7 @@ struct AutoScroller2: View {
 }
 
 struct LikeAndReplyView: View {
-    @ObservedObject var vm: PostViewModel
+    @ObservedObject var vm: CommunityViewModel
     let postId: Int
 
     var body: some View {
