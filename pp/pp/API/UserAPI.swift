@@ -10,7 +10,7 @@ import Moya
 enum UserAPI {
     case checkRegisteredUser(client: Client, idToken: String) // 로그인 회원 등록 여부 확인
     case editUserInfo(userId:Int,profile:EditProfileRequest)// 유저 정보 수정
-//    case withdrawalUser // 유저 탈퇴
+    case deleteUser(userId:Int) // 유저 탈퇴
 //    case fetchUserProfile // 유저 프로필 조회
 //    case fetchUserPosts // 유저 커뮤니티 게시글 목록 조회
 }
@@ -24,6 +24,8 @@ extension UserAPI : TargetType {
             return "/api/v1/oauth2/\(client)/users/registered"
         case .editUserInfo(let userId,_):
             return "/api/v1/users/\(userId)"
+        case .deleteUser(let userId):
+            return "/api/v1/users/\(userId)"
         }
     }
     
@@ -33,6 +35,8 @@ extension UserAPI : TargetType {
             return .post
         case .editUserInfo:
             return .patch
+        case .deleteUser:
+            return .delete
         }
     }
     
@@ -46,6 +50,8 @@ extension UserAPI : TargetType {
             return .requestParameters(parameters: ["idToken": idToken], encoding: URLEncoding.default)
         case .editUserInfo(_, let profile):
                   return .requestJSONEncodable(profile)
+        case .deleteUser(userId: let userId):
+            return .requestPlain
         }
     }
     

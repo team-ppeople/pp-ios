@@ -22,12 +22,21 @@ class UserService {
     
     //MARK: - 유저 정보 수정
     func editUserInfo(userId: Int, profile: EditProfileRequest) -> AnyPublisher<Void, APIError> {
-            provider.requestPublisher(.editUserInfo(userId: userId, profile: profile))
-                .map { _ in Void() }
-                .catch { error in self.handleError(error, retry: { self.editUserInfo(userId: userId, profile: profile) }) }
-                .eraseToAnyPublisher()
-        }
-
+        provider.requestPublisher(.editUserInfo(userId: userId, profile: profile))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: { self.editUserInfo(userId: userId, profile: profile) }) }
+            .eraseToAnyPublisher()
+    }
+    
+    func deleteUser(userId:Int) -> AnyPublisher<Void,APIError> {
+        provider.requestPublisher(.deleteUser(userId: userId))
+            .map { _ in Void() }
+            .catch { error in self.handleError(error, retry: {self.deleteUser(userId: userId)}) }
+            .eraseToAnyPublisher()
+    }
+    
+    
+    
 }
 
 
