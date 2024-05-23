@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PostReplyView: View {
     
-    @ObservedObject var vm: PostViewModel
+    @ObservedObject var vm: CommunityViewModel
     let postId:Int
     
     @State private var showAlert = false

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityView: View {
-    @ObservedObject var vm: PostViewModel = PostViewModel()
+    @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
     
     var body: some View {
         

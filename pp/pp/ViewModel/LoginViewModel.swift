@@ -159,6 +159,7 @@ class LoginViewModel: ObservableObject {
 				}
 			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
+
 				
 				UserDefaults.standard.set(true, forKey: "isLoggedIn")
 				
