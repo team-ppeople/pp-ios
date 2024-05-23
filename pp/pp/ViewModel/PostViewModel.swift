@@ -11,8 +11,6 @@ import PhotosUI
 
 class PostViewModel: PhotoPickerViewModel {
     
-  
-    
     private var cancellables = Set<AnyCancellable>()
     @Published var communityPosts: [Post] = []
     @Published var postDetail: PostDetail?

@@ -14,16 +14,20 @@ class UserService {
     
     private var cancellables = Set<AnyCancellable>()
     
-    lazy var provider = MoyaProvider<CommunityAPI>(plugins: [networkLogger])
+    lazy var provider = MoyaProvider<UserAPI>(plugins: [networkLogger])
     lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
     
     private init() {}
     
     
-    
-    
-    
-    
+    //MARK: - 유저 정보 수정
+    func editUserInfo(userId: Int, profile: EditProfileRequest) -> AnyPublisher<Void, APIError> {
+            provider.requestPublisher(.editUserInfo(userId: userId, profile: profile))
+                .map { _ in Void() }
+                .catch { error in self.handleError(error, retry: { self.editUserInfo(userId: userId, profile: profile) }) }
+                .eraseToAnyPublisher()
+        }
+
 }
 
 

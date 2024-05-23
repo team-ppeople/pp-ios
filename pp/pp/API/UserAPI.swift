@@ -31,7 +31,7 @@ extension UserAPI : TargetType {
         switch self {
         case .checkRegisteredUser:
             return .post
-        case .editUserInfo(userId: let userId):
+        case .editUserInfo:
             return .patch
         }
     }
