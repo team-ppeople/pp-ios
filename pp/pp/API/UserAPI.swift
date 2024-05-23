@@ -11,7 +11,7 @@ enum UserAPI {
     case checkRegisteredUser(client: Client, idToken: String) // 로그인 회원 등록 여부 확인
     case editUserInfo(userId:Int,profile:EditProfileRequest)// 유저 정보 수정
     case deleteUser(userId:Int) // 유저 탈퇴
-//    case fetchUserProfile // 유저 프로필 조회
+    case fetchUserProfile(userId:Int) // 유저 프로필 조회
 //    case fetchUserPosts // 유저 커뮤니티 게시글 목록 조회
 }
 
@@ -26,6 +26,8 @@ extension UserAPI : TargetType {
             return "/api/v1/users/\(userId)"
         case .deleteUser(let userId):
             return "/api/v1/users/\(userId)"
+        case .fetchUserProfile(let userId):
+                   return "/api/v1/users/\(userId)/profiles"
         }
     }
     
@@ -37,6 +39,8 @@ extension UserAPI : TargetType {
             return .patch
         case .deleteUser:
             return .delete
+        case .fetchUserProfile:
+            return .get
         }
     }
     
@@ -49,8 +53,10 @@ extension UserAPI : TargetType {
         case let .checkRegisteredUser(_, idToken):
             return .requestParameters(parameters: ["idToken": idToken], encoding: URLEncoding.default)
         case .editUserInfo(_, let profile):
-                  return .requestJSONEncodable(profile)
+            return .requestJSONEncodable(profile)
         case .deleteUser(userId: let userId):
+            return .requestPlain
+        case .fetchUserProfile:
             return .requestPlain
         }
     }

@@ -10,11 +10,13 @@ import Combine
 
 class UserViewModel:ObservableObject {
     
-    //MARK: - 유저 정보 수정
+   
     private var cancellables = Set<AnyCancellable>()
     @Published var nickname: String = ""
     @Published var profileImageFileUploadId: Int = 0
     
+    
+    //MARK: - 유저 정보 수정
     func editUserInfo(userId: Int) {
         let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: profileImageFileUploadId)
         UserService.shared.editUserInfo(userId: userId, profile: profile)
@@ -30,7 +32,7 @@ class UserViewModel:ObservableObject {
             })
             .store(in: &cancellables)
     }
-    
+    //MARK: - 유저 탈퇴
     func deleteUser(userId:Int) {
         UserService.shared.deleteUser(userId: userId)
             .sink(receiveCompletion: { completion in
@@ -45,6 +47,21 @@ class UserViewModel:ObservableObject {
             })
             .store(in: &cancellables)
     }
-    
+    //MARK: - 유저 정보 불러오기
+    func fetchUserProfile(userId: Int) {
+           UserService.shared.fetchUserProfile(userId: userId)
+               .sink(receiveCompletion: { completion in
+                   switch completion {
+                   case .finished:
+                       print("유저 프로필을 성공적으로 가져왔습니다.")
+                   case .failure(let error):
+                       print("유저 프로필 가져오기 중 오류 발생: \(error)")
+                   }
+               }, receiveValue: { userProfileResponse in
+              //     self.userProfile = userProfileResponse.data.user
+                //   print("유저 프로필: \(String(describing: self.userProfile))")
+               })
+               .store(in: &cancellables)
+       }
     
 }

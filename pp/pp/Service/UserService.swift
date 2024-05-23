@@ -27,14 +27,25 @@ class UserService {
             .catch { error in self.handleError(error, retry: { self.editUserInfo(userId: userId, profile: profile) }) }
             .eraseToAnyPublisher()
     }
-    
+    //MARK: - 유저 탈퇴
     func deleteUser(userId:Int) -> AnyPublisher<Void,APIError> {
         provider.requestPublisher(.deleteUser(userId: userId))
             .map { _ in Void() }
             .catch { error in self.handleError(error, retry: {self.deleteUser(userId: userId)}) }
             .eraseToAnyPublisher()
     }
-    
+    //MARK: - 유저 프로필 조회
+    func fetchUserProfile(userId: Int) -> AnyPublisher<UserProfileResponse, APIError> {
+            provider.requestPublisher(.fetchUserProfile(userId: userId))
+                .tryMap { response in
+                    guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                        throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+                    }
+                    return try JSONDecoder().decode(UserProfileResponse.self, from: response.data)
+                }
+                .catch { error in self.handleError(error, retry: { self.fetchUserProfile(userId: userId) }) }
+                .eraseToAnyPublisher()
+        }
     
     
 }
