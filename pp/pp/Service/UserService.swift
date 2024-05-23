@@ -104,5 +104,22 @@ extension UserService {
             }
             .eraseToAnyPublisher()
     }
+  
+    //MARK: - 유저 게시글 목록 조회
+       func fetchUserPosts(userId: Int, limit: Int = 20, lastId: Int? = nil) -> AnyPublisher<UserPostsResponse, APIError> {
+           provider.requestPublisher(.fetchUserPosts(userId: userId, limit: limit, lastId: lastId))
+               .tryMap { response in
+                   guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                       throw APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "Invalid response", instance: response.request?.url?.absoluteString ?? "")
+                   }
+                   return try JSONDecoder().decode(UserPostsResponse.self, from: response.data)
+               }
+               .catch { error in self.handleError(error, retry: { self.fetchUserPosts(userId: userId, limit: limit, lastId: lastId) }) }
+               .eraseToAnyPublisher()
+       }
+    
+    
+    
+    
     
 }

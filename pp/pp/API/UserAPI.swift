@@ -12,7 +12,7 @@ enum UserAPI {
     case editUserInfo(userId:Int,profile:EditProfileRequest)// 유저 정보 수정
     case deleteUser(userId:Int) // 유저 탈퇴
     case fetchUserProfile(userId:Int) // 유저 프로필 조회
-//    case fetchUserPosts // 유저 커뮤니티 게시글 목록 조회
+    case fetchUserPosts(userId: Int, limit: Int, lastId: Int?)// 유저 커뮤니티 게시글 목록 조회
 }
 
 extension UserAPI : TargetType {
@@ -28,6 +28,8 @@ extension UserAPI : TargetType {
             return "/api/v1/users/\(userId)"
         case .fetchUserProfile(let userId):
                    return "/api/v1/users/\(userId)/profiles"
+        case .fetchUserPosts(let userId, _, _):
+                    return "/api/v1/users/\(userId)/posts"
         }
     }
     
@@ -39,7 +41,7 @@ extension UserAPI : TargetType {
             return .patch
         case .deleteUser:
             return .delete
-        case .fetchUserProfile:
+        case .fetchUserProfile,.fetchUserPosts:
             return .get
         }
     }
@@ -58,6 +60,13 @@ extension UserAPI : TargetType {
             return .requestPlain
         case .fetchUserProfile:
             return .requestPlain
+        case let .fetchUserPosts(_, limit, lastId):
+            let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
+            var parameters: [String: Any] = ["limit": adjustedLimit]
+            if let lastId = lastId {
+                parameters["lastId"] = lastId - 1
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
     

@@ -10,7 +10,7 @@ import Combine
 
 class UserViewModel:ObservableObject {
     
-   
+    
     private var cancellables = Set<AnyCancellable>()
     @Published var nickname: String = ""
     @Published var profileImageFileUploadId: Int = 0
@@ -49,19 +49,37 @@ class UserViewModel:ObservableObject {
     }
     //MARK: - 유저 정보 불러오기
     func fetchUserProfile(userId: Int) {
-           UserService.shared.fetchUserProfile(userId: userId)
-               .sink(receiveCompletion: { completion in
-                   switch completion {
-                   case .finished:
-                       print("유저 프로필을 성공적으로 가져왔습니다.")
-                   case .failure(let error):
-                       print("유저 프로필 가져오기 중 오류 발생: \(error)")
-                   }
-               }, receiveValue: { userProfileResponse in
-              //     self.userProfile = userProfileResponse.data.user
+        UserService.shared.fetchUserProfile(userId: userId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 프로필을 성공적으로 가져왔습니다.")
+                case .failure(let error):
+                    print("유저 프로필 가져오기 중 오류 발생: \(error)")
+                }
+            }, receiveValue: { userProfileResponse in
+                //     self.userProfile = userProfileResponse.data.user
                 //   print("유저 프로필: \(String(describing: self.userProfile))")
-               })
-               .store(in: &cancellables)
-       }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func fetchUserPosts(userId: Int, limit: Int = 20, lastId: Int? = nil) {
+          UserService.shared.fetchUserPosts(userId: userId, limit: limit, lastId: lastId)
+              .sink(receiveCompletion: { completion in
+                  switch completion {
+                  case .finished:
+                      print("유저 게시글을 성공적으로 가져왔습니다.")
+                  case .failure(let error):
+                      print("유저 게시글 가져오기 중 오류 발생: \(error)")
+                  }
+              }, receiveValue: { userPostsResponse in
+//                  self.userPosts = userPostsResponse.data.posts
+//                  print("유저 게시글: \(self.userPosts)")
+              })
+              .store(in: &cancellables)
+      }
+    
+    
     
 }

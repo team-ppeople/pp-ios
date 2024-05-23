@@ -41,3 +41,12 @@ struct UserProfile: Codable {
     let thumbsUpCount: Int
     let posts: [Post]
 }
+
+//MARK: - 유저 게시글 조회
+struct UserPostsResponse: Codable {
+    let data: UserPostsData
+}
+
+struct UserPostsData: Codable {
+    let posts: [Post]
+}
