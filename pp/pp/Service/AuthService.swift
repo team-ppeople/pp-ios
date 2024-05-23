@@ -13,6 +13,8 @@ class AuthService {
 	static let shared = AuthService()
 	private let provider = MoyaProvider<AuthAPI>()
 	
+	var accessTokenSubject = PassthroughSubject<String, Never>()
+	
 	private init() {}
 	
 	//MARK: - 토큰 발급 (로그인)
@@ -22,15 +24,11 @@ class AuthService {
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
-			.mapError (handleError)
 			.tryMap { response -> TokenResponse in
-				guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-					let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-					throw apiError
-				}
+				
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
-			.mapError(handleError)
+			.mapError(Utils.handleError)
 			.eraseToAnyPublisher()
 	}
 	
@@ -41,7 +39,6 @@ class AuthService {
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
-			.mapError (handleError)
 			.tryMap { response -> TokenResponse in
 				guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
 					let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
@@ -49,7 +46,7 @@ class AuthService {
 				}
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
-			.mapError(handleError)
+			.mapError(Utils.handleError)
 			.eraseToAnyPublisher()
 	}
 	
@@ -59,20 +56,7 @@ class AuthService {
 	}
 }
 
-//MARK: - Error 핸들링
+
 extension AuthService {
-	private func handleError(_ error: Error) -> APIError {
-		if let moyaError = error as? MoyaError {
-			switch moyaError {
-			case .statusCode(let response):
-				if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
-					return apiError
-				}
-				return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
-			default:
-				return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
-			}
-		}
-		return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
-	}
+	
 }

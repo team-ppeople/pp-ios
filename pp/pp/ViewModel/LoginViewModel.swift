@@ -13,7 +13,7 @@ import SwiftyJSON
 
 class LoginViewModel: ObservableObject {
 	private let authService = AuthService.shared
-    private let userProvider = MoyaProvider<UserAPI>()
+	private let userService = UserService.shared
     private var cancellables = Set<AnyCancellable>()
     
 	@Published var isTermsLinkActive: Bool = false
@@ -93,6 +93,7 @@ class LoginViewModel: ObservableObject {
 	// MARK: - 회원여부 체크
     func checkRegisteredUser() {
 		// MARK: - 회원여부 체크 API 요청
+		let userProvider = MoyaProvider<UserAPI>()
 		userProvider.requestPublisher(.checkRegisteredUser(client: self.client, idToken: self.idToken))
             .sink { [weak self] completion in
                 print(completion)
@@ -138,12 +139,12 @@ class LoginViewModel: ObservableObject {
 	func login() {
 		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, authorizationCode: self.authCode)
 		
-		switch self.client {
-		case .kakao:
-			tokenRequest.clientId = "kauth.kakao.com"
-		case .apple:
-			tokenRequest.clientId = "appleid.apple.com"
-		}
+//		switch self.client {
+//		case .kakao:
+//			tokenRequest.clientId = "kauth.kakao.com"
+//		case .apple:
+//			tokenRequest.clientId = "appleid.apple.com"
+//		}
 		
 		// MARK: - 피피 토큰 발급 API 요청
 		authService
@@ -154,7 +155,7 @@ class LoginViewModel: ObservableObject {
 					print("토큰 발급 완료")
 				case .failure(let error):
 					print("토큰 발급 Error")
-					//dump(error)
+					dump(error)
 					self.showAlert = true
 				}
 			}, receiveValue: { [weak self] recievedValue in
