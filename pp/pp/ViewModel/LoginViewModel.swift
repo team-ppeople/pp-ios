@@ -159,7 +159,11 @@ class LoginViewModel: ObservableObject {
 				}
 			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
-                let accessToken = recievedValue.accessToken
+
+				
+				UserDefaults.standard.set(true, forKey: "isLoggedIn")
+				
+				let accessToken = recievedValue.accessToken
 				let refreshToken = recievedValue.refreshToken
 				
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
