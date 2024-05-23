@@ -15,3 +15,9 @@ struct CheckRegisteredUserResponse: Codable {
 struct Registered: Codable {
 	var isRegistered: Bool?
 }
+
+
+struct EditProfileRequest : Codable {
+    var nickname:String
+    var profileImageFileUploadId:Int
+}
