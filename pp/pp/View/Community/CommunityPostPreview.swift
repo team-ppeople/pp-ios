@@ -7,22 +7,19 @@
 
 import SwiftUI
 
-
-
 struct CommunityPostPreview: View {
     let vm: PostViewModel
     let communityPost: Post
+	var size: CGFloat
     
     var body: some View {
         NavigationLink(destination: CommunityDetailView(vm: vm, postId:communityPost.id)) {
             VStack(alignment: .leading) {
-                
-                
                AsyncImage(url:communityPost.thumbnailURLs) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height:121,alignment: .center)
+						.frame(width: size, height: size, alignment: .center)
                         .clipShape(
                             .rect(
                                 topLeadingRadius: 10,
@@ -33,10 +30,9 @@ struct CommunityPostPreview: View {
                     
                 } placeholder: {
                     ProgressView()
-                        .frame(height:121,alignment: .center)
+						.frame(width: size, height: size, alignment: .center)
                     
                 }
-                
                 
                 Text(communityPost.title)
                     .font(.system(size: 15))
@@ -52,7 +48,7 @@ struct CommunityPostPreview: View {
                     .frame(height: 15)
                     .padding([.horizontal, .bottom], 10)
             }
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+            .background(RoundedRectangle(cornerRadius: 10).stroke(.sub))
         }
         
         .onAppear {
@@ -60,7 +56,6 @@ struct CommunityPostPreview: View {
                 print("Thumbnail URL: \(url)")
             }
         }
-        
         
     }
 }

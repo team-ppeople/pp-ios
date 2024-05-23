@@ -10,6 +10,7 @@ import SwiftUI
 struct DiaryPostPreview: View {
     let vm: DiaryViewModel
 	let diaryPost: DiaryPost
+	var size: CGFloat
 	
 	var body: some View {
 		NavigationLink(destination: DiaryDetailView(vm: vm, diaryPost: diaryPost, images: diaryPost.images?.map({ Utils.createImage($0) }) ?? [])) {
@@ -17,7 +18,7 @@ struct DiaryPostPreview: View {
 				Utils.createImage(diaryPost.images?.first)
 					.resizable()
 					.scaledToFill()
-					.frame(height: 121, alignment: .center)
+					.frame(width: size, height: size, alignment: .center)
 					.clipShape(
 						.rect(
 							topLeadingRadius: 10,
@@ -40,7 +41,7 @@ struct DiaryPostPreview: View {
 					.frame(height: 15)
 					.padding([.horizontal, .bottom], 10)
 			}
-			.background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+			.background(RoundedRectangle(cornerRadius: 10).stroke(.sub))
 		}
 	}
 }

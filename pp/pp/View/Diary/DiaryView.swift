@@ -9,13 +9,9 @@
 import SwiftUI
 
 struct DiaryView: View {
-
-    
     @ObservedObject var vm: DiaryViewModel = DiaryViewModel()
 
-
     var body: some View {
-		
         NavigationStack {
             ZStack(alignment: .bottomTrailing) { 
 				GeometryReader { geometry in
@@ -48,24 +44,25 @@ struct DiaryView: View {
     }
 
     private var emptyStateView: some View {
-        Text("아직 저장된 일기가 없습니다.\n일기 쓰기 버튼을 눌러 새로 만드세요.")
-            .multilineTextAlignment(.center)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.offset(y: -20)
-			.background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
+		VStack(alignment: .center) {
+			Image("no.post")
+		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.offset(y: -30)
     }
     
     private var diaryPostsGrid: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-                ForEach(vm.diaryPosts, id: \.self) { diaryPost in
-					DiaryPostPreview(vm: vm, diaryPost: diaryPost)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 24)
-        }
-		.background(Color("#EBEBF4"), ignoresSafeAreaEdges: .leading)
+		GeometryReader { geometry in
+			ScrollView {
+				LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
+					ForEach(vm.diaryPosts, id: \.self) { diaryPost in
+						DiaryPostPreview(vm: vm, diaryPost: diaryPost, size: (geometry.size.width - 56)/2)
+					}
+				}
+				.padding(.horizontal, 16)
+				.padding(.vertical, 24)
+			}
+		}
     }
     
     private var floatingActionButton: some View {
