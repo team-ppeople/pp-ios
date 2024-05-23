@@ -66,7 +66,6 @@ class LoginViewModel: ObservableObject {
 			onCompletion: { [weak self] result in
 				switch result {
 				case .success(let authResults):
-					print("Apple Login Successful")
 					switch authResults.credential {
 					case let appleIDCredential as ASAuthorizationAppleIDCredential:
 						let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) ?? ""
@@ -149,14 +148,22 @@ class LoginViewModel: ObservableObject {
 		// MARK: - 피피 토큰 발급 API 요청
 		authService
 			.getToken(tokenRequest: tokenRequest)
-			.sink(receiveCompletion: { completion in
+			.sink(receiveCompletion: { [weak self] completion in
 				switch completion {
 				case .finished:
 					print("토큰 발급 완료")
 				case .failure(let error):
 					print("토큰 발급 Error")
 					dump(error)
-					self.showAlert = true
+					
+					if error.statusCode == 400 {
+						self?.authService.accessTokenSubject.send("")
+					} else if error.statusCode == 401 {
+						// 토큰 갱신
+						
+					} else {
+						self?.showAlert = true
+					}
 				}
 			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
@@ -166,6 +173,8 @@ class LoginViewModel: ObservableObject {
 				
 				let accessToken = recievedValue.accessToken
 				let refreshToken = recievedValue.refreshToken
+				
+				self?.authService.accessTokenSubject.send(accessToken)
 				
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
 				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")

@@ -6,21 +6,9 @@
 //
 
 import Foundation
-import UIKit
-import SwiftUI
 import Moya
 
 class Utils {
-	// MARK: - Data to Image
-	static func createImage(_ value: Data?) -> Image {
-		if let value = value {
-			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
-			return Image(uiImage: uiImage)
-		} else {
-			return Image("empty.image")
-		}
-	}
-	
 	// MARK: - date to string
 	static func toString(_ date: Date?) -> String {
 		let dateFormatter = DateFormatter()
@@ -63,71 +51,34 @@ class Utils {
 		if let moyaError = error as? MoyaError {
 			switch moyaError {
 			case .statusCode(let response):
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> statusCode", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> statusCode >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> statusCode", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
 				
 			case .jsonMapping(let response):
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> jsonMapping", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> jsonMapping >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> jsonMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
 				
 			case .imageMapping(let response):
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> imageMapping", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> imageMapping >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> imageMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
 				
 			case .stringMapping(let response):
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> stringMapping", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> stringMapping >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> stringMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
 				
 			case .objectMapping(let error, let response):
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> objectMapping", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> objectMapping >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> objectMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
 				
 			case .encodableMapping(let error):
-				
-				return APIError(description: "MoyaError >> encodableMapping", statusCode: error.asAFError?.responseCode, type: nil, title: nil, detail: nil, instance: error.asAFError?.url?.absoluteString, status: nil)
+				return APIError(description: "MoyaError >> encodableMapping", statusCode: error.asAFError?.responseCode, instance: error.asAFError?.url?.absoluteString)
 				
 			case .underlying(let error, let response):
-				
-				guard let response = response else {
-					return APIError(description: "MoyaError >> underlying", statusCode: nil, type: nil, title: nil, detail: nil, instance: nil, status: nil)
-				}
-				
-				guard let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) else {
-					return APIError(description: "MoyaError >> underlying", statusCode: response.statusCode, type: nil, title: nil, detail: nil, instance: response.request?.url?.absoluteString, status: nil)
-				}
-				
-				return APIError(description: "MoyaError >> underlying >> Server Error Response", statusCode: response.statusCode, type: apiError.type, title: apiError.title, detail: apiError.detail, instance: apiError.instance, status: apiError.status)
+				return APIError(description: "MoyaError >> underlying", statusCode: response?.statusCode, instance: response?.request?.url?.absoluteString)
 				
 			case .requestMapping(let url):
-				
-				return APIError(description: "MoyaError >> requestMapping", statusCode: nil, type: nil, title: nil, detail: nil, instance: url, status: nil)
+				return APIError(description: "MoyaError >> requestMapping", statusCode: nil, instance: url)
 				
 			case .parameterEncoding(let error):
-				
-				return APIError(description: "MoyaError >> parameterEncoding", statusCode: error.asAFError?.responseCode, type: nil, title: nil, detail: nil, instance: error.asAFError?.url?.absoluteString, status: nil)
+				return APIError(description: "MoyaError >> parameterEncoding", statusCode: error.asAFError?.responseCode, instance: error.asAFError?.url?.absoluteString)
 			}
 		}
 		
-		return APIError(description: "MoyaError 아님!! Unexpected Error 발생", statusCode: nil, type: nil, title: nil, detail: nil, instance: nil, status: nil)
+		return APIError(description: "MoyaError 아님!! Unexpected Error 발생", statusCode: nil, instance: nil)
 	}
 }

@@ -12,7 +12,7 @@ import Combine
 class AuthService {
 	static let shared = AuthService()
 	private let provider = MoyaProvider<AuthAPI>()
-	
+	private var cancellables = Set<AnyCancellable>()
 	var accessTokenSubject = PassthroughSubject<String, Never>()
 	
 	private init() {}
@@ -25,7 +25,6 @@ class AuthService {
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
 			.tryMap { response -> TokenResponse in
-				
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
 			.mapError(Utils.handleError)
@@ -40,10 +39,6 @@ class AuthService {
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
 			.tryMap { response -> TokenResponse in
-				guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-					let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-					throw apiError
-				}
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
 			.mapError(Utils.handleError)
@@ -58,5 +53,19 @@ class AuthService {
 
 
 extension AuthService {
-	
+	func fetchRefreshToken(tokenRequest: TokenRequest) {
+		self.refreshToken(tokenRequest: tokenRequest)
+			.sink(receiveCompletion: { completion in
+				switch completion {
+				case .finished:
+					print("토큰 재발급 완료")
+				case .failure(let error):
+					print("토큰 재발급 Error")
+					dump(error)
+				}
+			}, receiveValue: { receivedValue in
+				
+			})
+			.store(in: &cancellables)
+	}
 }
