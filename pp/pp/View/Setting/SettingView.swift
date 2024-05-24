@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct SettingView: View {
-	@State var isLoggedIn: Bool = false
+    @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
+    
+    @State var isLoggedIn: Bool = false
 	@State var showNoticeAlert: Bool = false
+    @State private var showModal = false
 	
-	init(isLoggedIn: Bool) {
-		self.isLoggedIn = isLoggedIn
-	}
+//	init(isLoggedIn: Bool) {
+//		self.isLoggedIn = isLoggedIn
+//	}
 	
     var body: some View {
 		NavigationStack {
@@ -69,6 +72,16 @@ struct SettingView: View {
 						})
 						.padding(.bottom, 12)
 					}
+                    
+                    Button("Show Modal") {
+                                  showModal.toggle()
+                              }
+                              .sheet(isPresented: $showModal) {
+                                  EditProfileView(vm: vm)
+                                      .presentationDetents([.fraction(5/12)]) // 화면의 1/3 높이로 설정
+                                      .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                                      .cornerRadius(40)
+                              }
 					
 					Spacer()
 				}
@@ -146,6 +159,6 @@ struct MyProfileView: View {
 	}
 }
 
-#Preview {
-	SettingView(isLoggedIn: false)
-}
+//#Preview {
+//	SettingView(isLoggedIn: false)
+//}
