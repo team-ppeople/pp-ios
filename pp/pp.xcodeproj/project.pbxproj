@@ -14,6 +14,7 @@
 		467235502BFEE39F00B61EBB /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4672354F2BFEE39F00B61EBB /* UserViewModel.swift */; };
 		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
 		46D334BF2BCF595100C11178 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* CommunityViewModel.swift */; };
+		46F02BD82C00E5AC00303BC5 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */; };
 		6A407C53AC36ECF0FB190C42 /* Pods_pp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */; };
 		9A4B12FF2BE9B91C00F7D1C7 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B12FE2BE9B91C00F7D1C7 /* AuthService.swift */; };
 		9A4B13012BE9B92400F7D1C7 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B13002BE9B92400F7D1C7 /* UserService.swift */; };
@@ -73,11 +74,11 @@
 		460298502BE766A000B93B71 /* CommunityPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPreview.swift; sourceTree = "<group>"; };
 		460298522BE7A55200B93B71 /* PhotoPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViewModel.swift; sourceTree = "<group>"; };
 		467235492BFEC0DD00B61EBB /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
-		4672354B2BFEC12C00B61EBB /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		4672354D2BFEC13B00B61EBB /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		4672354F2BFEE39F00B61EBB /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
 		46D334BE2BCF595100C11178 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
+		46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C89518046957F322B68C3A /* Pods-pp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.debug.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.debug.xcconfig"; sourceTree = "<group>"; };
 		77F17E162996FD910D313C07 /* Pods-pp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.release.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.release.xcconfig"; sourceTree = "<group>"; };
@@ -298,8 +299,8 @@
 			children = (
 				A910196F2BBD24B700046A62 /* SettingView.swift */,
 				467235492BFEC0DD00B61EBB /* MyProfileView.swift */,
-				4672354B2BFEC12C00B61EBB /* UserProfileView.swift */,
 				4672354D2BFEC13B00B61EBB /* EditProfileView.swift */,
+				46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -460,6 +461,7 @@
 			files = (
 				4672354E2BFEC13B00B61EBB /* EditProfileView.swift in Sources */,
 				4672354A2BFEC0DD00B61EBB /* MyProfileView.swift in Sources */,
+				46F02BD82C00E5AC00303BC5 /* UserProfileView.swift in Sources */,
 				9AF0F39B2BBBF8CA00964E75 /* Persistence.swift in Sources */,
 				9AF367BF2BE1D840003493E3 /* ImageCropper.swift in Sources */,
 				9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */,

@@ -5,14 +5,20 @@
 //  Created by 임재현 on 5/23/24.
 //
 
-//import SwiftUI
+import SwiftUI
 //
 //struct MyProfileView: View {
 //    var body: some View {
-//        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+//        HStack {
+//            Image("kakao.login.icon")
+//            Text("Hello, World!")
+//         
+//            NavigationLink(destination: UserProfileView()) {
+//                Text("프로필 보기")
+//            }
+//            
+//            
+//            }
+//        }
 //    }
-//}
-//
-//#Preview {
-//    MyProfileView()
-//}
+

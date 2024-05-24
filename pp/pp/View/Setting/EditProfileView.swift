@@ -53,3 +53,18 @@ struct EditProfileView: View {
         .padding()
     }
 }
+
+struct MyProfileView: View {
+    var body: some View {
+        HStack {
+            Image("kakao.login.icon")
+            Text("Hello, World!")
+         
+            NavigationLink(destination: UserProfileView()) {
+                Text("프로필 보기")
+            }
+            
+            
+            }
+        }
+    }

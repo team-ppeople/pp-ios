@@ -13,11 +13,11 @@ struct SettingView: View {
     @State var isLoggedIn: Bool = false
 	@State var showNoticeAlert: Bool = false
     @State private var showModal = false
-	
+//	
 //	init(isLoggedIn: Bool) {
 //		self.isLoggedIn = isLoggedIn
 //	}
-	
+//	
     var body: some View {
 		NavigationStack {
 			GeometryReader { geometry in
@@ -144,20 +144,7 @@ struct SettingView: View {
 	}
 }
 
-struct MyProfileView: View {
-	var body: some View {
-		HStack {
-			Image("kakao.login.icon")
-			Text("Hello, World!")
-			Button (action: {
-				print("")
-			}, label: {
-				Text("프로필 보기")
-			})
-		}
-		
-	}
-}
+
 
 //#Preview {
 //	SettingView(isLoggedIn: false)
