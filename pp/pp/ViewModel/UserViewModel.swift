@@ -6,16 +6,23 @@
 //
 
 import Combine
+import UIKit
+import _PhotosUI_SwiftUI
 
+class UserViewModel: PhotoPickerViewModel {
+    func addSelectedPhotos() {
+        print("hi")
+    }
+    
+    var uiImages: [UIImage] = []
+    var selectedPhotos: [PhotosPickerItem] = []
+    var cancellables = Set<AnyCancellable>()
 
-class UserViewModel:ObservableObject {
-    
-    
-    private var cancellables = Set<AnyCancellable>()
     @Published var nickname: String = ""
     @Published var profileImageFileUploadId: Int = 0
-    
-    
+    @Published var profileImage: UIImage?
+    @Published var selectedProfile: [PhotosPickerItem] = []
+
     //MARK: - 유저 정보 수정
     func editUserInfo(userId: Int) {
         let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: profileImageFileUploadId)
@@ -32,8 +39,9 @@ class UserViewModel:ObservableObject {
             })
             .store(in: &cancellables)
     }
+
     //MARK: - 유저 탈퇴
-    func deleteUser(userId:Int) {
+    func deleteUser(userId: Int) {
         UserService.shared.deleteUser(userId: userId)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -47,6 +55,7 @@ class UserViewModel:ObservableObject {
             })
             .store(in: &cancellables)
     }
+
     //MARK: - 유저 정보 불러오기
     func fetchUserProfile(userId: Int) {
         UserService.shared.fetchUserProfile(userId: userId)
@@ -58,28 +67,39 @@ class UserViewModel:ObservableObject {
                     print("유저 프로필 가져오기 중 오류 발생: \(error)")
                 }
             }, receiveValue: { userProfileResponse in
-                //     self.userProfile = userProfileResponse.data.user
-                //   print("유저 프로필: \(String(describing: self.userProfile))")
+                // self.userProfile = userProfileResponse.data.user
+                // print("유저 프로필: \(String(describing: self.userProfile))")
             })
             .store(in: &cancellables)
     }
-    
+
     func fetchUserPosts(userId: Int, limit: Int = 20, lastId: Int? = nil) {
-          UserService.shared.fetchUserPosts(userId: userId, limit: limit, lastId: lastId)
-              .sink(receiveCompletion: { completion in
-                  switch completion {
-                  case .finished:
-                      print("유저 게시글을 성공적으로 가져왔습니다.")
-                  case .failure(let error):
-                      print("유저 게시글 가져오기 중 오류 발생: \(error)")
-                  }
-              }, receiveValue: { userPostsResponse in
-//                  self.userPosts = userPostsResponse.data.posts
-//                  print("유저 게시글: \(self.userPosts)")
-              })
-              .store(in: &cancellables)
-      }
-    
-    
-    
+        UserService.shared.fetchUserPosts(userId: userId, limit: limit, lastId: lastId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 게시글을 성공적으로 가져왔습니다.")
+                case .failure(let error):
+                    print("유저 게시글 가져오기 중 오류 발생: \(error)")
+                }
+            }, receiveValue: { userPostsResponse in
+                // self.userPosts = userPostsResponse.data.posts
+                // print("유저 게시글: \(self.userPosts)")
+            })
+            .store(in: &cancellables)
+    }
+
+    @MainActor
+    func addSelectedProfile() {
+        guard let profileItem = selectedProfile.first else { return }
+        Task {
+            if let data = try? await profileItem.loadTransferable(type: Data.self),
+               let image = UIImage(data: data) {
+                profileImage = image
+                selectedProfile.removeAll()
+            }
+        }
+    }
 }
+
+

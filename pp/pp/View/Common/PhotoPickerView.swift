@@ -14,10 +14,11 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
     @Binding var selectedIndex: Int
     @Binding var isShownSheet: Bool
     
+    var tempProfileImage: Binding<UIImage?>? = nil
     var maxPhotosToSelect: Int
     var editingMode: Bool
     @State private var showAlert = false
-    
+
     var body: some View {
         if editingMode {
             HStack(alignment: .center, spacing: 10) {
@@ -26,7 +27,14 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                     maxSelectionCount: maxPhotosToSelect,
                     matching: .images
                 ) {
-                    if let profileImage = vm.profileImage {
+                    if let tempProfileImage = tempProfileImage, let profileImage = tempProfileImage.wrappedValue {
+                        Image(uiImage: profileImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 65, height: 65)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+                    } else if let profileImage = vm.profileImage {
                         Image(uiImage: profileImage)
                             .resizable()
                             .scaledToFill()
@@ -48,7 +56,12 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                         selectedPhotos.removeAll()
                     } else {
                         Task {
-                            vm.addSelectedProfile()
+                            if let profileItem = selectedPhotos.first,
+                               let data = try? await profileItem.loadTransferable(type: Data.self),
+                               let image = UIImage(data: data) {
+                                tempProfileImage?.wrappedValue = image
+                                selectedPhotos.removeAll()
+                            }
                         }
                     }
                 }
@@ -83,7 +96,7 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                     .frame(width: 65, height: 65)
                     .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(.sub, lineWidth: 1))
-                    
+
                     LazyHGrid(rows: [GridItem(.fixed(65))]) {
                         ForEach(0..<vm.uiImages.count, id: \.self) { index in
                             Button(action: {
@@ -108,3 +121,5 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
         }
     }
 }
+
+

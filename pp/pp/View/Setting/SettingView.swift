@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SettingView: View {
-    @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
+   // @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
+    @ObservedObject var vm: UserViewModel = UserViewModel()
     
     @State var isLoggedIn: Bool = false
 	@State var showNoticeAlert: Bool = false
@@ -23,7 +24,10 @@ struct SettingView: View {
 			GeometryReader { geometry in
 				VStack {
 					if isLoggedIn {
-						MyProfileView()
+                        MyProfileView(vm: vm)
+                            .padding(.horizontal, 0)
+                        Divider()
+                        .padding(.vertical, 16)
 					}
 					
 					Button (action: {

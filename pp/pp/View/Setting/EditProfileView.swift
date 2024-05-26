@@ -8,27 +8,28 @@
 import SwiftUI
 
 struct EditProfileView: View {
-    @ObservedObject var vm: CommunityViewModel
-   
+    @ObservedObject var vm: UserViewModel
     @State private var showModal = false
-    @State var nickName: String = ""
+    @State private var tempNickname: String = ""
+    @State private var tempProfileImage: UIImage?
     @Environment(\.presentationMode) var presentationMode
     let maxPhotosToSelect = 1
     @State private var selectedIndex: Int = 0
     @State private var isShownSheet = false
-    
+
     var body: some View {
         VStack {
-            PhotoPickerView<CommunityViewModel>(
+            PhotoPickerView(
                 vm: vm,
                 selectedPhotos: $vm.selectedProfile,
                 selectedIndex: $selectedIndex,
                 isShownSheet: $isShownSheet,
+                tempProfileImage: $tempProfileImage,
                 maxPhotosToSelect: maxPhotosToSelect,
                 editingMode: true
             )
-            
-            TextField("닉네임", text: $nickName)
+
+            TextField("닉네임", text: $tempNickname)
                 .padding(.vertical, 8)
                 .padding(.horizontal)
                 .frame(width: 182)
@@ -40,6 +41,10 @@ struct EditProfileView: View {
                 .padding()
 
             Button(action: {
+                // 유저 정보 수정 호출
+                vm.nickname = tempNickname
+                vm.profileImage = tempProfileImage
+             //   vm.editUserInfo(userId:Int)
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Text("수정 완료")
@@ -50,21 +55,14 @@ struct EditProfileView: View {
             }
             .padding(.top, 10)
         }
+        .onAppear {
+            tempNickname = vm.nickname
+            tempProfileImage = vm.profileImage
+        }
         .padding()
     }
 }
 
-struct MyProfileView: View {
-    var body: some View {
-        HStack {
-            Image("kakao.login.icon")
-            Text("Hello, World!")
-         
-            NavigationLink(destination: UserProfileView()) {
-                Text("프로필 보기")
-            }
-            
-            
-            }
-        }
-    }
+
+
+
