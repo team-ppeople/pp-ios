@@ -12,7 +12,7 @@ struct TokenRequest {
 	var grantType: String?
 	var clientId: String?
 	var clientAssertion: String?
-	var clientAssertionType: String = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+	var clientAssertionType: String?
 	var authorizationCode: String?
 	var refreshToken: String?
 	var scope: String = "user.read user.write post.read post.write file.write"

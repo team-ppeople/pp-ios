@@ -17,7 +17,7 @@ class AuthService {
 	
 	var accessTokenSubject = PassthroughSubject<String, Never>()
 	var logInSubject = PassthroughSubject<Bool, Never>()
-	var logOutSubject = PassthroughSubject<Bool, Never>()
+	var logOutSubject = CurrentValueSubject<Bool, Never>(false)
 	
 	//MARK: - 토큰 발급 (로그인)
 	func getToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
@@ -34,10 +34,11 @@ class AuthService {
 	}
 	
 	// MARK: - 토큰 재발급 (401인 경우)
-	func refreshToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
-		var parameter = tokenRequest
+	func refreshToken() -> AnyPublisher<TokenResponse, APIError> {
+		var parameter: TokenRequest = TokenRequest()
 		parameter.grantType = "refresh_token"
 		parameter.refreshToken = UserDefaults.standard.string(forKey: "RefreshToken")
+		parameter.clientId = UserDefaults.standard.string(forKey: "ClientId")
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
@@ -57,8 +58,8 @@ class AuthService {
 
 extension AuthService {
 	// MARK: - 토큰 재발급 구현부
-	func fetchRefreshToken(tokenRequest: TokenRequest) {
-		self.refreshToken(tokenRequest: tokenRequest)
+	func fetchRefreshToken() {
+		self.refreshToken()
 			.sink(receiveCompletion: { completion in
 				switch completion {
 				case .finished:
@@ -66,6 +67,8 @@ extension AuthService {
 				case .failure(let error):
 					print("토큰 재발급 Error")
 					dump(error)
+					
+					self.logOutSubject.send(true)
 				}
 			}, receiveValue: { [weak self] receivedValue in
 				dump(receivedValue)

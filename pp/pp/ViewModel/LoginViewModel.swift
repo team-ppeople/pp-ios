@@ -14,6 +14,7 @@ import SwiftyJSON
 class LoginViewModel: ObservableObject {
 	private let authService = AuthService.shared
 	private let userService = UserService.shared
+	
     private var cancellables = Set<AnyCancellable>()
     
 	@Published var isTermsLinkActive: Bool = false
@@ -92,27 +93,20 @@ class LoginViewModel: ObservableObject {
 	// MARK: - 회원여부 체크
     func checkRegisteredUser() {
 		// MARK: - 회원여부 체크 API 요청
-		let userProvider = MoyaProvider<UserAPI>()
-		userProvider.requestPublisher(.checkRegisteredUser(client: self.client, idToken: self.idToken))
-            .sink { [weak self] completion in
-                print(completion)
-                switch completion {
-                case let .failure(error):
-                    print("회원 등록 여부 확인 Fail - \(error.localizedDescription)")
+		userService
+			.checkRegisteredUser(client: self.client, idToken: self.idToken)
+			.sink { [weak self] completion in
+				switch completion {
+				case .finished:
+					print("회원 등록 여부 확인 Finished")
+				case .failure(let error):
+					print("회원 등록 여부 확인 Error")
+					dump(error)
+					
 					self?.showAlert = true
-                case .finished:
-                    print("회원 등록 여부 확인 Finished")
-                }
-            } receiveValue: { [weak self] recievedValue in
-				guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else {
-					self?.showAlert = true
-					return
 				}
-                
-                print("회원 등록 여부 확인 Success")
-                print(JSON(recievedValue.data))
-				
-				guard let isRegistered = responseData.data.isRegistered else {
+			} receiveValue: { [weak self] recievedValue in
+				guard let isRegistered = recievedValue.data.isRegistered else {
 					self?.showAlert = true
 					return
 				}
@@ -128,15 +122,14 @@ class LoginViewModel: ObservableObject {
 					case .none:
 						break
 					}
-					
-					self?.destination = .termsAgreement
 				}
-            }.store(in : &cancellables)
+			}
+			.store(in: &cancellables)
     }
     
 	// MARK: - 로그인
 	func login() {
-		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, authorizationCode: self.authCode)
+		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, clientAssertionType: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", authorizationCode: self.authCode)
 		
 		switch self.client {
 		case .kakao:
@@ -157,7 +150,7 @@ class LoginViewModel: ObservableObject {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken(tokenRequest: tokenRequest)
+						self?.authService.fetchRefreshToken()
 					} else {
 						self?.showAlert = true
 					}

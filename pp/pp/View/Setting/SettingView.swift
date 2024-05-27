@@ -22,8 +22,8 @@ struct SettingView: View {
 		NavigationStack {
 			GeometryReader { geometry in
 				VStack {
-					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태
-					if isLoggedIn || vm.isLoggedIn {
+					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태, vm.isLoggedOut: 로그아웃 한 상태 (로그아웃API 요청, 또는 토큰 갱신 실패시)
+					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						MyProfileView()
 					}
 					
@@ -58,7 +58,7 @@ struct SettingView: View {
 					createBoxStyle("버전 정보", version: currentAppVersion())
 						.padding(.bottom, 12)
 					
-					if isLoggedIn || vm.isLoggedIn {
+					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						Button (action: {
 							print("")
 						}, label: {
@@ -95,6 +95,7 @@ struct SettingView: View {
 		}
 		.onAppear {
 			vm.subscribeLogInSubject()
+			vm.subscribeLogOutSubject()
 		}
     }
 	

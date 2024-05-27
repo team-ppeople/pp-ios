@@ -21,6 +21,8 @@ struct pp_iOSApp: App {
 		
 		self.vm.checkAccessToken()
 		self.isLoggedIn = self.vm.checkLogin()
+		
+		print("AppDelegate isLoggedIn - \(isLoggedIn)")
 	}
 	
 	var body: some Scene {

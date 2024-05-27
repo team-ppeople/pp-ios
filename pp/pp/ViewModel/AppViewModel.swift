@@ -14,8 +14,6 @@ class AppViewModel: ObservableObject {
 	private var cancellables = Set<AnyCancellable>()
 	
 	private let accessToken = UserDefaults.standard.string(forKey: "AccessToken")
-	private let refreshToken = UserDefaults.standard.string(forKey: "RefreshToken")
-	private let clientId = UserDefaults.standard.string(forKey: "ClientId")
 	
 	// MARK: - 로그인 여부 체크
 	func checkLogin() -> Bool {
@@ -32,12 +30,13 @@ class AppViewModel: ObservableObject {
 		guard let accessToken = accessToken else { return }
 		guard let issuedAt = Utils.decode(accessToken)["iat"] as? Int else { return }
 		guard let expiration = Utils.decode(accessToken)["exp"] as? Int else { return }
+		let currentDate = Date().timeIntervalSince1970
 		
-		print("iss - \(issuedAt), exp - \(expiration)")
+		print("iss - \(issuedAt), exp - \(expiration), currentDate - \(currentDate)")
 		
 		if expiration - issuedAt < 2 {
-			let tokenRequest: TokenRequest = TokenRequest(grantType: "refresh_token", clientId: clientId, refreshToken: refreshToken)
-			authService.fetchRefreshToken(tokenRequest: tokenRequest)
+			print("토큰 만료됨:: \(expiration - issuedAt)")
+			self.authService.fetchRefreshToken()
 		}
 	}
 }
