@@ -12,12 +12,11 @@ import Combine
 //MARK: - Community API 통신
 class CommunityService {
 	static let shared = CommunityService()
-		//private let provider = MoyaProvider<CommunityAPI>()
+		
 	private var cancellables = Set<AnyCancellable>()
 	
 	lazy var provider = MoyaProvider<CommunityAPI>(plugins: [networkLogger])
 	lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
-	private init() {}
 	
 	
 		//    func uploadImageToPresignedURL(presignedURL: String, imageData: Data) -> AnyPublisher<Void, MoyaError> {

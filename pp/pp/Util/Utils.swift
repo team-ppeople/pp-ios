@@ -50,35 +50,13 @@ class Utils {
 	static func handleError(_ error: Error) -> APIError {
 		if let moyaError = error as? MoyaError {
 			switch moyaError {
-			case .statusCode(let response):
-				return APIError(description: "MoyaError >> statusCode", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
-				
-			case .jsonMapping(let response):
-				return APIError(description: "MoyaError >> jsonMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
-				
-			case .imageMapping(let response):
-				return APIError(description: "MoyaError >> imageMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
-				
-			case .stringMapping(let response):
-				return APIError(description: "MoyaError >> stringMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
-				
-			case .objectMapping(let error, let response):
-				return APIError(description: "MoyaError >> objectMapping", statusCode: response.statusCode, instance: response.request?.url?.absoluteString)
-				
-			case .encodableMapping(let error):
-				return APIError(description: "MoyaError >> encodableMapping", statusCode: error.asAFError?.responseCode, instance: error.asAFError?.url?.absoluteString)
-				
 			case .underlying(let error, let response):
 				return APIError(description: "MoyaError >> underlying", statusCode: response?.statusCode, instance: response?.request?.url?.absoluteString)
-				
-			case .requestMapping(let url):
-				return APIError(description: "MoyaError >> requestMapping", statusCode: nil, instance: url)
-				
-			case .parameterEncoding(let error):
-				return APIError(description: "MoyaError >> parameterEncoding", statusCode: error.asAFError?.responseCode, instance: error.asAFError?.url?.absoluteString)
+			default:
+				return APIError(description: "Error", statusCode: moyaError.response?.statusCode, instance: moyaError.asAFError?.url?.absoluteString)
 			}
 		}
 		
-		return APIError(description: "MoyaError 아님!! Unexpected Error 발생", statusCode: nil, instance: nil)
+		return APIError(description: "Unexpected Error Occurred", statusCode: nil, instance: nil)
 	}
 }

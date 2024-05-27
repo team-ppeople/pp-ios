@@ -9,9 +9,11 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-	@State var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+	private var isLoggedIn: Bool
 	
-	init() {
+	init(isLoggedIn: Bool) {
+		self.isLoggedIn = isLoggedIn
+		
 		let appearance: UITabBarAppearance = UITabBarAppearance()
 		appearance.configureWithOpaqueBackground()
 		appearance.shadowColor = UIColor.darkSubColor
@@ -57,5 +59,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+	ContentView(isLoggedIn: true)
 }

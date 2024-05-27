@@ -138,12 +138,12 @@ class LoginViewModel: ObservableObject {
 	func login() {
 		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, authorizationCode: self.authCode)
 		
-//		switch self.client {
-//		case .kakao:
-//			tokenRequest.clientId = "kauth.kakao.com"
-//		case .apple:
-//			tokenRequest.clientId = "appleid.apple.com"
-//		}
+		switch self.client {
+		case .kakao:
+			tokenRequest.clientId = "kauth.kakao.com"
+		case .apple:
+			tokenRequest.clientId = "appleid.apple.com"
+		}
 		
 		// MARK: - 피피 토큰 발급 API 요청
 		authService
@@ -156,20 +156,14 @@ class LoginViewModel: ObservableObject {
 					print("토큰 발급 Error")
 					dump(error)
 					
-					if error.statusCode == 400 {
-						self?.authService.accessTokenSubject.send("")
-					} else if error.statusCode == 401 {
-						// 토큰 갱신
-						
+					if error.statusCode == 401 {
+						self?.authService.fetchRefreshToken(tokenRequest: tokenRequest)
 					} else {
 						self?.showAlert = true
 					}
 				}
 			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
-
-				
-				UserDefaults.standard.set(true, forKey: "isLoggedIn")
 				
 				let accessToken = recievedValue.accessToken
 				let refreshToken = recievedValue.refreshToken
@@ -187,13 +181,17 @@ class LoginViewModel: ObservableObject {
 				switch self?.client {
 				case .kakao:
 					self?.isKaKaoLinkActive = true
+					UserDefaults.standard.set("kauth.kakao.com", forKey: "ClientId")
 				case .apple:
 					self?.isAppleLinkActive = true
+					UserDefaults.standard.set("appleid.apple.com", forKey: "ClientId")
 				case .none:
 					break
 				}
 				self?.isTermsLinkActive = true
 				self?.destination = .community
+				
+				self?.authService.logInSubject.send(true)
 			})
 			.store(in: &cancellables)
 	}

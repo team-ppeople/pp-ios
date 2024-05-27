@@ -11,11 +11,13 @@ import Combine
 //MARK: - Auth API 통신
 class AuthService {
 	static let shared = AuthService()
-	private let provider = MoyaProvider<AuthAPI>()
-	private var cancellables = Set<AnyCancellable>()
-	var accessTokenSubject = PassthroughSubject<String, Never>()
 	
-	private init() {}
+	private var cancellables = Set<AnyCancellable>()
+	private let provider = MoyaProvider<AuthAPI>()
+	
+	var accessTokenSubject = PassthroughSubject<String, Never>()
+	var logInSubject = PassthroughSubject<Bool, Never>()
+	var logOutSubject = PassthroughSubject<Bool, Never>()
 	
 	//MARK: - 토큰 발급 (로그인)
 	func getToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
@@ -31,10 +33,11 @@ class AuthService {
 			.eraseToAnyPublisher()
 	}
 	
-	// MARK: - 토큰 재발급 (400 Bad Reqeust인 경우 리프레시)
+	// MARK: - 토큰 재발급 (401인 경우)
 	func refreshToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
 		var parameter = tokenRequest
 		parameter.grantType = "refresh_token"
+		parameter.refreshToken = UserDefaults.standard.string(forKey: "RefreshToken")
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
@@ -53,6 +56,7 @@ class AuthService {
 
 
 extension AuthService {
+	// MARK: - 토큰 재발급 구현부
 	func fetchRefreshToken(tokenRequest: TokenRequest) {
 		self.refreshToken(tokenRequest: tokenRequest)
 			.sink(receiveCompletion: { completion in
@@ -63,8 +67,16 @@ extension AuthService {
 					print("토큰 재발급 Error")
 					dump(error)
 				}
-			}, receiveValue: { receivedValue in
+			}, receiveValue: { [weak self] receivedValue in
+				dump(receivedValue)
 				
+				let accessToken = receivedValue.accessToken
+				let refreshToken = receivedValue.refreshToken
+				
+				self?.accessTokenSubject.send(accessToken)
+				
+				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
+				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
 			})
 			.store(in: &cancellables)
 	}
