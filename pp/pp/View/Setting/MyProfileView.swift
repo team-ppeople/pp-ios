@@ -12,14 +12,36 @@ struct MyProfileView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            if let profileImage = vm.profileImage {
-                Image(uiImage: profileImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 58, height: 58)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                    .padding(.leading, 8)
+            if let profileImageUrl = vm.profileImageUrl {
+             
+                AsyncImage(url: profileImageUrl) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: 58, height: 58)
+                            .clipShape(Circle())
+                            .padding(.leading, 8)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 58, height: 58)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                            .padding(.leading, 8)
+                    case .failure:
+                        Image("emty.image")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 58, height: 58)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                            .padding(.leading, 8)
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+
             } else {
                 Image("empty.image")
                     .resizable()
@@ -50,5 +72,3 @@ struct MyProfileView: View {
         .padding(.horizontal, 8)
     }
 }
-
-

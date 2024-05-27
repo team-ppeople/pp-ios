@@ -29,11 +29,6 @@ class CommunityViewModel: PhotoPickerViewModel {
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var profileImage: UIImage?
     @Published var selectedProfile: [PhotosPickerItem] = []
-    
-    
-    
-   // @Published var selectedProfile: [PhotosPickerItem] = []
-    
     //MARK: - 이미지 업로드 가능 여부 확인(Presigned-URL)
     func getPresignedId(imageData:[PresignedUploadUrlRequests]) {
         CommunityService.shared.getPresignedId(requestData: imageData)
@@ -235,6 +230,8 @@ class CommunityViewModel: PhotoPickerViewModel {
                if let data = try? await profileItem.loadTransferable(type: Data.self),
                   let image = UIImage(data: data) {
                    profileImage = image
+//                   let imageUpload = ImageUpload(imageData: data)
+//                    imageUploads.append(imageUpload)
                    selectedProfile.removeAll() // 선택된 프로필 이미지 배열을 비웁니다.
                }
            }

@@ -34,13 +34,32 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                             .frame(width: 65, height: 65)
                             .clipShape(Circle())
                             .overlay(Circle().stroke(Color.sub, lineWidth: 1))
-                    } else if let profileImage = vm.profileImage {
-                        Image(uiImage: profileImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 65, height: 65)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+                    } else if let userVM = vm as? UserViewModel, let profileImageUrl = userVM.profileImageUrl {
+                        AsyncImage(url: profileImageUrl) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .frame(width: 65, height: 65)
+                                    .clipShape(Circle())
+                                    .padding(.leading, 8)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 65, height: 65)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+                            case .failure:
+                                Image(systemName: "person.fill")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 65, height: 65)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+                            @unknown default:
+                                EmptyView()
+                            }
+                        }
                     } else {
                         Image(systemName: "person.fill")
                             .resizable()
@@ -60,6 +79,10 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                                let data = try? await profileItem.loadTransferable(type: Data.self),
                                let image = UIImage(data: data) {
                                 tempProfileImage?.wrappedValue = image
+                                if let userVM = vm as? UserViewModel {
+                                    userVM.profileImage = image
+                                    userVM.addSelectedProfile() // presignedRequests 배열에 추가
+                                }
                                 selectedPhotos.removeAll()
                             }
                         }
@@ -121,5 +144,3 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
         }
     }
 }
-
-

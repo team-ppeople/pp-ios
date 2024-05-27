@@ -19,7 +19,7 @@ struct EditProfileView: View {
 
     var body: some View {
         VStack {
-            PhotoPickerView(
+            PhotoPickerView<UserViewModel>(
                 vm: vm,
                 selectedPhotos: $vm.selectedProfile,
                 selectedIndex: $selectedIndex,
@@ -43,8 +43,21 @@ struct EditProfileView: View {
             Button(action: {
                 // 유저 정보 수정 호출
                 vm.nickname = tempNickname
-                vm.profileImage = tempProfileImage
-             //   vm.editUserInfo(userId:Int)
+                if let tempProfileImage = tempProfileImage {
+                    vm.profileImage = tempProfileImage // 이미지 업데이트
+                }
+                
+                if vm.presignedRequests.isEmpty {
+                    print("Presigned 요청 비어있음")
+                } else {
+                    if let userIdString = UserDefaults.standard.string(forKey: "UserId"),
+                       let userId = Int(userIdString) {
+                        vm.updateProfile(userId: userId)
+                    } else {
+                        print("UserId 찾을수 없음")
+                    }
+                }
+                
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Text("수정 완료")
@@ -57,12 +70,8 @@ struct EditProfileView: View {
         }
         .onAppear {
             tempNickname = vm.nickname
-            tempProfileImage = vm.profileImage
+            tempProfileImage = vm.profileImage // 프로필 이미지 설정
         }
         .padding()
     }
 }
-
-
-
-

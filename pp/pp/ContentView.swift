@@ -9,7 +9,8 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-	@State var isLoggedIn: Bool = UserDefaults.standard.bool(forKey: "isLoggedIn")
+	@State var isLoggedIn: Bool = false
+    //UserDefaults.standard.bool(forKey: "isLoggedIn")
 	
 	init() {
 		let appearance: UITabBarAppearance = UITabBarAppearance()

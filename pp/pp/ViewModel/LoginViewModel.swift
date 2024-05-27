@@ -171,7 +171,6 @@ class LoginViewModel: ObservableObject {
 				
 				let userId = Utils.decode(accessToken)["sub"] as? String ?? ""
 				print("유저 아이디 - \(userId)")
-				
 				UserDefaults.standard.set(userId, forKey: "UserId")
 				
 				switch self?.client {
