@@ -13,9 +13,9 @@ struct DiaryPostPreview: View {
 	var size: CGFloat
 	
 	var body: some View {
-		NavigationLink(destination: DiaryDetailView(vm: vm, diaryPost: diaryPost, images: diaryPost.images?.map({ Utils.createImage($0) }) ?? [])) {
+		NavigationLink(destination: DiaryDetailView(vm: vm, diaryPost: diaryPost, images: diaryPost.images?.map({ createImage($0) }) ?? [])) {
 			VStack(alignment: .leading) {
-				Utils.createImage(diaryPost.images?.first)
+				createImage(diaryPost.images?.first)
 					.resizable()
 					.scaledToFill()
 					.frame(width: size, height: size, alignment: .center)
@@ -42,6 +42,15 @@ struct DiaryPostPreview: View {
 					.padding([.horizontal, .bottom], 10)
 			}
 			.background(RoundedRectangle(cornerRadius: 10).stroke(.sub))
+		}
+	}
+	
+	private func createImage(_ value: Data?) -> Image {
+		if let value = value {
+			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
+			return Image(uiImage: uiImage)
+		} else {
+			return Image("empty.image")
 		}
 	}
 }

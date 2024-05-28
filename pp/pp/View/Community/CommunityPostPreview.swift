@@ -13,9 +13,9 @@ struct CommunityPostPreview: View {
 	var size: CGFloat
     
     var body: some View {
-        NavigationLink(destination: CommunityDetailView(vm: vm, postId:communityPost.id)) {
+        NavigationLink(destination: CommunityDetailView(vm: vm, postId: communityPost.id)) {
             VStack(alignment: .leading) {
-               AsyncImage(url:communityPost.thumbnailURLs) { image in
+               AsyncImage(url: communityPost.thumbnailURLs) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

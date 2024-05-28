@@ -29,7 +29,10 @@
 		9A73F5732BBFD42F00FFB0B7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F5722BBFD42F00FFB0B7 /* Utils.swift */; };
 		9A73F59B2BC43B9300FFB0B7 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */; };
 		9A73F59E2BC67DFC00FFB0B7 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */; };
-		9AF0F3922BBBF8C800964E75 /* ppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3912BBBF8C800964E75 /* ppApp.swift */; };
+		9AA12F232C044E36005EBB0A /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA12F222C044E36005EBB0A /* AppViewModel.swift */; };
+		9AA12F252C0452B2005EBB0A /* pp_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA12F242C0452B2005EBB0A /* pp_iOSApp.swift */; };
+		9AA12F272C0460F8005EBB0A /* LogInStatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA12F262C0460F8005EBB0A /* LogInStatusViewModel.swift */; };
+		9AA12F292C047ACB005EBB0A /* CommunityTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA12F282C047ACB005EBB0A /* CommunityTabView.swift */; };
 		9AF0F3942BBBF8C800964E75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF0F3932BBBF8C800964E75 /* ContentView.swift */; };
 		9AF0F3962BBBF8CA00964E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */; };
 		9AF0F3992BBBF8CA00964E75 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AF0F3982BBBF8CA00964E75 /* Preview Assets.xcassets */; };
@@ -97,8 +100,11 @@
 		9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		9A73F59C2BC5359E00FFB0B7 /* pp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = pp.entitlements; sourceTree = "<group>"; };
 		9A73F59D2BC67DFC00FFB0B7 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		9AA12F222C044E36005EBB0A /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		9AA12F242C0452B2005EBB0A /* pp_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pp_iOSApp.swift; sourceTree = "<group>"; };
+		9AA12F262C0460F8005EBB0A /* LogInStatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInStatusViewModel.swift; sourceTree = "<group>"; };
+		9AA12F282C047ACB005EBB0A /* CommunityTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityTabView.swift; sourceTree = "<group>"; };
 		9AF0F38E2BBBF8C800964E75 /* pp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9AF0F3912BBBF8C800964E75 /* ppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ppApp.swift; sourceTree = "<group>"; };
 		9AF0F3932BBBF8C800964E75 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AF0F3982BBBF8CA00964E75 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -161,7 +167,6 @@
 		9A73F5632BBE236500FFB0B7 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				9AF0F3912BBBF8C800964E75 /* ppApp.swift */,
 				9A73F5722BBFD42F00FFB0B7 /* Utils.swift */,
 				9A73F59A2BC43B9300FFB0B7 /* Secrets.swift */,
 				A97FD49E2BCF8C42009D2758 /* Url.swift */,
@@ -209,7 +214,7 @@
 				A910194D2BBCFDF100046A62 /* Database */,
 				9A73F5692BBE23BD00FFB0B7 /* Extension */,
 				9A73F5632BBE236500FFB0B7 /* Util */,
-				9AF0F3932BBBF8C800964E75 /* ContentView.swift */,
+				9AA12F242C0452B2005EBB0A /* pp_iOSApp.swift */,
 				9AF0F3952BBBF8CA00964E75 /* Assets.xcassets */,
 				9A73F56A2BBE50A200FFB0B7 /* Launch Screen.storyboard */,
 				9A73F59C2BC5359E00FFB0B7 /* pp.entitlements */,
@@ -235,6 +240,7 @@
 				A910196D2BBD249D00046A62 /* Community */,
 				A910196C2BBD249400046A62 /* Diary */,
 				A91019802BBD462900046A62 /* Login */,
+				9AF0F3932BBBF8C800964E75 /* ContentView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -247,6 +253,8 @@
 				46D334BE2BCF595100C11178 /* CommunityViewModel.swift */,
 				460298522BE7A55200B93B71 /* PhotoPickerViewModel.swift */,
 				4672354F2BFEE39F00B61EBB /* UserViewModel.swift */,
+				9AA12F262C0460F8005EBB0A /* LogInStatusViewModel.swift */,
+				9AA12F222C044E36005EBB0A /* AppViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -284,6 +292,7 @@
 		A910196D2BBD249D00046A62 /* Community */ = {
 			isa = PBXGroup;
 			children = (
+				9AA12F282C047ACB005EBB0A /* CommunityTabView.swift */,
 				A91019722BBD24D100046A62 /* CommunityView.swift */,
 				A910197A2BBD24F900046A62 /* CommunityDetailView.swift */,
 				A910197C2BBD250400046A62 /* CommunityUploadView.swift */,
@@ -483,6 +492,7 @@
 				A91019702BBD24B700046A62 /* SettingView.swift in Sources */,
 				A91019752BBD24DA00046A62 /* DiaryView.swift in Sources */,
 				A91019772BBD24E300046A62 /* DiaryDetailView.swift in Sources */,
+				9AA12F272C0460F8005EBB0A /* LogInStatusViewModel.swift in Sources */,
 				A910195B2BBD243F00046A62 /* UserAPI.swift in Sources */,
 				9A4B13012BE9B92400F7D1C7 /* UserService.swift in Sources */,
 				A97FD49F2BCF8C42009D2758 /* Url.swift in Sources */,
@@ -497,9 +507,11 @@
 				A910196B2BBD249000046A62 /* LoginView.swift in Sources */,
 				A91019792BBD24EE00046A62 /* DiaryUploadView.swift in Sources */,
 				9A4B12FF2BE9B91C00F7D1C7 /* AuthService.swift in Sources */,
-				9AF0F3922BBBF8C800964E75 /* ppApp.swift in Sources */,
+				9AA12F252C0452B2005EBB0A /* pp_iOSApp.swift in Sources */,
+				9AA12F232C044E36005EBB0A /* AppViewModel.swift in Sources */,
 				9A73F5652BBE237E00FFB0B7 /* ColorExtension.swift in Sources */,
 				9A4BE4D32BFEE6270084CC8E /* PhotoPickerView.swift in Sources */,
+				9AA12F292C047ACB005EBB0A /* CommunityTabView.swift in Sources */,
 				9A4B13032BE9B92D00F7D1C7 /* CommunityService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

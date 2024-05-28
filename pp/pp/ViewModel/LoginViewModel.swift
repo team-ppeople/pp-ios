@@ -13,7 +13,8 @@ import SwiftyJSON
 
 class LoginViewModel: ObservableObject {
 	private let authService = AuthService.shared
-    private let userProvider = MoyaProvider<UserAPI>()
+	private let userService = UserService.shared
+	
     private var cancellables = Set<AnyCancellable>()
     
 	@Published var isTermsLinkActive: Bool = false
@@ -66,7 +67,6 @@ class LoginViewModel: ObservableObject {
 			onCompletion: { [weak self] result in
 				switch result {
 				case .success(let authResults):
-					print("Apple Login Successful")
 					switch authResults.credential {
 					case let appleIDCredential as ASAuthorizationAppleIDCredential:
 						let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) ?? ""
@@ -93,26 +93,20 @@ class LoginViewModel: ObservableObject {
 	// MARK: - 회원여부 체크
     func checkRegisteredUser() {
 		// MARK: - 회원여부 체크 API 요청
-		userProvider.requestPublisher(.checkRegisteredUser(client: self.client, idToken: self.idToken))
-            .sink { [weak self] completion in
-                print(completion)
-                switch completion {
-                case let .failure(error):
-                    print("회원 등록 여부 확인 Fail - \(error.localizedDescription)")
+		userService
+			.checkRegisteredUser(client: self.client, idToken: self.idToken)
+			.sink { [weak self] completion in
+				switch completion {
+				case .finished:
+					print("회원 등록 여부 확인 Finished")
+				case .failure(let error):
+					print("회원 등록 여부 확인 Error")
+					dump(error)
+					
 					self?.showAlert = true
-                case .finished:
-                    print("회원 등록 여부 확인 Finished")
-                }
-            } receiveValue: { [weak self] recievedValue in
-				guard let responseData = try? recievedValue.map(CheckRegisteredUserResponse.self) else {
-					self?.showAlert = true
-					return
 				}
-                
-                print("회원 등록 여부 확인 Success")
-                print(JSON(recievedValue.data))
-				
-				guard let isRegistered = responseData.data.isRegistered else {
+			} receiveValue: { [weak self] recievedValue in
+				guard let isRegistered = recievedValue.data.isRegistered else {
 					self?.showAlert = true
 					return
 				}
@@ -128,15 +122,14 @@ class LoginViewModel: ObservableObject {
 					case .none:
 						break
 					}
-					
-					self?.destination = .termsAgreement
 				}
-            }.store(in : &cancellables)
+			}
+			.store(in: &cancellables)
     }
     
 	// MARK: - 로그인
 	func login() {
-		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, authorizationCode: self.authCode)
+		var tokenRequest: TokenRequest = TokenRequest(clientAssertion: self.idToken, clientAssertionType: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", authorizationCode: self.authCode)
 		
 		switch self.client {
 		case .kakao:
@@ -148,23 +141,27 @@ class LoginViewModel: ObservableObject {
 		// MARK: - 피피 토큰 발급 API 요청
 		authService
 			.getToken(tokenRequest: tokenRequest)
-			.sink(receiveCompletion: { completion in
+			.sink(receiveCompletion: { [weak self] completion in
 				switch completion {
 				case .finished:
 					print("토큰 발급 완료")
 				case .failure(let error):
 					print("토큰 발급 Error")
-					//dump(error)
-					self.showAlert = true
+					dump(error)
+					
+					if error.statusCode == 401 {
+						self?.authService.fetchRefreshToken()
+					} else {
+						self?.showAlert = true
+					}
 				}
 			}, receiveValue: { [weak self] recievedValue in
 				dump(recievedValue)
-
-				
-				UserDefaults.standard.set(true, forKey: "isLoggedIn")
 				
 				let accessToken = recievedValue.accessToken
 				let refreshToken = recievedValue.refreshToken
+				
+				self?.authService.accessTokenSubject.send(accessToken)
 				
 				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
 				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
@@ -177,13 +174,17 @@ class LoginViewModel: ObservableObject {
 				switch self?.client {
 				case .kakao:
 					self?.isKaKaoLinkActive = true
+					UserDefaults.standard.set("kauth.kakao.com", forKey: "ClientId")
 				case .apple:
 					self?.isAppleLinkActive = true
+					UserDefaults.standard.set("appleid.apple.com", forKey: "ClientId")
 				case .none:
 					break
 				}
 				self?.isTermsLinkActive = true
 				self?.destination = .community
+				
+				self?.authService.logInSubject.send(true)
 			})
 			.store(in: &cancellables)
 	}

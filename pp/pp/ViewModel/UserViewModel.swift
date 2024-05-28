@@ -10,13 +10,13 @@ import Combine
 
 class UserViewModel:ObservableObject {
     
-    
+
     private var cancellables = Set<AnyCancellable>()
     @Published var nickname: String = ""
     @Published var profileImageFileUploadId: Int = 0
     
     
-    //MARK: - 유저 정보 수정
+    // MARK: - 유저 정보 수정
     func editUserInfo(userId: Int) {
         let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: profileImageFileUploadId)
         UserService.shared.editUserInfo(userId: userId, profile: profile)

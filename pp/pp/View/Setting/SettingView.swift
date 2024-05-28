@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct SettingView: View {
-	@State var isLoggedIn: Bool = false
+	@ObservedObject var vm: LogInStatusViewModel = LogInStatusViewModel()
+	
+	@State var isLoggedIn: Bool
 	@State var showNoticeAlert: Bool = false
 	
 	init(isLoggedIn: Bool) {
@@ -19,7 +22,8 @@ struct SettingView: View {
 		NavigationStack {
 			GeometryReader { geometry in
 				VStack {
-					if isLoggedIn {
+					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태, vm.isLoggedOut: 로그아웃 한 상태 (로그아웃API 요청, 또는 토큰 갱신 실패시)
+					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						MyProfileView()
 					}
 					
@@ -54,7 +58,7 @@ struct SettingView: View {
 					createBoxStyle("버전 정보", version: currentAppVersion())
 						.padding(.bottom, 12)
 					
-					if isLoggedIn {
+					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						Button (action: {
 							print("")
 						}, label: {
@@ -88,6 +92,10 @@ struct SettingView: View {
 					}
 				}
 			}
+		}
+		.onAppear {
+			vm.subscribeLogInSubject()
+			vm.subscribeLogOutSubject()
 		}
     }
 	
