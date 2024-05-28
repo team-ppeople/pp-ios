@@ -16,7 +16,7 @@ class AuthService {
 	private let provider = MoyaProvider<AuthAPI>()
 	
 	var accessTokenSubject = PassthroughSubject<String, Never>()
-	var logInSubject = PassthroughSubject<Bool, Never>()
+	var logInSubject = CurrentValueSubject<Bool, Never>(false)
 	var logOutSubject = CurrentValueSubject<Bool, Never>(false)
 	
 	//MARK: - 토큰 발급 (로그인)
@@ -69,6 +69,11 @@ extension AuthService {
 					dump(error)
 					
 					self.logOutSubject.send(true)
+					
+					UserDefaults.standard.set(nil, forKey: "AccessToken")
+					UserDefaults.standard.set(nil, forKey: "RefreshToken")
+					UserDefaults.standard.set(nil, forKey: "UserId")
+					UserDefaults.standard.set(nil, forKey: "ClientId")
 				}
 			}, receiveValue: { [weak self] receivedValue in
 				dump(receivedValue)

@@ -15,9 +15,8 @@ struct DiaryDetailView: View {
 	let images: [Image]
     
 	var body: some View {
-		
-			VStack {
-				GeometryReader { geometry in
+		GeometryReader { geometry in
+			VStack(alignment: .leading) {
 				if images.count != 0 {
 					AutoScroller(images: images, size: abs(geometry.size.width - 32))
 						.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
@@ -25,16 +24,13 @@ struct DiaryDetailView: View {
 				
 				Text(diaryPost.title ?? "")
 					.font(.system(size: 18))
-					.frame(maxWidth: .infinity, alignment: .leading)
 					.padding(.top, 25)
 				
 				Text(Utils.toString(diaryPost.date))
 					.font(.system(size: 12))
-					.frame(maxWidth: .infinity, alignment: .leading)
 				
 				Text(diaryPost.contents ?? "")
 					.font(.system(size: 15))
-					.frame(maxWidth: .infinity, alignment: .leading)
 					.padding(.top, 20)
 				
 				Spacer()
@@ -54,9 +50,8 @@ struct DiaryDetailView: View {
 					}
 				}
 			}
-			.toolbar(.hidden, for: .tabBar)
 		}
-    }
+	}
 }
 
 struct AutoScroller: View {
@@ -68,9 +63,6 @@ struct AutoScroller: View {
 
     var body: some View {
         ZStack {
-            Color("#F3F3F3")
-                .ignoresSafeArea()
-
             TabView(selection: $selectedImageIndex) {
                 ForEach(0..<images.count, id: \.self) { index in
                     ZStack(alignment: .topLeading) {

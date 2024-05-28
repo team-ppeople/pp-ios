@@ -30,23 +30,15 @@ struct ContentView: View {
 						Text("나의 일기")
 					}
 				}
-			if isLoggedIn {
-				CommunityView()
-					.tabItem {
-						VStack {
-							Image(systemName: "person.3.fill")
-							Text("커뮤니티")
-						}
+			
+			CommunityTabView(isLoggedIn: isLoggedIn)
+				.tabItem {
+					VStack {
+						Image(systemName: "person.3.fill")
+						Text("커뮤니티")
 					}
-			} else {
-				LoginView()
-					.tabItem {
-						VStack {
-							Image(systemName: "person.3.fill")
-							Text("커뮤니티")
-						}
-					}
-			}
+				}
+			
 			SettingView(isLoggedIn: isLoggedIn)
 				.tabItem {
 					VStack {

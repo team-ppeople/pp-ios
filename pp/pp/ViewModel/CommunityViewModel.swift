@@ -81,7 +81,7 @@ class CommunityViewModel: PhotoPickerViewModel {
 	}
 
    // MARK: - 새로고침 or 데이터 불러오오면 동작 -> 서버에서 데이터 가져옴
-    func loadPosts(limit: Int = 20, lastId: Int?) {
+    func loadPosts(limit: Int = 100, lastId: Int?) {
         CommunityService.shared.fetchPosts(limit: limit, lastId: lastId)
             .sink(receiveCompletion: { [weak self] completion in
 				switch completion {

@@ -7,7 +7,7 @@
 
 import Combine
 
-class SettingViewModel: ObservableObject {
+class LogInStatusViewModel: ObservableObject {
 	private let authService = AuthService.shared
 
 	private var cancellables = Set<AnyCancellable>()
@@ -18,9 +18,11 @@ class SettingViewModel: ObservableObject {
 	// MARK: - 로그인 감지
 	func subscribeLogInSubject() {
 		authService.logInSubject
-			.sink { _ in
-				print("SettingViewModel 로그인 감지!")
-				self.isLoggedIn = true
+			.sink { [weak self] receivedValue in
+				if receivedValue {
+					self?.isLoggedIn = true
+					print("LogInStatusViewModel 로그인 감지!")
+				}
 			}
 			.store(in: &cancellables)
 	}
@@ -28,10 +30,11 @@ class SettingViewModel: ObservableObject {
 	// MARK: - 로그아웃 감지
 	func subscribeLogOutSubject() {
 		authService.logOutSubject
-			.sink { receivedValue in
-				print(receivedValue)
-				print("SettingViewModel 로그아웃 감지!")
-				self.isLoggedOut = true
+			.sink { [weak self] receivedValue in
+				if receivedValue {
+					self?.isLoggedOut = true
+					print("LogInStatusViewModel 로그아웃 감지!")
+				}
 			}
 			.store(in: &cancellables)
 	}

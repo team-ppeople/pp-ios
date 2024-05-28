@@ -69,7 +69,7 @@ class CommunityService {
 	}
 	
 	//MARK: - 커뮤니티 게시글 목록 조회
-	func fetchPosts(limit: Int = 20, lastId: Int?) -> AnyPublisher<PostsResponse, APIError> {
+	func fetchPosts(limit: Int, lastId: Int?) -> AnyPublisher<PostsResponse, APIError> {
 		return provider
 			.requestPublisher(.fetchPostsLists(limit: limit, lastId: lastId))
 			.tryMap { response -> PostsResponse in

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SettingView: View {
-	@ObservedObject var vm: SettingViewModel = SettingViewModel()
+	@ObservedObject var vm: LogInStatusViewModel = LogInStatusViewModel()
 	
 	@State var isLoggedIn: Bool
 	@State var showNoticeAlert: Bool = false
