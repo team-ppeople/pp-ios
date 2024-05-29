@@ -52,7 +52,7 @@ struct UserPostView: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
                     ForEach(posts, id: \.id) { post in
-                        UserPostPreview(post: post, size: (geometry.size.width - 56) / 2)
+                        UserPostPreview(post: post, size: abs((geometry.size.width - 56) / 2))
                     }
                 }
                 .padding(.horizontal, 16)
