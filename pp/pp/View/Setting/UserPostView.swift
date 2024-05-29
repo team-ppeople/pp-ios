@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct UserPostView: View {
-    @ObservedObject var vm: UserViewModel = UserViewModel()
+    @ObservedObject var vm: UserViewModel
 
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 GeometryReader { geometry in
                     VStack {
-                        if ((vm.userProfile?.posts.isEmpty) != nil) {
-                            emptyStateView
+                        if let posts = vm.userProfile?.posts, !posts.isEmpty {
+                            userPostsGrid(posts: posts)
                         } else {
-                            userPostsGrid
+                            emptyStateView
                         }
                     }
                     .toolbar {
@@ -35,7 +35,6 @@ struct UserPostView: View {
                         }
                     }
                 }
-             
             }
         }
     }
@@ -47,14 +46,13 @@ struct UserPostView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .offset(y: -30)
     }
-    
-    private var userPostsGrid: some View {
+
+    private func userPostsGrid(posts: [Post]) -> some View {
         GeometryReader { geometry in
             ScrollView {
                 LazyVGrid(columns: [GridItem(), GridItem()], spacing: 24) {
-                    ForEach(vm.userProfile!.posts, id: \.self) { diaryPost in
-                      //  DiaryPostPreview(vm: vm, diaryPost: diaryPost, size: (geometry.size.width - 56)/2)
-                    //   CommunityPostPreview(vm: vm, diaryPost: diaryPost, size: (geometry.size.width - 56)/2)
+                    ForEach(posts, id: \.id) { post in
+                        UserPostPreview(post: post, size: (geometry.size.width - 56) / 2)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -62,20 +60,4 @@ struct UserPostView: View {
             }
         }
     }
-    
-//    private var floatingActionButton: some View {
-//        NavigationLink(destination: DiaryUploadView(vm: vm)) {
-//            Image(systemName: "pencil")
-//                .foregroundColor(.white)
-//                .font(.system(size: 26, weight: .bold))
-//                .frame(width: 50, height: 50)
-//                .background(Color.accentColor)
-//                .clipShape(Circle())
-//                .shadow(color: .gray, radius: 3, x: 1, y: 1)
-//        }
-//    }
 }
-//
-//#Preview {
-//    DiaryView(vm: DiaryViewModel())
-//}

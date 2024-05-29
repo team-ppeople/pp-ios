@@ -13,6 +13,7 @@
 		4672354E2BFEC13B00B61EBB /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4672354D2BFEC13B00B61EBB /* EditProfileView.swift */; };
 		467235502BFEE39F00B61EBB /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4672354F2BFEE39F00B61EBB /* UserViewModel.swift */; };
 		46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */; };
+		46B60EF92C06FAAD0095AA37 /* UserPostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B60EF82C06FAAD0095AA37 /* UserPostPreview.swift */; };
 		46D334BF2BCF595100C11178 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D334BE2BCF595100C11178 /* CommunityViewModel.swift */; };
 		46E15FFF2C0479E600F4703B /* UserPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E15FFE2C0479E600F4703B /* UserPostView.swift */; };
 		46F02BD82C00E5AC00303BC5 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */; };
@@ -81,6 +82,7 @@
 		4672354D2BFEC13B00B61EBB /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		4672354F2BFEE39F00B61EBB /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		46A2F2972BCCF04D003E594B /* DiaryPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryPostPreview.swift; sourceTree = "<group>"; };
+		46B60EF82C06FAAD0095AA37 /* UserPostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostPreview.swift; sourceTree = "<group>"; };
 		46D334BE2BCF595100C11178 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		46E15FFE2C0479E600F4703B /* UserPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostView.swift; sourceTree = "<group>"; };
 		46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 				4672354D2BFEC13B00B61EBB /* EditProfileView.swift */,
 				46F02BD72C00E5AC00303BC5 /* UserProfileView.swift */,
 				46E15FFE2C0479E600F4703B /* UserPostView.swift */,
+				46B60EF82C06FAAD0095AA37 /* UserPostPreview.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -506,6 +509,7 @@
 				A910195F2BBD244C00046A62 /* UserModel.swift in Sources */,
 				46A2F2982BCCF04D003E594B /* DiaryPostPreview.swift in Sources */,
 				9A73F5672BBE238D00FFB0B7 /* ViewExtension.swift in Sources */,
+				46B60EF92C06FAAD0095AA37 /* UserPostPreview.swift in Sources */,
 				A91019672BBD247000046A62 /* DiaryViewModel.swift in Sources */,
 				9A4BE4D52BFEE6740084CC8E /* TextInputView.swift in Sources */,
 				46D334BF2BCF595100C11178 /* CommunityViewModel.swift in Sources */,
