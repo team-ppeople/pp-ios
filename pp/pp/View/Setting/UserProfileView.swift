@@ -88,7 +88,14 @@ struct UserProfileView: View {
             HStack(spacing: 0) {
                 VStack {
                     Text("게시글수")
-                    Text("1")
+                    
+                    if let postcount = vm.userProfile?.postCount {
+                        Text("\(postcount)")
+                    } else {
+                        Text("0")
+                    }
+                    
+                    
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -98,15 +105,23 @@ struct UserProfileView: View {
                 
                 VStack {
                     Text("받은 좋아요 수")
-                    Text("8")
+                    
+                    
+                    if let thumbsUpCount = vm.userProfile?.thumbsUpCount {
+                        Text("\(thumbsUpCount)")
+                    } else {
+                        Text("0")
+                    }
+                    
+                  
                 }
                 .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 32)
             .padding(.top, 16)
-            
+//            
             Spacer()
-            DiaryView()
+            CommunityView()
         }
         .padding(.top, 16)
         
