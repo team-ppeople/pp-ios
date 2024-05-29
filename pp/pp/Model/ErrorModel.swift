@@ -7,13 +7,9 @@
 
 import Foundation
 
-
-//MARK: - APIError Type
-
-struct APIError: Decodable, Error {
-    let type: String
-    let title: String
-    let status: Int
-    let detail: String
-    let instance: String
+//MARK: - HTTP 통신 에러 Type
+struct APIError: Error {
+    let description: String?
+	let statusCode: Int?
+	let instance: String?
 }

@@ -88,14 +88,13 @@ struct CommunityDetailView: View {
 
 
 struct AutoScroller2: View {
+	@State private var selectedImageIndex: Int = 0
+	
     var imageURLs: [URL]
 	let size: CGFloat
 
     var body: some View {
         ZStack {
-            Color.gray.opacity(0.2)
-                .ignoresSafeArea()
-
             TabView {
                 ForEach(imageURLs, id: \.self) { url in
                     AsyncImage(url: url) { phase in
@@ -124,6 +123,18 @@ struct AutoScroller2: View {
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .ignoresSafeArea()
+			
+			HStack {
+				ForEach(0..<imageURLs.count, id: \.self) { index in
+					Capsule()
+						.fill(Color.white.opacity(selectedImageIndex == index ? 1 : 0.33))
+						.frame(width: 10, height: 10)
+						.onTapGesture {
+							selectedImageIndex = index
+						}
+				}
+			}
+			.offset(y: size/2 - 20)
         }
     }
 }

@@ -11,45 +11,37 @@ struct CommunityView: View {
     @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
     
     var body: some View {
-        
-        NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                GeometryReader { geometry in
-                    VStack {
-                        if vm.communityPosts.isEmpty {
-                            emptyStateView
-                            
-                        } else {
-                            communityPostsGrid
-                        }
-                    }
-                    .onAppear {
-                        print("CommunityView appeared on screen")
-                    }
-                    .toolbar {
-                        ToolbarItem {
-                            HStack {
-                                Text("커뮤니티")
-                                    .font(.system(size: 20))
-                                    .bold()
-                                    .padding(.leading, 16)
-                                Spacer()
-                            }
-                            .frame(width: geometry.size.width, height: 45)
-                            .background(.white)
-                        }
-                    }
-                }
-                
-                floatingActionButton
-                    .padding(16)
-                
-            }
+		ZStack(alignment: .bottomTrailing) {
+			GeometryReader { geometry in
+				VStack {
+					if vm.communityPosts.isEmpty {
+						emptyStateView
+						
+					} else {
+						communityPostsGrid
+					}
+				}
+				.toolbar {
+					ToolbarItem {
+						HStack {
+							Text("커뮤니티")
+								.font(.system(size: 20))
+								.bold()
+								.padding(.leading, 16)
+							Spacer()
+						}
+						.frame(width: geometry.size.width, height: 45)
+						.background(.white)
+					}
+				}
+			}
+			
+			floatingActionButton
+				.padding(16)
         }
-        .task {
+        .onAppear {
             vm.loadPosts(lastId: nil)
         }
-        
         .navigationBarBackButtonHidden(true)
         
     }

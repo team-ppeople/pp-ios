@@ -5,21 +5,10 @@
 //  Created by 김지현 on 2024/04/05.
 //
 
-import SwiftUI
-import UIKit
+import Foundation
+import Moya
 
 class Utils {
-	// MARK: - Data to Image
-	static func createImage(_ value: Data?) -> Image {
-		if let value = value {
-			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
-			return Image(uiImage: uiImage)
-			
-		} else {
-			return Image(uiImage: (UIImage(named: "emty.image") ?? UIImage(named: "emty.image"))!)
-		}
-	}
-	
 	// MARK: - date to string
 	static func toString(_ date: Date?) -> String {
 		let dateFormatter = DateFormatter()
@@ -55,5 +44,19 @@ class Utils {
 		}
 		
 		return payload
+	}
+	
+	//MARK: - Error 핸들링
+	static func handleError(_ error: Error) -> APIError {
+		if let moyaError = error as? MoyaError {
+			switch moyaError {
+			case .underlying(let error, let response):
+				return APIError(description: "MoyaError >> underlying", statusCode: response?.statusCode, instance: response?.request?.url?.absoluteString)
+			default:
+				return APIError(description: "Error", statusCode: moyaError.response?.statusCode, instance: moyaError.asAFError?.url?.absoluteString)
+			}
+		}
+		
+		return APIError(description: "Unexpected Error Occurred", statusCode: nil, instance: nil)
 	}
 }

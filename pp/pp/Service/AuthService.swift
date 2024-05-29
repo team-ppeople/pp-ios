@@ -11,9 +11,13 @@ import Combine
 //MARK: - Auth API 통신
 class AuthService {
 	static let shared = AuthService()
+	
+	private var cancellables = Set<AnyCancellable>()
 	private let provider = MoyaProvider<AuthAPI>()
 	
-	private init() {}
+	var accessTokenSubject = PassthroughSubject<String, Never>()
+	var logInSubject = CurrentValueSubject<Bool, Never>(false)
+	var logOutSubject = CurrentValueSubject<Bool, Never>(false)
 	
 	//MARK: - 토큰 발급 (로그인)
 	func getToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
@@ -22,34 +26,26 @@ class AuthService {
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
-			.mapError (handleError)
 			.tryMap { response -> TokenResponse in
-				guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-					let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-					throw apiError
-				}
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
-			.mapError(handleError)
+			.mapError(Utils.handleError)
 			.eraseToAnyPublisher()
 	}
 	
-	// MARK: - 토큰 재발급 (400 Bad Reqeust인 경우 리프레시)
-	func refreshToken(tokenRequest: TokenRequest) -> AnyPublisher<TokenResponse, APIError> {
-		var parameter = tokenRequest
+	// MARK: - 토큰 재발급 (401인 경우)
+	func refreshToken() -> AnyPublisher<TokenResponse, APIError> {
+		var parameter: TokenRequest = TokenRequest()
 		parameter.grantType = "refresh_token"
+		parameter.refreshToken = UserDefaults.standard.string(forKey: "RefreshToken")
+		parameter.clientId = UserDefaults.standard.string(forKey: "ClientId")
 		
 		return provider
 			.requestPublisher(.getToken(parameter: parameter))
-			.mapError (handleError)
 			.tryMap { response -> TokenResponse in
-				guard let statusCode = response.response?.statusCode, statusCode >= 200 && statusCode < 300 else {
-					let apiError = try JSONDecoder().decode(APIError.self, from: response.data)
-					throw apiError
-				}
 				return try JSONDecoder().decode(TokenResponse.self, from: response.data)
 			}
-			.mapError(handleError)
+			.mapError(Utils.handleError)
 			.eraseToAnyPublisher()
 	}
 	
@@ -59,20 +55,37 @@ class AuthService {
 	}
 }
 
-//MARK: - Error 핸들링
+
 extension AuthService {
-	private func handleError(_ error: Error) -> APIError {
-		if let moyaError = error as? MoyaError {
-			switch moyaError {
-			case .statusCode(let response):
-				if let apiError = try? JSONDecoder().decode(APIError.self, from: response.data) {
-					return apiError
+	// MARK: - 토큰 재발급 구현부
+	func fetchRefreshToken() {
+		self.refreshToken()
+			.sink(receiveCompletion: { completion in
+				switch completion {
+				case .finished:
+					print("토큰 재발급 완료")
+				case .failure(let error):
+					print("토큰 재발급 Error")
+					dump(error)
+					
+					self.logOutSubject.send(true)
+					
+					UserDefaults.standard.set(nil, forKey: "AccessToken")
+					UserDefaults.standard.set(nil, forKey: "RefreshToken")
+					UserDefaults.standard.set(nil, forKey: "UserId")
+					UserDefaults.standard.set(nil, forKey: "ClientId")
 				}
-				return APIError(type: "about:blank", title: "Error", status: response.statusCode, detail: "An error occurred.", instance: response.request?.url?.absoluteString ?? "")
-			default:
-				return APIError(type: "about:blank", title: "Network Error", status: 500, detail: "A network error occurred.", instance: "/error")
-			}
-		}
-		return APIError(type: "about:blank", title: "Unknown Error", status: 500, detail: "An unexpected error occurred.", instance: "/error")
+			}, receiveValue: { [weak self] receivedValue in
+				dump(receivedValue)
+				
+				let accessToken = receivedValue.accessToken
+				let refreshToken = receivedValue.refreshToken
+				
+				self?.accessTokenSubject.send(accessToken)
+				
+				UserDefaults.standard.set(accessToken, forKey: "AccessToken")
+				UserDefaults.standard.set(refreshToken, forKey: "RefreshToken")
+			})
+			.store(in: &cancellables)
 	}
 }
