@@ -21,7 +21,7 @@ struct DiaryUploadView: View {
     var body: some View {
         NavigationView {
             VStack {
-				PhotoPickerView<DiaryViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect)
+				PhotoPickerView<DiaryViewModel>(vm: vm, selectedPhotos: $vm.selectedPhotos, selectedIndex: $selectedIndex, isShownSheet: $isShownSheet, maxPhotosToSelect: maxPhotosToSelect,editingMode: false)
                 
                 TextInputView(title: $vm.title, contents: $vm.contents)
                     .padding(.top, 10)

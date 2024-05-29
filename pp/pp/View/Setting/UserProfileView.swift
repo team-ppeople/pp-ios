@@ -2,17 +2,191 @@
 //  UserProfileView.swift
 //  pp
 //
-//  Created by 임재현 on 5/23/24.
+//  Created by 임재현 on 5/25/24.
 //
 
 import SwiftUI
 
+
 struct UserProfileView: View {
+    @State private var showModal = false
+    @ObservedObject var vm: UserViewModel
+   // let postId: Int
+    
+    
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            HStack(spacing: 8) {
+                if let profileImageUrl = vm.profileImageUrl {
+                    AsyncImage(url: profileImageUrl) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 58, height: 58)
+                                .clipShape(Circle())
+                                .padding(.leading, 8)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 58, height: 58)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                                .padding(.leading, 8)
+                        case .failure:
+                            Image("emty.image")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 58, height: 58)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                                .padding(.leading, 8)
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                } else {
+                    Image("emty.image")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 58, height: 58)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                        .padding(.leading, 8)
+                }
+                
+                Text(vm.nickname.isEmpty ? "바다거북맘" : vm.nickname)
+                    .font(.title3)
+                
+                Spacer()
+                
+                Button(action: {
+                    showModal.toggle()
+                }) {
+                    Text("프로필 수정")
+                        .frame(width: 93, height: 45)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.blue, lineWidth: 1)
+                        )
+                }
+                .padding(.trailing, 8)
+                .sheet(isPresented: $showModal) {
+                    EditProfileView(vm: vm)
+                        .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+                        .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                        .cornerRadius(40)
+                }
+            }
+            .padding(.horizontal, 8)
+            
+            Divider()
+                .background(Color.gray)
+                .padding(.horizontal, 32)
+                .padding(.top, 16)
+            
+            HStack(spacing: 0) {
+                VStack {
+                    Text("게시글수")
+                    
+                    if let postcount = vm.userProfile?.postCount {
+                        Text("\(postcount)")
+                    } else {
+                        Text("0")
+                    }
+                    
+                    
+                }
+                .frame(maxWidth: .infinity)
+                
+                Divider()
+                    .frame(width: 1, height: 50)
+                    .background(Color.gray)
+                
+                VStack {
+                    Text("받은 좋아요 수")
+                    
+                    
+                    if let thumbsUpCount = vm.userProfile?.thumbsUpCount {
+                        Text("\(thumbsUpCount)")
+                    } else {
+                        Text("0")
+                    }
+                    
+                  
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 16)
+            
+            UserPostView(vm: vm)
+            Spacer()
+        }
+        .padding(.top, 16)
     }
 }
 
-#Preview {
-    UserProfileView()
-}
+//import SwiftUI
+//
+//struct UserProfileView: View {
+//    @ObservedObject var vm: UserViewModel
+//
+//    var body: some View {
+//        VStack {
+//            if let userProfile = vm.userProfile {
+//                Text(userProfile.nickname)
+//                    .font(.title)
+//                    .padding()
+//
+//                if let profileImageUrl = userProfile.profileImageUrls{
+//                    AsyncImage(url: profileImageUrl) { phase in
+//                        switch phase {
+//                        case .empty:
+//                            ProgressView()
+//                        case .success(let image):
+//                            image
+//                                .resizable()
+//                                .scaledToFill()
+//                                .frame(width: 100, height: 100)
+//                                .clipShape(Circle())
+//                        case .failure:
+//                            Image(systemName: "person.fill")
+//                                .resizable()
+//                                .frame(width: 100, height: 100)
+//                                .clipShape(Circle())
+//                        @unknown default:
+//                            EmptyView()
+//                        }
+//                    }
+//                } else {
+//                    Image(systemName: "person.fill")
+//                        .resizable()
+//                        .frame(width: 100, height: 100)
+//                        .clipShape(Circle())
+//                }
+//
+//                List {
+//                    ForEach(userProfile.posts, id: \.id) { post in
+//                       // NavigationLink(destination: PostDetailView(post: post)) {
+//                            UserPostPreview(post: post, size: 100)
+//                       // }
+//                    }
+//                }
+//            } else {
+//                Text("Loading...")
+//                    .onAppear {
+//                        if let userId = UserDefaults.standard.string(forKey: "UserId"), let id = Int(userId) {
+//                            vm.fetchUserProfile(userId: id)
+//                        }
+//                    }
+//            }
+//        }
+//        .navigationTitle("User Profile")
+//    }
+//}
+//

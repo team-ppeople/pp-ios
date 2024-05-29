@@ -9,22 +9,30 @@ import SwiftUI
 import Combine
 
 struct SettingView: View {
+
+
 	@ObservedObject var vm: LogInStatusViewModel = LogInStatusViewModel()
+    @ObservedObject var userVm: UserViewModel = UserViewModel()
 	
 	@State var isLoggedIn: Bool
+
 	@State var showNoticeAlert: Bool = false
-	
-	init(isLoggedIn: Bool) {
-		self.isLoggedIn = isLoggedIn
-	}
-	
+    @State private var showModal = false
+//	
+//	init(isLoggedIn: Bool) {
+//		self.isLoggedIn = isLoggedIn
+//	}
+//	
     var body: some View {
+
 		NavigationStack {
 			GeometryReader { geometry in
 				VStack {
 					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태, vm.isLoggedOut: 로그아웃 한 상태 (로그아웃API 요청, 또는 토큰 갱신 실패시)
 					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
-						MyProfileView()
+                        NavigationLink(destination: UserProfileView(vm: userVm)) {
+                            MyProfileView(vm: userVm)
+                        }
 					}
 					
 					Button (action: {
@@ -92,68 +100,52 @@ struct SettingView: View {
 					}
 				}
 			}
-		}
+		} .task {
+            if let userIdString = UserDefaults.standard.string(forKey: "UserId"), let userId = Int(userIdString) {
+                userVm.fetchUserProfile(userId: userId)
+            } else {
+                print("No valid userId found in UserDefaults")
+            }
+        }
 		.onAppear {
 			vm.subscribeLogInSubject()
 			vm.subscribeLogOutSubject()
 		}
+
     }
-	
-	private func createBoxStyle(_ text: String, version: String = "", isOnlyText: Bool = false) -> some View {
-		HStack {
-			Text(text)
-				.tint(.black)
-			Spacer()
-			if version == "" {
-				Text(text)
-					.hidden()
-				Image(systemName: "chevron.right")
-					.tint(.black)
-			} else if isOnlyText {
-				Image(systemName: "chevron.right")
-					.hidden()
-				Text(version)
-					.hidden()
-			} else {
-				Image(systemName: "chevron.right")
-					.hidden()
-				Text(version)
-					.tint(.accent)
-			}
-		}
-		.frame(maxWidth: .infinity)
-		.frame(height: 40)
-		.padding(.horizontal, 15)
-		.overlay(
-			RoundedRectangle(cornerRadius: 5)
-				.stroke(.sub, lineWidth: 1)
-		)
-	}
-	
-	private func currentAppVersion() -> String {
-		let info: [String: Any]? = Bundle.main.infoDictionary
-		let currentVersion: String? = info?["CFBundleShortVersionString"] as? String
-		let buildNumber: String? = info?["CFBundleVersion"] as? String
-		
-		return "\(currentVersion ?? "1.0") (\(buildNumber ?? ""))"
-	}
+
+    private func createBoxStyle(_ text: String, version: String = "", isOnlyText: Bool = false) -> some View {
+        HStack {
+            Text(text).tint(.black)
+            Spacer()
+            if version.isEmpty {
+                Image(systemName: "chevron.right")
+                    .tint(.black)
+            } else if isOnlyText {
+                Image(systemName: "chevron.right")
+                    .hidden()
+                Text(version).hidden()
+            } else {
+                Image(systemName: "chevron.right")
+                    .hidden()
+                Text(version).tint(.accent)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 40)
+        .padding(.horizontal, 15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(.sub, lineWidth: 1)
+        )
+    }
+
+    private func currentAppVersion() -> String {
+        let info: [String: Any]? = Bundle.main.infoDictionary
+        let currentVersion: String? = info?["CFBundleShortVersionString"] as? String
+        let buildNumber: String? = info?["CFBundleVersion"] as? String
+        return "\(currentVersion ?? "1.0") (\(buildNumber ?? ""))"
+    }
 }
 
-struct MyProfileView: View {
-	var body: some View {
-		HStack {
-			Image("kakao.login.icon")
-			Text("Hello, World!")
-			Button (action: {
-				print("")
-			}, label: {
-				Text("프로필 보기")
-			})
-		}
-		
-	}
-}
 
-#Preview {
-	SettingView(isLoggedIn: false)
-}

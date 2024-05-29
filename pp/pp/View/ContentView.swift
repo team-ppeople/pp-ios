@@ -9,7 +9,9 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+
 	private var isLoggedIn: Bool
+
 	
 	init(isLoggedIn: Bool) {
 		self.isLoggedIn = isLoggedIn

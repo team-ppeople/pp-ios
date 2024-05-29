@@ -26,13 +26,8 @@ struct EditProfileRequest : Codable {
 
 //MARK: - 유저 프로필 조회
 struct UserProfileResponse: Codable {
-    let data: UserData
+    let data: UserProfile
 }
-
-struct UserData: Codable {
-    let user: UserProfile
-}
-
 struct UserProfile: Codable {
     let id: Int
     let nickname: String
@@ -40,6 +35,11 @@ struct UserProfile: Codable {
     let postCount: Int
     let thumbsUpCount: Int
     let posts: [Post]
+    
+    
+    var profileImageUrls: URL? {
+        return  URL(string: "\(profileImageUrl)")
+    }
 }
 
 //MARK: - 유저 게시글 조회
