@@ -27,8 +27,8 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                     maxSelectionCount: maxPhotosToSelect,
                     matching: .images
                 ) {
-                    if let tempProfileImage = tempProfileImage, let profileImage = tempProfileImage.wrappedValue {
-                        Image(uiImage: profileImage)
+                    if let tempProfileImage = tempProfileImage?.wrappedValue {
+                        Image(uiImage: tempProfileImage)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 65, height: 65)
@@ -144,3 +144,4 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
         }
     }
 }
+

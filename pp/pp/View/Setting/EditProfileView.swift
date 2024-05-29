@@ -70,8 +70,20 @@ struct EditProfileView: View {
         }
         .onAppear {
             tempNickname = vm.nickname
-            tempProfileImage = vm.profileImage // 프로필 이미지 설정
+            tempProfileImage = vm.profileImage 
+                 // 프로필 이미지 설정
+            
+            print("onappear")
+        }
+        .onDisappear {
+            //            vm.clearUploadData()
+            /*tempProfileImage = UIImage(systemName: "person.fill") */  // EditProfileView가 dismiss될 때 초기화
+          print("disappear")
+            
         }
         .padding()
     }
 }
+
+
+

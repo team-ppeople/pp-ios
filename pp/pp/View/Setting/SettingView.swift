@@ -12,6 +12,7 @@ struct SettingView: View {
 
 
 	@ObservedObject var vm: LogInStatusViewModel = LogInStatusViewModel()
+    @ObservedObject var userVm: UserViewModel = UserViewModel()
 	
 	@State var isLoggedIn: Bool
 
@@ -29,7 +30,7 @@ struct SettingView: View {
 				VStack {
 					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태, vm.isLoggedOut: 로그아웃 한 상태 (로그아웃API 요청, 또는 토큰 갱신 실패시)
 					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
-						MyProfileView()
+                        MyProfileView(vm: userVm)
 					}
 					
 					Button (action: {
@@ -97,7 +98,13 @@ struct SettingView: View {
 					}
 				}
 			}
-		}
+		} .task {
+            if let userIdString = UserDefaults.standard.string(forKey: "UserId"), let userId = Int(userIdString) {
+                userVm.fetchUserProfile(userId: userId)
+            } else {
+                print("No valid userId found in UserDefaults")
+            }
+        }
 		.onAppear {
 			vm.subscribeLogInSubject()
 			vm.subscribeLogOutSubject()
@@ -138,3 +145,5 @@ struct SettingView: View {
         return "\(currentVersion ?? "1.0") (\(buildNumber ?? ""))"
     }
 }
+
+

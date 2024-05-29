@@ -119,12 +119,10 @@ struct UserProfileView: View {
             }
             .padding(.horizontal, 32)
             .padding(.top, 16)
-//            
+            
             Spacer()
-            CommunityView()
         }
         .padding(.top, 16)
-        
-        Spacer()
     }
 }
+
