@@ -10,7 +10,6 @@ import Combine
 
 struct SettingView: View {
 
-
 	@ObservedObject var vm: LogInStatusViewModel = LogInStatusViewModel()
     @ObservedObject var userVm: UserViewModel = UserViewModel()
 	
@@ -68,14 +67,14 @@ struct SettingView: View {
 					
 					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						Button (action: {
-							print("")
+							userVm.logout()
 						}, label: {
 							createBoxStyle("로그아웃", isOnlyText: true)
 						})
 						.padding(.bottom, 12)
 						
 						Button (action: {
-							print("")
+							userVm.deleteUser()
 						}, label: {
 							createBoxStyle("탈퇴하기", isOnlyText: true)
 						})

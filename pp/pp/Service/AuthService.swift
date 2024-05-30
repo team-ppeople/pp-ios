@@ -68,6 +68,7 @@ extension AuthService {
 					print("토큰 재발급 Error")
 					dump(error)
 					
+					self.logInSubject.send(false)
 					self.logOutSubject.send(true)
 					
 					UserDefaults.standard.set(nil, forKey: "AccessToken")
