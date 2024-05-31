@@ -44,7 +44,7 @@ struct SettingView: View {
 //							}
 //					})
 //					.padding(.bottom, 12)
-                    NavigationLink(destination: NoticeView()) {
+                    NavigationLink(destination: NoticeView(vm: userVm)) {
                                             createBoxStyle("공지사항")
                                         }
                                         .padding(.bottom, 12)
