@@ -50,3 +50,27 @@ struct UserPostsResponse: Codable {
 struct UserPostsData: Codable {
     let posts: [Post]
 }
+
+
+
+//MARK: - 공지사항
+struct NoticeResponse: Codable {
+    let data: NoticeData
+}
+
+struct NoticeData: Codable {
+    let notices: [Notice]
+}
+
+
+struct Notice: Identifiable, Codable, Hashable {
+    let id: Int
+    let title: String
+    let content: String
+    let createDate: String
+}
+
+
+
+
+

@@ -35,15 +35,19 @@ struct SettingView: View {
                         }
 					}
 					
-					Button (action: {
-						showNoticeAlert = true
-					}, label: {
-						createBoxStyle("공지사항")
-							.alert(isPresented: $showNoticeAlert) {
-								return Alert(title: Text(""), message: Text("아직 공지사항이 없습니다."))
-							}
-					})
-					.padding(.bottom, 12)
+//					Button (action: {
+//						showNoticeAlert = true
+//					}, label: {
+//						createBoxStyle("공지사항")
+//							.alert(isPresented: $showNoticeAlert) {
+//								return Alert(title: Text(""), message: Text("아직 공지사항이 없습니다."))
+//							}
+//					})
+//					.padding(.bottom, 12)
+                    NavigationLink(destination: NoticeView(vm: userVm)) {
+                                            createBoxStyle("공지사항")
+                                        }
+                                        .padding(.bottom, 12)
 					
 					Button (action: {
 						print("")
