@@ -12,78 +12,115 @@ struct CommunityDetailView: View {
     let postId: Int
     
     @Environment(\.dismiss) private var dismiss
-  
+    
     @State private var showAlert = false
     @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
-	
-	var body: some View {
-		GeometryReader { geometry in
-			VStack(alignment: .leading) {
-				if let imageUrls = vm.postDetail?.imageUrls, !imageUrls.isEmpty {
-					AutoScroller2(imageURLs: imageUrls, size: abs(geometry.size.width - 32))
-						.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
-				} else {
-					ProgressView()
-						.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
-				}
-				
-				Text(vm.postDetail?.title ?? "title")
-					.font(.system(size: 18))
-					.padding(.top, 25)
-				
-				Text(vm.postDetail?.createdDate ?? "date")
-					.font(.system(size: 12))
-				
-				Text(vm.postDetail?.content ?? "content")
-					.font(.system(size: 15))
-					.padding(.top, 20)
-				
-				LikeAndReplyView(vm: vm,postId:postId)
-				Spacer()
-			}
-			.onAppear {
-				print("Loading post details for postId: \(postId)")
-				vm.loadDetailPosts(postId: postId)
-			}
-			.padding(.horizontal, 16)
-			.padding(.vertical, 25)
-			
-			.toolbar {
-				ToolbarItem {
-					Menu {
-						Button(role: .destructive) {
-							showAlert = true
-						} label: {
-							Label("신고", systemImage: "exclamationmark.circle")
-								.frame(width: 22, height: 30)
-						}
-					} label: {
-						Image("menu.icon")
-							.frame(width: 22, height: 30)
-					}
-				}
-			}
-			.alert("신고 확인", isPresented: $showAlert) {
-				Button("확인", role: .destructive) {
-					showReportConfirmation = true
-					
-						// ToDo: - fetchPost에서 각 게시글 Id 받아와서 가지고 있다 신고할때 이 Id 값으로 신고
-					vm.reportPost(postId: self.postId)
-					print("신고 postId\(postId)")
-				}
-				Button("취소", role: .cancel) {}
-			} message: {
-				Text("이 게시물을 신고하시겠습니까?")
-			}
-			.alert("신고 완료", isPresented: $showReportConfirmation) {
-				Button("확인", role: .cancel) {
-					dismiss()
-				}
-			} message: {
-				Text("신고가 처리되었습니다.")
-			}
-		}
+    @State private var showDeleteAlert = false
+    @State private var showDeleteConfirmation = false
+    
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(alignment: .leading) {
+                if let imageUrls = vm.postDetail?.imageUrls, !imageUrls.isEmpty {
+                    AutoScroller2(imageURLs: imageUrls, size: abs(geometry.size.width - 32))
+                        .frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
+                } else {
+                    ProgressView()
+                        .frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
+                }
+                
+                Text(vm.postDetail?.title ?? "title")
+                    .font(.system(size: 18))
+                    .padding(.top, 25)
+                
+                Text(vm.postDetail?.createdDate ?? "date")
+                    .font(.system(size: 12))
+                
+                Text(vm.postDetail?.content ?? "content")
+                    .font(.system(size: 15))
+                    .padding(.top, 20)
+                
+                LikeAndReplyView(vm: vm,postId:postId)
+                Spacer()
+            }
+            .onAppear {
+                print("Loading post details for postId: \(postId)")
+                vm.loadDetailPosts(postId: postId)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 25)
+            
+            .toolbar {
+                ToolbarItem {
+                    Menu {
+                        Button(role: .destructive) {
+                            showAlert = true
+                        } label: {
+                            Label("신고", systemImage: "exclamationmark.circle")
+                                .frame(width: 22, height: 30)
+                        }
+                        if isUserPost() {
+                            Button {
+                                showDeleteAlert = true
+                            } label: {
+                                Label("삭제", systemImage: "trash")
+                                    .frame(width: 22, height: 30)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    } label: {
+                        Image("menu.icon")
+                            .frame(width: 22, height: 30)
+                    }
+                }
+            }
+            .alert("신고 확인", isPresented: $showAlert) {
+                Button("확인", role: .destructive) {
+                    showReportConfirmation = true
+                    vm.reportPost(postId: self.postId)
+                    print("신고 postId\(postId)")
+                }
+                Button("취소", role: .cancel) {}
+            } message: {
+                Text("이 게시물을 신고하시겠습니까?")
+            }
+            .alert("신고 완료", isPresented: $showReportConfirmation) {
+                Button("확인", role: .cancel) {
+                    dismiss()
+                }
+            } message: {
+                Text("신고가 처리되었습니다.")
+            }
+            .alert("삭제 확인", isPresented: $showDeleteAlert) {
+                Button("확인", role: .destructive) {
+                    showDeleteConfirmation = true
+                }
+                Button("취소", role: .cancel) {}
+            } message: {
+                Text("게시글을 삭제하시면 다시 복구하실 수 없습니다. 그래도 삭제하시겠습니까?")
+            }
+            .alert("삭제 완료", isPresented: $showDeleteConfirmation) {
+                Button("확인", role: .cancel) {
+                    vm.deletePost(postId: self.postId)
+                    dismiss()
+                }
+            } message: {
+                Text("게시글이 삭제되었습니다.")
+            }
+        }
     }
+                
+    
+    private func isUserPost() ->Bool {
+        guard let userId = UserDefaults.standard.string(forKey: "UserId"),
+              let postDetail = vm.postDetail else {
+            return false
+        }
+        return userId == String(postDetail.createdUser.id
+        )
+    }
+    
+    
 }
 
 
