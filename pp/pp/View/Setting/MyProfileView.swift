@@ -59,7 +59,7 @@ struct MyProfileView: View {
             
             Spacer()
             
-            NavigationLink(destination: UserProfileView(vm: vm)) {
+            NavigationLink(destination: UserProfileView(vm: vm, userId: nil)) {
                 Text("프로필 보기")
                     .frame(width: 93, height: 45)
 					.background(.accent)

@@ -11,10 +11,10 @@ import SwiftUI
 struct UserProfileView: View {
     @State private var showModal = false
     @ObservedObject var vm: UserViewModel
-   // let postId: Int
+    // let postId: Int
     
+    let userId: Int? 
     
-
     var body: some View {
         VStack {
             HStack(spacing: 8) {
@@ -66,7 +66,7 @@ struct UserProfileView: View {
                 }) {
                     Text("프로필 수정")
                         .frame(width: 93, height: 45)
-						.background(.accent)
+                        .background(.accent)
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
@@ -113,7 +113,7 @@ struct UserProfileView: View {
                         Text("0")
                     }
                     
-                  
+                    
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -122,67 +122,14 @@ struct UserProfileView: View {
             
             UserPostView(vm: vm)
             Spacer()
+            
         }
+        
         .padding(.top, 16)
+        .onAppear {
+            guard let userId = userId else { return }
+            vm.fetchUserProfile(userId: userId)
+            
+        }
     }
 }
-
-//import SwiftUI
-//
-//struct UserProfileView: View {
-//    @ObservedObject var vm: UserViewModel
-//
-//    var body: some View {
-//        VStack {
-//            if let userProfile = vm.userProfile {
-//                Text(userProfile.nickname)
-//                    .font(.title)
-//                    .padding()
-//
-//                if let profileImageUrl = userProfile.profileImageUrls{
-//                    AsyncImage(url: profileImageUrl) { phase in
-//                        switch phase {
-//                        case .empty:
-//                            ProgressView()
-//                        case .success(let image):
-//                            image
-//                                .resizable()
-//                                .scaledToFill()
-//                                .frame(width: 100, height: 100)
-//                                .clipShape(Circle())
-//                        case .failure:
-//                            Image(systemName: "person.fill")
-//                                .resizable()
-//                                .frame(width: 100, height: 100)
-//                                .clipShape(Circle())
-//                        @unknown default:
-//                            EmptyView()
-//                        }
-//                    }
-//                } else {
-//                    Image(systemName: "person.fill")
-//                        .resizable()
-//                        .frame(width: 100, height: 100)
-//                        .clipShape(Circle())
-//                }
-//
-//                List {
-//                    ForEach(userProfile.posts, id: \.id) { post in
-//                       // NavigationLink(destination: PostDetailView(post: post)) {
-//                            UserPostPreview(post: post, size: 100)
-//                       // }
-//                    }
-//                }
-//            } else {
-//                Text("Loading...")
-//                    .onAppear {
-//                        if let userId = UserDefaults.standard.string(forKey: "UserId"), let id = Int(userId) {
-//                            vm.fetchUserProfile(userId: id)
-//                        }
-//                    }
-//            }
-//        }
-//        .navigationTitle("User Profile")
-//    }
-//}
-//
