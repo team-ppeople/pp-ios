@@ -15,6 +15,7 @@ enum UserAPI {
     case fetchUserProfile(userId:Int) // 유저 프로필 조회
     case fetchUserPosts(userId: Int, limit: Int, lastId: Int?)// 유저 커뮤니티 게시글 목록 조회
     case uploadImage(presignedURL: String, imageData: Data)
+    case fetchNotices(limit: Int, lastId: Int?) // 공지사항 조회
 }
 
 extension UserAPI: TargetType {
@@ -43,6 +44,8 @@ extension UserAPI: TargetType {
             return "/api/v1/presigned-urls/upload"
         case .uploadImage:
             return ""
+        case .fetchNotices:
+            return "/api/v1/notices"
         }
     }
     
@@ -54,10 +57,11 @@ extension UserAPI: TargetType {
             return .patch
         case .deleteUser:
             return .delete
-        case .fetchUserProfile, .fetchUserPosts:
+        case .fetchUserProfile, .fetchUserPosts,.fetchNotices:
             return .get
         case .uploadImage:
             return .put
+        
         }
     }
     
@@ -85,6 +89,16 @@ extension UserAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .uploadImage(_, let imageData):
             return .requestData(imageData)
+        case .fetchNotices(let limit, let lastId):
+            let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
+            var parameters: [String: Any] = ["limit": adjustedLimit]
+            if let lastId = lastId {
+                parameters["lastId"] = lastId - 1
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            
+            
+            
         }
     }
     
@@ -94,6 +108,9 @@ extension UserAPI: TargetType {
             return ["Content-Type": "application/x-www-form-urlencoded"]
         case .uploadImage:
             return ["Content-Type": "image/jpeg"]
+        case .fetchNotices:
+            return ["Content-Type": "application/json"]
+            
         default:
             let accessToken = UserDefaults.standard.string(forKey: "AccessToken") ?? ""
             return [
