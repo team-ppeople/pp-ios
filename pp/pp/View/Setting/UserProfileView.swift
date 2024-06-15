@@ -56,7 +56,7 @@ struct UserProfileView: View {
                         .padding(.leading, 8)
                 }
                 
-                Text(vm.nickname.isEmpty ? "바다거북맘" : vm.nickname)
+                Text(vm.nickname.isEmpty ? "" : vm.nickname)
                     .font(.title3)
                 
                 Spacer()
@@ -66,13 +66,9 @@ struct UserProfileView: View {
                 }) {
                     Text("프로필 수정")
                         .frame(width: 93, height: 45)
-                        .background(Color.blue)
+						.background(.accent)
                         .foregroundColor(.white)
                         .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.blue, lineWidth: 1)
-                        )
                 }
                 .padding(.trailing, 8)
                 .sheet(isPresented: $showModal) {

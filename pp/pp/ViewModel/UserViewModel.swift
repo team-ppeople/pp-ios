@@ -54,25 +54,24 @@ class UserViewModel: PhotoPickerViewModel {
             do {
                 if let data = try await profileItem.loadTransferable(type: Data.self),
                    let image = UIImage(data: data) {
-                    profileImage = image
-                    
-                    let contentLength = data.count
-                    let contentType = data.containsPNGData() ? "image/png" : "image/jpeg"
+					let compressedImageData = image.jpegData(compressionQuality: 0.1) ?? Data()
+					let imageUpload = ImageUpload(imageData: compressedImageData)
+                    let contentLength = compressedImageData.count
+                    let contentType = compressedImageData.containsPNGData() ? "image/png" : "image/jpeg"
                     let fileName = "image_\(UUID().uuidString).\(contentType == "image/png" ? "png" : "jpg")"
                     let requestType = "PROFILE_IMAGE"
                     let presignedRequest = PresignedUploadUrlRequests(
                         fileType: requestType, fileName: fileName, fileContentLength: contentLength, fileContentType: contentType
                     )
                     
-                    presignedRequests.append(presignedRequest)
-                    
-                    let imageUpload = ImageUpload(imageData: data)
+					profileImage = image
+					presignedRequests.append(presignedRequest)
                     imageUploads.append(imageUpload)
-                    
+					selectedProfile.removeAll()
                     
                     print("Presigned request added: \(presignedRequest)") // 추가된 요청 확인
                     print("Image selected \(imageUpload)")
-                    selectedProfile.removeAll()
+					print("프로필 이미지 용량 : \(compressedImageData)")
                     //     imageUploads.removeAll()
                 } else {
                     print("Failed to load image data")
