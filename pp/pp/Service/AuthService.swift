@@ -13,7 +13,9 @@ class AuthService {
 	static let shared = AuthService()
 	
 	private var cancellables = Set<AnyCancellable>()
-	private let provider = MoyaProvider<AuthAPI>()
+	
+	lazy var provider = MoyaProvider<AuthAPI>(plugins: [networkLogger])
+	lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
 	
 	var accessTokenSubject = PassthroughSubject<String, Never>()
 	var logInSubject = CurrentValueSubject<Bool, Never>(false)
