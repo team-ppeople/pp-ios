@@ -24,7 +24,7 @@ struct UserPostView: View {
                     .toolbar {
                         ToolbarItem {
                             HStack {
-                                Text("나의 일기")
+                                Text("프로필")
                                     .font(.system(size: 20))
                                     .bold()
                                     .padding(.leading, 16)

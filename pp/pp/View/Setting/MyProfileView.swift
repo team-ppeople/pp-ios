@@ -53,21 +53,18 @@ struct MyProfileView: View {
             }
             
 //            Text((((vm.userProfile?.nickname.isEmpty) != nil) ? "바다거북맘" : vm.userProfile?.nickname) ?? "응답 실패")
-            Text(vm.nickname.isEmpty ? "바다거북맘" : vm.nickname)
+            Text(vm.nickname.isEmpty ? "" : vm.nickname)
                 .font(.title3)
+				.tint(.black)
             
             Spacer()
             
             NavigationLink(destination: UserProfileView(vm: vm)) {
                 Text("프로필 보기")
                     .frame(width: 93, height: 45)
-                    .background(Color.blue)
+					.background(.accent)
                     .foregroundColor(.white)
                     .cornerRadius(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
             }
         }
         .padding(.horizontal, 8)

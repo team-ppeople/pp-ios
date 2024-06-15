@@ -273,18 +273,21 @@ class CommunityViewModel: PhotoPickerViewModel {
                 Task {
                     if let imageData = try? await eachItem.loadTransferable(type: Data.self),
                        let image = UIImage(data: imageData) {
-                        uiImages.append(image)
-                        let contentLength = imageData.count
-                        let contentType = imageData.containsPNGData() ? "image/png" : "image/jpeg"
+						let compressedImageData = image.jpegData(compressionQuality: 0.1) ?? Data()
+						let imageUpload = ImageUpload(imageData: compressedImageData)
+                        let contentLength = compressedImageData.count
+                        let contentType = compressedImageData.containsPNGData() ? "image/png" : "image/jpeg"
                         let fileName = "image_\(UUID().uuidString).\(contentType == "image/png" ? "png" : "jpg")"
                         let requestType = "POST_IMAGE"
                         let presignedRequest = PresignedUploadUrlRequests(
                             fileType: requestType, fileName: fileName, fileContentLength: contentLength, fileContentType: contentType
                         )
+						
+						uiImages.append(image)
                         presignedRequests.append(presignedRequest)
-                        
-                        let imageUpload = ImageUpload(imageData: imageData)
                         imageUploads.append(imageUpload)
+						
+						print("게시물 이미지 용량 : \(compressedImageData)")
                     }
                 }
             }
