@@ -184,6 +184,7 @@ class LoginViewModel: ObservableObject {
 				self?.destination = .community
 				
 				self?.authService.logInSubject.send(true)
+				self?.authService.logOutSubject.send(false)
 			})
 			.store(in: &cancellables)
 	}

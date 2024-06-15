@@ -99,15 +99,30 @@ class UserViewModel: PhotoPickerViewModel {
             })
             .store(in: &cancellables)
     }
-    
-    func clearUploadData() {
-        imageUploads.removeAll()
-        presignedRequests.removeAll()
-        tempProfileImage = nil
-    }
-    
+
+	
+	func clearUploadData() {
+		imageUploads.removeAll()
+		presignedRequests.removeAll()
+		tempProfileImage = nil
+	}
+	
+	// 로그아웃
+	func logout() {
+		AuthService.shared.logInSubject.send(false)
+		AuthService.shared.logOutSubject.send(true)
+		
+		UserDefaults.standard.set(nil, forKey: "AccessToken")
+		UserDefaults.standard.set(nil, forKey: "RefreshToken")
+		UserDefaults.standard.set(nil, forKey: "UserId")
+		UserDefaults.standard.set(nil, forKey: "ClientId")
+	}
+
+
     // 유저 탈퇴
-    func deleteUser(userId: Int) {
+    func deleteUser() {
+		let userId = Int(UserDefaults.standard.string(forKey: "UserId") ?? "") ?? 0
+		
         UserService.shared.deleteUser(userId: userId)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -116,8 +131,10 @@ class UserViewModel: PhotoPickerViewModel {
                 case .failure(let error):
                     print("유저 탈퇴 중 오류 발생: \(error)")
                 }
-            }, receiveValue: {
+            }, receiveValue: { [weak self] in
                 print("유저 탈퇴")
+				
+				self?.logout()
             })
             .store(in: &cancellables)
     }

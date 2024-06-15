@@ -13,7 +13,9 @@ class AuthService {
 	static let shared = AuthService()
 	
 	private var cancellables = Set<AnyCancellable>()
-	private let provider = MoyaProvider<AuthAPI>()
+	
+	lazy var provider = MoyaProvider<AuthAPI>(plugins: [networkLogger])
+	lazy var networkLogger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
 	
 	var accessTokenSubject = PassthroughSubject<String, Never>()
 	var logInSubject = CurrentValueSubject<Bool, Never>(false)
@@ -68,6 +70,7 @@ extension AuthService {
 					print("토큰 재발급 Error")
 					dump(error)
 					
+					self.logInSubject.send(false)
 					self.logOutSubject.send(true)
 					
 					UserDefaults.standard.set(nil, forKey: "AccessToken")
