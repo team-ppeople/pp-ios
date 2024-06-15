@@ -20,9 +20,10 @@ class LogInStatusViewModel: ObservableObject {
 		authService.logInSubject
 			.sink { [weak self] receivedValue in
 				if receivedValue {
-					self?.isLoggedIn = true
 					print("LogInStatusViewModel 로그인 감지!")
 				}
+				
+				self?.isLoggedIn = receivedValue
 			}
 			.store(in: &cancellables)
 	}
@@ -32,9 +33,10 @@ class LogInStatusViewModel: ObservableObject {
 		authService.logOutSubject
 			.sink { [weak self] receivedValue in
 				if receivedValue {
-					self?.isLoggedOut = true
 					print("LogInStatusViewModel 로그아웃 감지!")
 				}
+				
+				self?.isLoggedOut = receivedValue
 			}
 			.store(in: &cancellables)
 	}
