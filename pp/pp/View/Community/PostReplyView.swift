@@ -28,7 +28,7 @@ struct PostReplyView: View {
                 VStack {
                     List {
                         ForEach($vm.comments) { $comments in
-                            ReplyCellView(id: comments.id, comments: comments.content)
+                            ReplyCellView(id: comments.id, comments: comments.content, user: comments.createdUser)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         reportCommentId = comments.id
@@ -188,20 +188,33 @@ struct ReplyCellView: View {
     
     let id:Int
     let comments: String
+    let user: CreatedUser
     @State var showFullText: Bool = false  // 댓글을 전체 보기 상태 관리
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image("kakao.login.icon")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 35, height: 35)
-                .clipShape(Circle())
-                .background(Circle().fill(Color.red))
-                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+            if let url = user.profileImageURL {
+                            AsyncImage(url: url) { image in
+                                image.resizable()
+                            } placeholder: {
+                                Color.gray
+                            }
+                            .scaledToFill()
+                            .frame(width: 35, height: 35)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                        } else {
+                            Image("person.fill")  // 기본 이미지 설정
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 35, height: 35)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                        }
+            
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(id)").font(.headline)
+                Text("\(user.nickname)").font(.headline)
                 Text(comments)
                     .lineLimit(showFullText ? nil : 3)
                     .font(.subheadline)
