@@ -162,6 +162,25 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
             }, receiveValue: { })
             .store(in: &cancellables)
     }
+    
+    //MARK: - 게시물 삭제
+    func deletePost(postId: Int) {
+        CommunityService.shared.deletePost(postId: postId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("게시글 삭제가 완료되었습니다.")
+                case .failure(let error):
+                    print("게시글 삭제 중 오류 발생: \(error)")
+                }
+            }, receiveValue: {
+                print("게시글 삭제")
+            })
+            .store(in: &cancellables)
+    }
+    
+    
+    
 	
     //MARK: - 게시물 좋아요
     func likePost(postId:Int) {

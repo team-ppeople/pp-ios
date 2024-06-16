@@ -14,7 +14,9 @@ struct CommunityDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var showAlert = false
-    @State private var showReportConfirmation = false
+
+    @State private var showReportConfirmation = false  // 신고 처리 확인용 Alert 표시
+
     @State private var showDeleteAlert = false
     @State private var showDeleteConfirmation = false
     
@@ -88,10 +90,12 @@ struct CommunityDetailView: View {
                 LikeAndReplyView(vm: vm, postId: postId)
             }
             .padding(.horizontal)
+
             .onAppear {
                 print("Loading post details for postId: \(postId)")
                 vm.loadDetailPosts(postId: postId)
             }
+
 
             .toolbar {
                 ToolbarItem {
@@ -109,39 +113,52 @@ struct CommunityDetailView: View {
                             } label: {
                                 Label("신고", systemImage: "exclamationmark.circle")
                                 
+
                             }
                         }
                     } label: {
                         Image("menu.icon")
+
                             .imageScale(.large)
+
+                          //  .frame(width: 22, height: 30)
+
                     }
                 }
             }
             .alert("신고 확인", isPresented: $showAlert) {
                 Button("확인", role: .destructive) {
                     showReportConfirmation = true
-                    vm.reportPost(postId: postId)
+
+                    vm.reportPost(postId: self.postId)
+                    print("신고 postId\(postId)")
+
                 }
                 Button("취소", role: .cancel) {}
             } message: {
                 Text("이 게시물을 신고하시겠습니까?")
             }
+
             .alert("삭제 확인", isPresented: $showDeleteAlert) {
                 Button("삭제", role: .destructive) {
+
                     showDeleteConfirmation = true
                 }
                 Button("취소", role: .cancel) {}
             } message: {
-                Text("게시글을 삭제하시겠습니까?")
+
+                Text("게시글을 삭제하시면 다시 복구하실 수 없습니다. 그래도 삭제하시겠습니까?")
             }
             .alert("삭제 완료", isPresented: $showDeleteConfirmation) {
                 Button("확인", role: .cancel) {
-                 // vm.deletePost(postId: postId)
+                    vm.deletePost(postId: self.postId)
+
                     dismiss()
                 }
             } message: {
                 Text("게시글이 삭제되었습니다.")
             }
+
 
             
          
@@ -156,8 +173,6 @@ struct CommunityDetailView: View {
            }
            return userId == postUserId
        }
-    
-    
 }
 
 
