@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TermsAgreementView: View {
 	@ObservedObject var vm: LoginViewModel
+    @ObservedObject var communityVm: CommunityViewModel
 	@State var privacyTermsToggleIsOn: Bool = false
 	@State var serviceTermsToggleIsOn: Bool = false
 	@State var allTermsToggleIsOn: Bool = false
@@ -138,14 +139,14 @@ struct TermsAgreementView: View {
 		.navigationDestination(isPresented: $vm.isTermsLinkActive) {
 			switch vm.destination {
 			case .community:
-				CommunityView()
+                CommunityView(vm: communityVm)
 			default:
-				CommunityView()
+                CommunityView(vm: communityVm)
 			}
 		}
 	}
 }
 
-#Preview {
-	TermsAgreementView(vm: LoginViewModel())
-}
+//#Preview {
+//	TermsAgreementView(vm: LoginViewModel())
+//}

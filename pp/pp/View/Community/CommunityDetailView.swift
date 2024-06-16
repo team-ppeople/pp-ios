@@ -27,16 +27,42 @@ struct CommunityDetailView: View {
                     ProgressView()
                         .frame(height: UIScreen.main.bounds.width - 32)
                 }
-                
                 HStack {
-                    Image(systemName: "person.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 35, height: 35)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                        .background(Circle().foregroundColor(.red))
-                    
+//                    NavigationLink(destination: UserProfileView(vm: UserViewModel(), userId: vm.postDetail?.createdUser.id)) {
+                        if let profileImageUrl = vm.postDetail?.createdUser.profileImageURL {
+                            AsyncImage(url: profileImageUrl) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(width: 35, height: 35)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 35, height: 35)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                case .failure:
+                                    Image(systemName: "person.crop.circle.badge.exclamationmark")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 35, height: 35)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        } else {
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 35, height: 35)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                .background(Circle().foregroundColor(.red))
+                        }
+                 //   }
                     Text(vm.postDetail?.createdUser.nickname ?? "닉네임 불러오는중...")
                         .font(.title2)
                         .foregroundColor(.primary)

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
 	@ObservedObject var vm: LoginViewModel = LoginViewModel()
+    @ObservedObject var communityVm: CommunityViewModel = CommunityViewModel()
 	
     var body: some View {
 		Text("커뮤니티 둘러보기")
@@ -32,11 +33,11 @@ struct LoginView: View {
 			.navigationDestination(isPresented: $vm.isKaKaoLinkActive) {
 				switch vm.destination {
 				case .community:
-					CommunityView()
+                    CommunityView(vm: communityVm)
 				case .termsAgreement:
-					TermsAgreementView(vm: vm)
+                    TermsAgreementView(vm: vm, communityVm: communityVm)
 				case .none:
-					TermsAgreementView(vm: vm)
+                    TermsAgreementView(vm: vm, communityVm: communityVm)
 				}
 			}
 			.alert(isPresented: $vm.showAlert) {
@@ -59,11 +60,11 @@ struct LoginView: View {
 			.navigationDestination(isPresented: $vm.isAppleLinkActive) {
 				switch vm.destination {
 				case .community:
-					CommunityView()
+                    CommunityView(vm: communityVm)
 				case .termsAgreement:
-					TermsAgreementView(vm: vm)
+                    TermsAgreementView(vm: vm, communityVm: communityVm)
 				case .none:
-					TermsAgreementView(vm: vm)
+                    TermsAgreementView(vm: vm, communityVm: communityVm)
 				}
 			}
 			.alert(isPresented: $vm.showAlert) {
