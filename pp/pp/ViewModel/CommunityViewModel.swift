@@ -9,7 +9,15 @@ import SwiftUI
 import Combine
 import PhotosUI
 
-class CommunityViewModel: PhotoPickerViewModel {
+class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
+    @Published var profileImageUrl: URL?
+    
+    @Published var nickname: String = ""
+    
+    @Published var userProfile: UserProfile?
+    
+   
+    
 	private let authService = AuthService.shared
     
     private var cancellables = Set<AnyCancellable>()
@@ -309,7 +317,27 @@ class CommunityViewModel: PhotoPickerViewModel {
                }
            }
        }
-    
+   
+    //MARK: - 프로필 사진 클릭하면 해당 유저 프로필 조회
+    func fetchUserProfile(userId: Int) {
+       
+            UserService.shared.fetchUserProfile(userId: userId)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("유저 프로필을 성공적으로 가져왔습니다.")
+                    case .failure(let error):
+                        print("유저 프로필 가져오기 중 오류 발생: \(error)")
+                    }
+                }, receiveValue: { userProfileResponse in
+                    self.userProfile = userProfileResponse.data
+                    self.nickname = userProfileResponse.data.nickname
+                    self.profileImageUrl = userProfileResponse.data.profileImageUrls
+                    print("Updated profileImageUrl: \(String(describing: self.profileImageUrl))")
+                })
+                .store(in: &cancellables)
+
+    }
     
 }
     
