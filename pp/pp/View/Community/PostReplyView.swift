@@ -28,8 +28,10 @@ struct PostReplyView: View {
                 VStack {
                     List {
                         ForEach($vm.comments) { $comments in
+
                             ReplyCellView(id: comments.id, comments: comments.content, user: comments.createdUser, vm: vm)
                                 .padding(.leading, -16)
+
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         reportCommentId = comments.id
@@ -191,10 +193,12 @@ struct ReplyCellView: View {
     let id: Int
     let comments: String
     let user: CreatedUser
+
     @ObservedObject var vm: CommunityViewModel
     
     @State var showFullText: Bool = false
     @State private var isActive = false  // NavigationLink 활성화를 위한 상태 변수
+
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
