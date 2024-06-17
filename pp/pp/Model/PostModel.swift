@@ -104,6 +104,9 @@ struct CreatedUser: Codable {
     let id: Int
     let nickname: String
     let profileImageUrl: String
+   var profileImageURL: URL? {
+           URL(string: profileImageUrl)
+       }
 }
 
 struct UserActionHistory: Codable {
@@ -124,6 +127,7 @@ struct Comment: Codable,Identifiable {
     let id: Int
     let content: String
     let createDate: String
+    let createdUser: CreatedUser
 }
 
 //MARK: - 댓글 작성

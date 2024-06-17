@@ -16,6 +16,9 @@ struct EditProfileView: View {
     let maxPhotosToSelect = 1
     @State private var selectedIndex: Int = 0
     @State private var isShownSheet = false
+    @State private var originalProfileImage: UIImage?
+    @State private var originalNickname: String = ""
+    @State private var isUpdateConfirmed = false
 
     var body: some View {
         VStack {
@@ -41,23 +44,23 @@ struct EditProfileView: View {
                 .padding()
 
             Button(action: {
-                // 유저 정보 수정 호출
                 vm.nickname = tempNickname
                 if let tempProfileImage = tempProfileImage {
-                    vm.profileImage = tempProfileImage // 이미지 업데이트
+                    vm.profileImage = tempProfileImage
                 }
-                
+
                 if vm.presignedRequests.isEmpty {
                     print("Presigned 요청 비어있음")
                 } else {
                     if let userIdString = UserDefaults.standard.string(forKey: "UserId"),
                        let userId = Int(userIdString) {
                         vm.updateProfile(userId: userId)
+                        isUpdateConfirmed = true
                     } else {
                         print("UserId 찾을수 없음")
                     }
                 }
-                
+
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Text("수정 완료")
@@ -70,20 +73,16 @@ struct EditProfileView: View {
         }
         .onAppear {
             tempNickname = vm.nickname
-            tempProfileImage = vm.profileImage 
-                 // 프로필 이미지 설정
-            
-            print("onappear")
+            originalNickname = vm.nickname
+            tempProfileImage = vm.profileImage
+            originalProfileImage = vm.profileImage
         }
         .onDisappear {
-            //            vm.clearUploadData()
-            /*tempProfileImage = UIImage(systemName: "person.fill") */  // EditProfileView가 dismiss될 때 초기화
-          print("disappear")
-            
+            if !isUpdateConfirmed {
+                vm.profileImage = originalProfileImage
+                vm.nickname = originalNickname
+            }
         }
         .padding()
     }
 }
-
-
-

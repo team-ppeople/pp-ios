@@ -28,7 +28,10 @@ struct PostReplyView: View {
                 VStack {
                     List {
                         ForEach($vm.comments) { $comments in
-                            ReplyCellView(id: comments.id, comments: comments.content)
+
+                            ReplyCellView(id: comments.id, comments: comments.content, user: comments.createdUser, vm: vm)
+                                .padding(.leading, -16)
+
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         reportCommentId = comments.id
@@ -39,6 +42,7 @@ struct PostReplyView: View {
                                 }
                         }
                     }
+                    
                     .listStyle(.plain)
                     .scrollIndicators(.hidden)
                     .ignoresSafeArea(edges: .horizontal)
@@ -186,22 +190,39 @@ struct PostReplyView: View {
 
 struct ReplyCellView: View {
     
-    let id:Int
+    let id: Int
     let comments: String
-    @State var showFullText: Bool = false  // 댓글을 전체 보기 상태 관리
+    let user: CreatedUser
+
+    @ObservedObject var vm: CommunityViewModel
+    
+    @State var showFullText: Bool = false
+    @State private var isActive = false  // NavigationLink 활성화를 위한 상태 변수
+
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image("kakao.login.icon")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 35, height: 35)
-                .clipShape(Circle())
-                .background(Circle().fill(Color.red))
-                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+            // NavigationLink와 함께 클릭 가능한 프로필 이미지
+            NavigationLink(destination: UserProfileView(vm: vm, userId: user.id), isActive: $isActive) {
+                
+
+                EmptyView()
+            }
             
+        
+            
+            .hidden()
+            .frame(width: 0, height: 0)
+            
+            Button(action: {
+                self.isActive = true  // 버튼 클릭 시 NavigationLink 활성화
+            }) {
+                profileImageView(url: user.profileImageURL)
+            }
+            .buttonStyle(PlainButtonStyle())  // 버튼 스타일 제거하여 이미지만 표시
+
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(id)").font(.headline)
+                Text("\(user.nickname)").font(.headline)
                 Text(comments)
                     .lineLimit(showFullText ? nil : 3)
                     .font(.subheadline)
@@ -219,8 +240,37 @@ struct ReplyCellView: View {
             Spacer()
         }
         .padding(.vertical, 8)
+        .padding(.leading, 0)  // 왼쪽 패딩을 0으로 설정하여 더 왼쪽으로 밀착
+    }
+
+    // 프로필 이미지를 로딩하는 뷰
+    @ViewBuilder
+    private func profileImageView(url: URL?) -> some View {
+        if let url = url {
+            AsyncImage(url: url) { phase in
+                if let image = phase.image {
+                    image.resizable()
+                } else if phase.error != nil {
+                    Color.red
+                } else {
+                    Color.blue
+                }
+            }
+            .scaledToFill()
+            .frame(width: 35, height: 35)
+            .clipShape(Circle())
+            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+        } else {
+            Image(systemName: "person.fill")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 35, height: 35)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+        }
     }
 }
+
 
 struct DynamicHeightTextEditor: UIViewRepresentable {
     @Binding var text: String

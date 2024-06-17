@@ -29,9 +29,11 @@ struct DiaryDetailView: View {
 				Text(Utils.toString(diaryPost.date))
 					.font(.system(size: 12))
 				
-				Text(diaryPost.contents ?? "")
-					.font(.system(size: 15))
-					.padding(.top, 20)
+                ScrollView(showsIndicators: false) {
+                    Text(diaryPost.contents ?? "")
+                        .font(.system(size: 15))
+                        .padding(.top, 20)
+                }
 				
 				Spacer()
 			}

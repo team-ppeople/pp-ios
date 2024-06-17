@@ -20,6 +20,7 @@ enum CommunityAPI {
     case writeComments(postId: Int, comment: CommentRequest)
     case reportComment(commentId: Int)
     case uploadImage(presignedURL: String, imageData: Data)
+    case deletePost(postId:Int)
 }
 
 extension CommunityAPI: TargetType {
@@ -50,8 +51,11 @@ extension CommunityAPI: TargetType {
             return "/api/v1/comments/\(commentId)/report"
         case .getPresignedId:
             return "/api/v1/presigned-urls/upload"
+        case .deletePost(postId: let postId):
+            return "/api/v1/posts/\(postId)"
         case .uploadImage:
             return ""
+        
         }
     }
     
@@ -63,6 +67,8 @@ extension CommunityAPI: TargetType {
             return .get
         case .uploadImage:
             return .put
+        case .deletePost:
+            return .delete
         }
     }
     
@@ -80,7 +86,7 @@ extension CommunityAPI: TargetType {
                 parameters["lastId"] = lastId - 1
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case .fetchDetailPosts, .reportPost, .thumbsUp, .thumbs_sideways, .reportComment:
+        case .fetchDetailPosts, .reportPost, .thumbsUp, .thumbs_sideways, .reportComment,.deletePost:
             return .requestPlain
         case .fetchComments(let postId, let limit, let lastId):
             let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용

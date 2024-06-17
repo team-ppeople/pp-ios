@@ -29,7 +29,7 @@ struct SettingView: View {
 				VStack {
 					// MARK: - isLoggedIn: 앱 시작시 로그인 된 상태, vm.isLoggedIn: 로그인API 요청 후 로그인 된 상태, vm.isLoggedOut: 로그아웃 한 상태 (로그아웃API 요청, 또는 토큰 갱신 실패시)
 					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
-                        NavigationLink(destination: UserProfileView(vm: userVm)) {
+                        NavigationLink(destination: UserProfileView(vm: userVm, userId: nil)) {
                             MyProfileView(vm: userVm)
                         }
 					}

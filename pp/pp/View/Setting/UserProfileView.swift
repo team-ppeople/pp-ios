@@ -8,13 +8,13 @@
 import SwiftUI
 
 
-struct UserProfileView: View {
+struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
     @State private var showModal = false
-    @ObservedObject var vm: UserViewModel
-   // let postId: Int
+    @ObservedObject var vm: ViewModel
+    // let postId: Int
     
+    let userId: Int? 
     
-
     var body: some View {
         VStack {
             HStack(spacing: 8) {
@@ -56,27 +56,48 @@ struct UserProfileView: View {
                         .padding(.leading, 8)
                 }
                 
-                Text(vm.nickname.isEmpty ? "" : vm.nickname)
+                Text(vm.nickname.isEmpty ? "닉네임 불러오기 실패" : vm.nickname)
                     .font(.title3)
                 
                 Spacer()
+
+                let currentUserId = UserDefaults.standard.string(forKey: "UserId").flatMap(Int.init)
+
+                               // 프로필 수정 버튼 표시 조건
+                               if type(of: vm) == UserViewModel.self || (type(of: vm) == CommunityViewModel.self && userId == currentUserId) {
+                                   Button(action: {
+                                       showModal.toggle()
+                                   }) {
+                                       Text("프로필 수정")
+                                           .frame(width: 93, height: 45)
+                                           .background(Color.accentColor)
+                                           .foregroundColor(.white)
+                                           .cornerRadius(8)
+                                   }
+                                   .padding(.trailing, 8)
+                                   .sheet(isPresented: $showModal) {
+                                       if let userVM = vm as? UserViewModel {
+                                           EditProfileView(vm: userVM)
+                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                                               .cornerRadius(40)
+                                       }
+                                       
+//                                       if let vm = vm as? CommunityViewModel {
+//                                           EditProfileView(vm: vm)
+//                                              
+//                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+//                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+//                                               .cornerRadius(40)
+//                                       }
+                                       
+                                       
+                                   }
+                               }
+                         
                 
-                Button(action: {
-                    showModal.toggle()
-                }) {
-                    Text("프로필 수정")
-                        .frame(width: 93, height: 45)
-						.background(.accent)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding(.trailing, 8)
-                .sheet(isPresented: $showModal) {
-                    EditProfileView(vm: vm)
-                        .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
-                        .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
-                        .cornerRadius(40)
-                }
+                
+                
             }
             .padding(.horizontal, 8)
             
@@ -113,76 +134,24 @@ struct UserProfileView: View {
                         Text("0")
                     }
                     
-                  
+                    
                 }
                 .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 32)
             .padding(.top, 16)
             
-            UserPostView(vm: vm)
+             UserPostView(vm: vm)
             Spacer()
+            
         }
+        
         .padding(.top, 16)
+        .onAppear {
+            guard let userId = userId else { return }
+            print("유저아이디\(userId)")
+            vm.fetchUserProfile(userId: userId)
+            
+        }
     }
 }
-
-//import SwiftUI
-//
-//struct UserProfileView: View {
-//    @ObservedObject var vm: UserViewModel
-//
-//    var body: some View {
-//        VStack {
-//            if let userProfile = vm.userProfile {
-//                Text(userProfile.nickname)
-//                    .font(.title)
-//                    .padding()
-//
-//                if let profileImageUrl = userProfile.profileImageUrls{
-//                    AsyncImage(url: profileImageUrl) { phase in
-//                        switch phase {
-//                        case .empty:
-//                            ProgressView()
-//                        case .success(let image):
-//                            image
-//                                .resizable()
-//                                .scaledToFill()
-//                                .frame(width: 100, height: 100)
-//                                .clipShape(Circle())
-//                        case .failure:
-//                            Image(systemName: "person.fill")
-//                                .resizable()
-//                                .frame(width: 100, height: 100)
-//                                .clipShape(Circle())
-//                        @unknown default:
-//                            EmptyView()
-//                        }
-//                    }
-//                } else {
-//                    Image(systemName: "person.fill")
-//                        .resizable()
-//                        .frame(width: 100, height: 100)
-//                        .clipShape(Circle())
-//                }
-//
-//                List {
-//                    ForEach(userProfile.posts, id: \.id) { post in
-//                       // NavigationLink(destination: PostDetailView(post: post)) {
-//                            UserPostPreview(post: post, size: 100)
-//                       // }
-//                    }
-//                }
-//            } else {
-//                Text("Loading...")
-//                    .onAppear {
-//                        if let userId = UserDefaults.standard.string(forKey: "UserId"), let id = Int(userId) {
-//                            vm.fetchUserProfile(userId: id)
-//                        }
-//                    }
-//            }
-//        }
-//        .navigationTitle("User Profile")
-//    }
-//}
-//

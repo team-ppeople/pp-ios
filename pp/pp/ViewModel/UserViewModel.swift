@@ -9,7 +9,18 @@ import Combine
 import UIKit
 import _PhotosUI_SwiftUI
 
-class UserViewModel: PhotoPickerViewModel {
+
+
+
+protocol UserViewModelProtocol: ObservableObject {
+    var profileImageUrl: URL? { get }
+    var nickname: String { get }
+    var userProfile: UserProfile? { get }
+    func fetchUserProfile(userId: Int)
+}
+
+
+class UserViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     var uiImages: [UIImage] = []
     
     var selectedPhotos: [PhotosPickerItem]  = []
@@ -196,7 +207,3 @@ class UserViewModel: PhotoPickerViewModel {
     
     
 }
-////
-////
-//
-//

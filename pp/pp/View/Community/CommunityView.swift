@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityView: View {
-    @ObservedObject var vm: CommunityViewModel = CommunityViewModel()
+    @ObservedObject var vm: CommunityViewModel
     
     var body: some View {
 		ZStack(alignment: .bottomTrailing) {
