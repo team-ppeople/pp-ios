@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct UserPostView: View {
-    @ObservedObject var vm: UserViewModel
+struct UserPostView<ViewModel: UserViewModelProtocol>: View {
+    @ObservedObject var vm: ViewModel
 
     var body: some View {
         NavigationStack {

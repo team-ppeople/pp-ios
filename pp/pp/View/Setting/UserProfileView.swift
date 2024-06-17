@@ -84,8 +84,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                                        }
                                        
 //                                       if let vm = vm as? CommunityViewModel {
-////                                           EditProfileView(vm: vm)
-//                                               TestView()
+//                                           EditProfileView(vm: vm)
+//                                              
 //                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
 //                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
 //                                               .cornerRadius(40)
@@ -141,7 +141,7 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             .padding(.horizontal, 32)
             .padding(.top, 16)
             
-        //    UserPostView(vm: vm)
+             UserPostView(vm: vm)
             Spacer()
             
         }
@@ -155,62 +155,3 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
         }
     }
 }
-
-
-
-//
-//
-//
-//struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
-//    @State private var showModal = false
-//    @ObservedObject var vm: ViewModel
-//    let userId: Int?
-//
-//    var body: some View {
-//        VStack {
-//            HStack(spacing: 8) {
-//                // AsyncImage 로직...
-//                
-//                Text(vm.nickname.isEmpty ? "" : vm.nickname)
-//                    .font(.title3)
-//
-//                Spacer()
-//
-//                // 타입 확인하여 조건부로 버튼 표시
-//                if type(of: vm) == UserViewModel.self {
-//                    Button(action: {
-//                        showModal.toggle()
-//                    }) {
-//                        Text("프로필 수정")
-//                            .frame(width: 93, height: 45)
-//                            .background(.accent)
-//                            .foregroundColor(.white)
-//                            .cornerRadius(8)
-//                    }
-//                    .padding(.trailing, 8)
-//                    .sheet(isPresented: $showModal) {
-//                        // EditProfileView는 UserViewModel만을 사용하도록 설계되어 있으므로 다운캐스팅이 필요
-//                        if let userVM = vm as? UserViewModel {
-//                            EditProfileView(vm: userVM)
-//                                .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
-//                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
-//                                .cornerRadius(40)
-//                        }
-//                  }
-//                }
-//            }
-//            .padding(.horizontal, 8)
-//            
-//            Divider().background(Color.gray).padding(.horizontal, 32).padding(.top, 16)
-//            
-//            // HStack 로직...
-//            
-//            Spacer()
-//        }
-//        .padding(.top, 16)
-//        .onAppear {
-//            guard let userId = userId else { return }
-//            vm.fetchUserProfile(userId: userId)
-//        }
-//    }
-//}
