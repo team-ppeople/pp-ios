@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EditProfileView<ViewModel: UserViewModelProtocol & PhotoPickerViewModel>: View {
+   
     @ObservedObject var vm: ViewModel
     @State private var showModal = false
     @State private var tempNickname: String = ""
