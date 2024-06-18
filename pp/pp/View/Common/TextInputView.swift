@@ -39,19 +39,5 @@ struct TextInputView: View {
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
-    }
-    
-    
-    
-    private func isValidInput(_ input: String) -> Bool {
-          // 유효성 검사 - 공백문자만 있는지,Html 태그 방지,최소한 하나의 공백 아닌 문자 포함해야함
-        let pattern = "^(?!\\s*$)(?!.*<[^>]+>).+"
-          let regex = try? NSRegularExpression(pattern: pattern)
-          let range = NSRange(location: 0, length: input.utf16.count)
-          return regex?.firstMatch(in: input, options: [], range: range) != nil
-      }
-    
-    
-    
-    
+    }    
 }

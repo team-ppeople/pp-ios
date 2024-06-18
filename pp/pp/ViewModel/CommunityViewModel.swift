@@ -39,6 +39,7 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     @Published var selectedPhotos: [PhotosPickerItem] = []
     @Published var profileImage: UIImage?
     @Published var selectedProfile: [PhotosPickerItem] = []
+	
     //MARK: - 이미지 업로드 가능 여부 확인(Presigned-URL)
     func getPresignedId(imageData:[PresignedUploadUrlRequests]) {
         CommunityService.shared.getPresignedId(requestData: imageData)
@@ -46,13 +47,16 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
             .sink { [weak self] completion in
 				switch completion {
 				case .finished:
-					print("게시물 작성 완료")
+					print("이미지 업로드 완료")
 				case .failure(let error):
-					print("게시물 작성 Error")
+					print("이미지 업로드 Error")
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken {
+							print("fetchRefreshToken")
+							self?.getPresignedId(imageData: imageData)
+						}
 					}
 				}
             } receiveValue: { response in
@@ -62,26 +66,50 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     }
     
     //MARK: -  작성 완료 버튼 누르면 동작 -> 게시글 작성 API 호출
-    func writePost(title: String, content: String) {
+	func writePost(withImages: Bool, title: String, content: String) {
 
-		CommunityService.shared.uploadPostWithImages(title: title, content: content, imageUploads: imageUploads, presignedRequests: presignedRequests)
-			.sink(receiveCompletion: { [weak self] completion in
-				switch completion {
-				case .finished:
-					print("게시물 작성 완료")
-				case .failure(let error):
-					print("게시물 작성 Error")
-					dump(error)
-					
-					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+		if withImages {
+			CommunityService.shared.uploadPostWithImages(title: title, content: content, imageUploads: imageUploads, presignedRequests: presignedRequests)
+				.sink(receiveCompletion: { [weak self] completion in
+					switch completion {
+					case .finished:
+						print("이미지와 함께 게시물 작성 완료")
+						self?.loadPosts(lastId: nil)
+					case .failure(let error):
+						print("이미지와 함께 게시물 작성 Error")
+						dump(error)
+						
+						if error.statusCode == 401 {
+							self?.authService.fetchRefreshToken {
+								print("fetchRefreshToken")
+								self?.writePost(withImages: true, title: title, content: content)
+							}
+						}
 					}
-				}
-			}, receiveValue: {
-				print("게시글 생성 완료")
-			})
-			.store(in: &cancellables)
-        }
+				}, receiveValue: { })
+				.store(in: &cancellables)
+		} else {
+			CommunityService.shared.createPost(post: PostRequest(title: title, content: content, postImageFileUploadIds: []))
+				.sink(receiveCompletion: { [weak self] completion in
+					switch completion {
+					case .finished:
+						print("No Image 게시물 작성 완료")
+						self?.loadPosts(lastId: nil)
+					case .failure(let error):
+						print("No Image 게시물 작성 Error")
+						dump(error)
+						
+						if error.statusCode == 401 {
+							self?.authService.fetchRefreshToken {
+								print("fetchRefreshToken")
+								self?.writePost(withImages: false, title: title, content: content)
+							}
+						}
+					}
+				}, receiveValue: { })
+				.store(in: &cancellables)
+		}
+	}
 	
     //MARK: - 글 작성 후 리셋
     func reset() {
@@ -106,7 +134,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.loadPosts(lastId: lastId)
+						}
 					}
 				}
             }, receiveValue: { response in
@@ -129,7 +160,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.loadDetailPosts(postId: postId)
+						}
 					}
 				}
 
@@ -156,7 +190,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.reportPost(postId: postId)
+						}
 					}
 				}
             }, receiveValue: { })
@@ -194,7 +231,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.likePost(postId: postId)
+						}
 					}
 				}
             }, receiveValue: { })
@@ -215,7 +255,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.dislikePost(postId: postId)
+						}
 					}
 				}
             }, receiveValue: { })
@@ -225,7 +268,7 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 	
    //MARK: - 게시물 댓글 불러오기
 
-    func loadComments(postId:Int,limit:Int,lastId:Int?) {
+    func loadComments(postId:Int,limit:Int = 100 ,lastId:Int?) {
         CommunityService.shared.fetchComments(postId: postId,limit: limit,lastId: lastId)
             .sink(receiveCompletion: { [weak self] completion in
 				switch completion {
@@ -236,7 +279,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.loadComments(postId: postId, lastId: lastId)
+						}
 					}
 				}
             }, receiveValue: { commentsResponse in
@@ -256,12 +302,16 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 				switch completion {
 				case .finished:
 					print("게시물 댓글 작성 완료")
+					self?.loadComments(postId: postId, lastId: nil)
 				case .failure(let error):
 					print("게시물 댓글 작성 Error")
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.submitComments(postId: postId, content: content)
+						}
 					}
 				}
             }, receiveValue: { })
@@ -280,7 +330,10 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken() {
+							print("fetchRefreshToken")
+							self?.reportComment(commentId: commentId)
+						}
 					}
 				}
             }, receiveValue: { })
