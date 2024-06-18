@@ -108,7 +108,7 @@ struct PostReplyView: View {
                 }
             }
             .task {
-                vm.loadComments(postId: self.postId, limit: 20, lastId: nil)
+                vm.loadComments(postId: self.postId, lastId: nil)
             }
             .onAppear {
                 setupKeyboardObservers()

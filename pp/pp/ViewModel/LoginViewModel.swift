@@ -150,7 +150,9 @@ class LoginViewModel: ObservableObject {
 					dump(error)
 					
 					if error.statusCode == 401 {
-						self?.authService.fetchRefreshToken()
+						self?.authService.fetchRefreshToken {
+							print("fetchRefreshToken")
+						}
 					} else {
 						self?.showAlert = true
 					}

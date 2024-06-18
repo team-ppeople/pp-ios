@@ -36,7 +36,9 @@ class AppViewModel: ObservableObject {
 		
 		if expiration - issuedAt < 2 {
 			print("토큰 만료됨:: \(expiration - issuedAt)")
-			self.authService.fetchRefreshToken()
+			self.authService.fetchRefreshToken {
+				print("fetchRefreshToken")
+			}
 		}
 	}
 }

@@ -59,12 +59,16 @@ struct PostRequest: Codable {
 
 struct Post: Codable, Identifiable,Hashable {
     let id: Int
-    let thumbnailUrl: String
+    let thumbnailUrl: String?
     let title: String
     let createDate: String
     
     var thumbnailURLs: URL? {
-        return  URL(string: "\(thumbnailUrl)")
+		if let thumbnailUrl = thumbnailUrl {
+			return URL(string: "\(thumbnailUrl)")
+		} else {
+			return nil
+		}
     }
 }
 

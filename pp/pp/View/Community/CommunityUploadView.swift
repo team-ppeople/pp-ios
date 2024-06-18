@@ -29,13 +29,17 @@ struct CommunityUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
-                        if !isValidInput(vm.title) || !isValidInput(vm.contents) || vm.uiImages.isEmpty {
+                        if !isValidInput(vm.title) || !isValidInput(vm.contents) {
                             showAlert = true
-                        } else {
-                            vm.writePost(title: vm.title, content: vm.contents)
+                        } else if vm.uiImages.isEmpty {
+							vm.writePost(withImages: false, title: vm.title, content: vm.contents)
                             dismiss()
                             vm.reset()
-                        }
+						} else {
+							vm.writePost(withImages: true, title: vm.title, content: vm.contents)
+							dismiss()
+							vm.reset()
+						}
                     }
                     .tint(.white)
                     .frame(width: 120, height: 40)
@@ -46,17 +50,14 @@ struct CommunityUploadView: View {
                 .padding(.top, 20)
                 Spacer()
             }
-            .onTapGesture {
-                hideKeyboard()
-            }
             .padding(.top, 24)
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("입력 오류"),
-                    message: Text("이미지, 제목 및 내용을 모두 입력해 주세요."),
-                    dismissButton: .default(Text("확인"))
-                )
-            }
+			.alert(isPresented: $showAlert) {
+				Alert(
+					title: Text("입력 오류"),
+					message: Text("제목 및 내용을 모두 입력해 주세요."),
+					dismissButton: .default(Text("확인"))
+				)
+			}
         }
         .navigationBarTitle("업로드", displayMode: .inline)
         .navigationBarBackButtonHidden(true) // 기본 네비게이션 뒤로가기 버튼 숨기기
@@ -88,6 +89,9 @@ struct CommunityUploadView: View {
         .sheet(isPresented: $isShownSheet) {
             ImageCropper(image: $vm.uiImages[selectedIndex])
         }
+		.onTapGesture {
+			hideKeyboard()
+		}
     }
 
     private func hideKeyboard() {

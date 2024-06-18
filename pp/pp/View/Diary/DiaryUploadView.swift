@@ -31,7 +31,7 @@ struct DiaryUploadView: View {
                 HStack {
                     Spacer()
                     Button("작성 완료") {
-                        if !isValidInput(vm.title) || !isValidInput(vm.contents) || vm.uiImages.isEmpty {
+                        if !isValidInput(vm.title) || !isValidInput(vm.contents) {
                             showAlert = true
                         } else {
                             vm.convertImageToData {
@@ -50,14 +50,11 @@ struct DiaryUploadView: View {
                 .padding(.top, 20)
                 Spacer()
             }
-            .onTapGesture {
-                hideKeyboard()
-            }
             .padding(.top, 24)
             .alert(isPresented: $showAlert) {
                 Alert(
                     title: Text("입력 오류"),
-                    message: Text("이미지, 제목 및 내용을 모두 입력해 주세요."),
+                    message: Text("제목 및 내용을 모두 입력해 주세요."),
                     dismissButton: .default(Text("확인"))
                 )
             }
@@ -97,6 +94,9 @@ struct DiaryUploadView: View {
         .sheet(isPresented: $isShownSheet, content: {
             ImageCropper(image: $vm.uiImages[selectedIndex])
         })
+		.onTapGesture {
+			hideKeyboard()
+		}
     }
 
     private func hideKeyboard() {
