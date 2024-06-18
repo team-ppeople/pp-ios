@@ -40,53 +40,28 @@ class UserService {
     }
     
     //MARK: - 프로필 수정
-    //        func updateUserProfile(userId: Int, nickname: String, imageUploads: [ImageUpload], presignedRequests: [PresignedUploadUrlRequests]) -> AnyPublisher<Void, APIError> {
-    //            return getPresignedId(requestData: presignedRequests)
-    //                .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
-    //                    let uploadPublishers = presignedResponse.data.presignedUploadFiles.enumerated().map { (index, file) in
-    //                        self.uploadImageToPresignedURL(presignedURL: file.presignedUploadUrl, imageData: imageUploads[index].imageData)
-    //                            .mapError { _ in APIError(type: "about:blank", title: "Upload Error", status: 500, detail: "Failed to upload image", instance: "/error-upload") }
-    //                    }
-    //
-    //                    return Publishers.MergeMany(uploadPublishers)
-    //                        .collect()
-    //                        .flatMap { _ -> AnyPublisher<Void, APIError> in
-    //                            let fileUploadId = presignedResponse.data.presignedUploadFiles.first!.fileUploadId
-    //                            let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: fileUploadId)
-    //                            return self.editUserInfo(userId: userId, profile: profile)
-    //                        }
-    //                        .eraseToAnyPublisher()
-    //                }
-    //                .catch { error -> AnyPublisher<Void, APIError> in
-    //                    print("Error in updating user profile: \(error.status): \(error.title)")
-    //                    return Fail(error: APIError(type: "about:blank", title: "Comprehensive Error", status: 500, detail: "Failed to update user profile", instance: "/error")).eraseToAnyPublisher()
-    //                }
-    //                .eraseToAnyPublisher()
-    //        }
     func updateUserProfile(userId: Int, nickname: String, imageUploads: [ImageUpload], presignedRequests: [PresignedUploadUrlRequests]) -> AnyPublisher<Void, APIError> {
-        return getPresignedId(requestData: presignedRequests)
-            .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
-                let uploadPublishers = presignedResponse.data.presignedUploadFiles.enumerated().map { (index, file) in
-                    self.uploadImageToPresignedURL(presignedURL: file.presignedUploadUrl, imageData: imageUploads[index].imageData)
-                        .mapError(Utils.handleError)
-                }
-                
-                return Publishers.MergeMany(uploadPublishers)
-                    .collect()
-                    .flatMap { _ -> AnyPublisher<Void, APIError> in
-                        guard let fileUploadId = presignedResponse.data.presignedUploadFiles.first?.fileUploadId else {
-                            return Fail(error: APIError(description: "No file upload ID found", statusCode: 500, instance: "/error-upload-id")).eraseToAnyPublisher()
-                        }
-                        let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: fileUploadId)
-                        return self.editUserInfo(userId: userId, profile: profile)
-                    }
-                    .eraseToAnyPublisher()
-            }
-            .mapError(Utils.handleError)
-            .eraseToAnyPublisher()
-    }
-    
-    
+          return getPresignedId(requestData: presignedRequests)
+              .flatMap { presignedResponse -> AnyPublisher<Void, APIError> in
+                  let uploadPublishers = presignedResponse.data.presignedUploadFiles.enumerated().map { (index, file) in
+                      self.uploadImageToPresignedURL(presignedURL: file.presignedUploadUrl, imageData: imageUploads[index].imageData)
+                          .mapError(Utils.handleError)
+                  }
+                  
+                  return Publishers.MergeMany(uploadPublishers)
+                      .collect()
+                      .flatMap { _ -> AnyPublisher<Void, APIError> in
+                          guard let fileUploadId = presignedResponse.data.presignedUploadFiles.first?.fileUploadId else {
+                              return Fail(error: APIError(description: "No file upload ID found", statusCode: 500, instance: "/error-upload-id")).eraseToAnyPublisher()
+                          }
+                          let profile = EditProfileRequest(nickname: nickname, profileImageFileUploadId: fileUploadId)
+                          return self.editUserInfo(userId: userId, profile: profile)
+                      }
+                      .eraseToAnyPublisher()
+              }
+              .mapError(Utils.handleError)
+              .eraseToAnyPublisher()
+      }
     
     // MARK: - Presigned ID 요청
     func getPresignedId(requestData: [PresignedUploadUrlRequests]) -> AnyPublisher<PresignedIdResponse, APIError> {
@@ -107,12 +82,22 @@ class UserService {
     
     //MARK: - 유저 정보 수정
     func editUserInfo(userId: Int, profile: EditProfileRequest) -> AnyPublisher<Void, APIError> {
-        provider.requestPublisher(.editUserInfo(userId: userId, profile: profile))
-            .map { _ in Void() }
-            .mapError(Utils.handleError)
-            .eraseToAnyPublisher()
-    }
-    
+           return Future { promise in
+               self.provider.request(.editUserInfo(userId: userId, profile: profile)) { result in
+                   switch result {
+                   case .success(let response):
+                       if response.statusCode == 200 {
+                           promise(.success(()))
+                       } else {
+                           promise(.failure(APIError(description: "Bad response", statusCode: response.statusCode, instance: "/edit-user-info")))
+                       }
+                   case .failure(let error):
+                       promise(.failure(APIError(description: error.localizedDescription, statusCode: (error as NSError).code, instance: "/edit-user-info")))
+                   }
+               }
+           }
+           .eraseToAnyPublisher()
+       }
     //MARK: - 유저 탈퇴
     func deleteUser(userId:Int) -> AnyPublisher<Void,APIError> {
         provider.requestPublisher(.deleteUser(userId: userId))
