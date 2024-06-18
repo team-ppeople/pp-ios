@@ -21,7 +21,7 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
 
     var body: some View {
         if editingMode {
-            HStack(alignment: .center, spacing: 10) {
+            HStack(alignment: .center) {
                 PhotosPicker(
                     selection: $selectedPhotos,
                     maxSelectionCount: maxPhotosToSelect,
@@ -32,42 +32,40 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                         Image(uiImage: tempProfileImage)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: 65, height: 65)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+							.frame(width: 70, height: 70)
+							.clipShape(Circle())
+							.background(Circle().foregroundColor(.sub))
                     } else if let profileImageUrl = getProfileImageUrl(from: vm) {
                         AsyncImage(url: profileImageUrl) { phase in
                             switch phase {
                             case .empty:
-                                ProgressView()
-                                    .frame(width: 65, height: 65)
-                                    .clipShape(Circle())
-                                    .padding(.leading, 8)
+								Image(systemName: "person.fill")
+									.resizable()
+									.scaledToFill()
+									.frame(width: 70, height: 70)
+									.clipShape(Circle())
+									.background(Circle().foregroundColor(.sub))
                             case .success(let image):
                                 image
                                     .resizable()
                                     .scaledToFill()
-                                    .frame(width: 65, height: 65)
+                                    .frame(width: 70, height: 70)
                                     .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.sub, lineWidth: 1))
                             case .failure:
-                                Image(systemName: "person.fill")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 65, height: 65)
-                                    .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+								ProgressView()
+									.frame(width: 70, height: 70)
+									.background(Circle().foregroundColor(.sub))
                             @unknown default:
                                 EmptyView()
                             }
                         }
                     } else {
-                        Image(systemName: "person.fill")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 65, height: 65)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.sub, lineWidth: 1))
+						Image(systemName: "person.fill")
+							.resizable()
+							.scaledToFill()
+							.frame(width: 70, height: 70)
+							.clipShape(Circle())
+							.background(Circle().foregroundColor(.sub))
                     }
                 }
                 .onChange(of: selectedPhotos) { _ in
@@ -88,8 +86,6 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                     }
                 }
             }
-            .frame(height: 65)
-            .padding(.leading, 20)
             .padding(.vertical, 5)
             .frame(height: 70)
             .alert(isPresented: $showAlert) {

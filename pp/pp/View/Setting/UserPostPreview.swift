@@ -18,24 +18,30 @@ struct UserPostPreview: View {
                 AsyncImage(url: post.thumbnailURLs) { phase in
                     switch phase {
                     case .empty:
-                        ProgressView()
-                            .frame(width: size, height: size, alignment: .center)
+                        Image("empty.image")
+							.resizable()
+							.aspectRatio(contentMode: .fill)
+							.frame(width: size, height: size)
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: size, height: size)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+							.clipShape(
+								.rect(
+									topLeadingRadius: 10,
+									bottomLeadingRadius: 0,
+									bottomTrailingRadius: 0,
+									topTrailingRadius: 10
+								))
                     case .failure:
-                        Image(systemName: "photo")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: size, height: size)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+						ProgressView()
+							.frame(width: size, height: size, alignment: .center)
                     @unknown default:
                         EmptyView()
                     }
                 }
+				
                 Text(post.title)
                     .font(.system(size: 15))
                     .foregroundColor(.black)
@@ -48,7 +54,7 @@ struct UserPostPreview: View {
                     .frame(height: 15)
                     .padding([.horizontal, .bottom], 10)
             }
-            .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray))
+			.background(RoundedRectangle(cornerRadius: 10).stroke(.sub))
         }
     }
 }

@@ -37,19 +37,11 @@ struct SettingView: View {
                         }
 					}
 					
-//					Button (action: {
-//						showNoticeAlert = true
-//					}, label: {
-//						createBoxStyle("공지사항")
-//							.alert(isPresented: $showNoticeAlert) {
-//								return Alert(title: Text(""), message: Text("아직 공지사항이 없습니다."))
-//							}
-//					})
-//					.padding(.bottom, 12)
-                    NavigationLink(destination: NoticeView(vm: userVm)) {
-                                            createBoxStyle("공지사항")
-                                        }
-                                        .padding(.bottom, 12)
+					NavigationLink(destination: NoticeView(vm: userVm)) {
+						createBoxStyle("공지사항")
+					}
+					.padding(.bottom, 12)
+					.padding(.top, 20)
 					
 					Button (action: {
 						print("")
@@ -89,24 +81,24 @@ struct SettingView: View {
                                                         secondaryButton: .cancel(Text("취소"))
                                                     )
                                                 }
-
+						
 						
 						Button (action: {
-                            showDeleteUserAlert = true
+							showDeleteUserAlert = true
 						}, label: {
 							createBoxStyle("탈퇴하기", isOnlyText: true)
 						})
 						.padding(.bottom, 12)
-                        .alert(isPresented: $showDeleteUserAlert) {
-                                                   Alert(
-                                                       title: Text("탈퇴 확인"),
-                                                       message: Text("정말 탈퇴하시겠습니까?\n 탈퇴하면 작성된 글들이 전부 사라집니다!!"),
-                                                       primaryButton: .destructive(Text("탈퇴하기")) {
-                                                           userVm.deleteUser()
-                                                       },
-                                                       secondaryButton: .cancel(Text("취소"))
-                                                   )
-                                               }
+						.alert(isPresented: $showDeleteUserAlert) {
+							Alert(
+								title: Text("탈퇴 확인"),
+								message: Text("정말 탈퇴하시겠습니까?\n 탈퇴하면 작성된 글들이 전부 사라집니다!!"),
+								primaryButton: .destructive(Text("탈퇴하기")) {
+									userVm.deleteUser()
+								},
+								secondaryButton: .cancel(Text("취소"))
+							)
+						}
 					}
 					
 					Spacer()

@@ -16,26 +16,27 @@ struct DiaryDetailView: View {
     
 	var body: some View {
 		GeometryReader { geometry in
-			VStack(alignment: .leading) {
-				if images.count != 0 {
-					AutoScroller(images: images, size: abs(geometry.size.width - 32))
-						.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
+			ScrollView(showsIndicators: false) {
+				VStack(alignment: .leading) {
+					if images.count != 0 {
+						AutoScroller(images: images, size: abs(geometry.size.width - 32))
+							.frame(width: abs(geometry.size.width - 32), height: abs(geometry.size.width - 32))
+					}
+					
+					Text(diaryPost.title ?? "")
+						.font(.system(size: 18))
+						.padding(.top, 25)
+					
+					Text(Utils.toString(diaryPost.date))
+						.font(.system(size: 12))
+					
+					
+					Text(diaryPost.contents ?? "")
+						.font(.system(size: 15))
+						.padding(.top, 20)
+					
+					Spacer()
 				}
-				
-				Text(diaryPost.title ?? "")
-					.font(.system(size: 18))
-					.padding(.top, 25)
-				
-				Text(Utils.toString(diaryPost.date))
-					.font(.system(size: 12))
-				
-                ScrollView(showsIndicators: false) {
-                    Text(diaryPost.contents ?? "")
-                        .font(.system(size: 15))
-                        .padding(.top, 20)
-                }
-				
-				Spacer()
 			}
 			.padding(.horizontal, 16)
 			.padding(.vertical, 25)
@@ -60,7 +61,6 @@ struct AutoScroller: View {
 	@State private var selectedImageIndex: Int = 0
 	
     var images: [Image]
-    let timer = Timer.publish(every: 2.0, on: .main, in: .common).autoconnect()
 	let size: CGFloat
 
     var body: some View {
@@ -90,11 +90,6 @@ struct AutoScroller: View {
                 }
             }
 			.offset(y: size/2 - 20)
-        }
-        .onReceive(timer) { _ in
-            withAnimation(.default) {
-                selectedImageIndex = (selectedImageIndex + 1) % images.count
-            }
         }
     }
 }
