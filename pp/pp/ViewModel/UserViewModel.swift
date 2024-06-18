@@ -11,14 +11,17 @@ import _PhotosUI_SwiftUI
 
 
 
-
 protocol UserViewModelProtocol: ObservableObject {
     var profileImageUrl: URL? { get }
-    var nickname: String { get }
+    var nickname: String { get set }
     var userProfile: UserProfile? { get }
+    var profileImage: UIImage? { get set }
+    var selectedProfile: [PhotosPickerItem] { get set }
+    var presignedRequests: [PresignedUploadUrlRequests] { get }
     func fetchUserProfile(userId: Int)
+    func updateProfile(userId: Int)
+    func clearUploadData()
 }
-
 
 class UserViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     var uiImages: [UIImage] = []
@@ -115,6 +118,9 @@ class UserViewModel: PhotoPickerViewModel,UserViewModelProtocol {
 		imageUploads.removeAll()
 		presignedRequests.removeAll()
 		tempProfileImage = nil
+        profileImage = nil
+        selectedPhotos.removeAll()
+        selectedProfile.removeAll()
 	}
 	
 	// 로그아웃

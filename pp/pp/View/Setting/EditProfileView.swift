@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct EditProfileView: View {
-    @ObservedObject var vm: UserViewModel
+struct EditProfileView<ViewModel: UserViewModelProtocol & PhotoPickerViewModel>: View {
+   
+    @ObservedObject var vm: ViewModel
     @State private var showModal = false
     @State private var tempNickname: String = ""
     @State private var tempProfileImage: UIImage?
@@ -22,15 +23,13 @@ struct EditProfileView: View {
 
     var body: some View {
         VStack {
-            PhotoPickerView<UserViewModel>(
-                vm: vm,
-                selectedPhotos: $vm.selectedProfile,
-                selectedIndex: $selectedIndex,
-                isShownSheet: $isShownSheet,
-                tempProfileImage: $tempProfileImage,
-                maxPhotosToSelect: maxPhotosToSelect,
-                editingMode: true
-            )
+            PhotoPickerView(vm: vm,
+                            selectedPhotos: $vm.selectedProfile,
+                            selectedIndex: $selectedIndex,
+                            isShownSheet: $isShownSheet,
+                            tempProfileImage: $tempProfileImage,
+                            maxPhotosToSelect: maxPhotosToSelect,
+                            editingMode: true)
 
             TextField("닉네임", text: $tempNickname)
                 .padding(.vertical, 8)
@@ -81,7 +80,10 @@ struct EditProfileView: View {
             if !isUpdateConfirmed {
                 vm.profileImage = originalProfileImage
                 vm.nickname = originalNickname
+                vm.clearUploadData()
+         
             }
+           
         }
         .padding()
     }

@@ -27,6 +27,7 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                     maxSelectionCount: maxPhotosToSelect,
                     matching: .images
                 ) {
+                    // 분기 처리하여 각 뷰 모델의 프로필 이미지 처리
                     if let tempProfileImage = tempProfileImage?.wrappedValue {
                         Image(uiImage: tempProfileImage)
                             .resizable()
@@ -34,7 +35,7 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                             .frame(width: 65, height: 65)
                             .clipShape(Circle())
                             .overlay(Circle().stroke(Color.sub, lineWidth: 1))
-                    } else if let userVM = vm as? UserViewModel, let profileImageUrl = userVM.profileImageUrl {
+                    } else if let profileImageUrl = getProfileImageUrl(from: vm) {
                         AsyncImage(url: profileImageUrl) { phase in
                             switch phase {
                             case .empty:
@@ -79,10 +80,8 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                                let data = try? await profileItem.loadTransferable(type: Data.self),
                                let image = UIImage(data: data) {
                                 tempProfileImage?.wrappedValue = image
-                                if let userVM = vm as? UserViewModel {
-                                    userVM.profileImage = image
-                                    userVM.addSelectedProfile() // presignedRequests 배열에 추가
-                                }
+                                vm.profileImage = image
+                                vm.addSelectedProfile()
                                 selectedPhotos.removeAll()
                             }
                         }
@@ -143,5 +142,14 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
             .frame(height: 70)
         }
     }
-}
 
+    // 프로필 이미지 URL 가져오기 함수
+    private func getProfileImageUrl(from viewModel: ViewModel) -> URL? {
+        if let userVM = viewModel as? UserViewModel {
+            return userVM.profileImageUrl
+        } else if let communityVM = viewModel as? CommunityViewModel {
+            return communityVM.profileImageUrl
+        }
+        return nil
+    }
+}
