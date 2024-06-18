@@ -83,13 +83,13 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                                                .cornerRadius(40)
                                        }
                                        
-//                                       if let vm = vm as? CommunityViewModel {
-//                                           EditProfileView(vm: vm)
-//                                              
-//                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
-//                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
-//                                               .cornerRadius(40)
-//                                       }
+                                       if let vm = vm as? CommunityViewModel {
+                                           EditProfileView(vm: vm)
+                                              
+                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                                               .cornerRadius(40)
+                                       }
                                        
                                        
                                    }

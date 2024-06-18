@@ -60,7 +60,9 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                                 EmptyView()
                             }
                         }
-                    } else {
+                    } 
+                    
+                    else {
                         Image(systemName: "person.fill")
                             .resizable()
                             .scaledToFill()
@@ -79,10 +81,13 @@ struct PhotoPickerView<ViewModel: PhotoPickerViewModel>: View {
                                let data = try? await profileItem.loadTransferable(type: Data.self),
                                let image = UIImage(data: data) {
                                 tempProfileImage?.wrappedValue = image
-                                if let userVM = vm as? UserViewModel {
-                                    userVM.profileImage = image
-                                    userVM.addSelectedProfile() // presignedRequests 배열에 추가
-                                }
+//                                if let userVM = vm as? UserViewModel {
+//                                    userVM.profileImage = image
+//                                    userVM.addSelectedProfile() // presignedRequests 배열에 추가
+//                                }
+                                
+                                vm.profileImage = image
+                                vm.addSelectedProfile()
                                 selectedPhotos.removeAll()
                             }
                         }

@@ -12,13 +12,24 @@ import _PhotosUI_SwiftUI
 
 
 
+//protocol UserViewModelProtocol: ObservableObject {
+//    var profileImageUrl: URL? { get }
+//    var nickname: String { get }
+//    var userProfile: UserProfile? { get }
+//    func fetchUserProfile(userId: Int)
+//}
+//
+
 protocol UserViewModelProtocol: ObservableObject {
     var profileImageUrl: URL? { get }
-    var nickname: String { get }
+    var nickname: String { get set }
     var userProfile: UserProfile? { get }
+    var profileImage: UIImage? { get set }
+    var selectedProfile: [PhotosPickerItem] { get set }
+    var presignedRequests: [PresignedUploadUrlRequests] { get }
     func fetchUserProfile(userId: Int)
+    func updateProfile(userId: Int)
 }
-
 
 class UserViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     var uiImages: [UIImage] = []
