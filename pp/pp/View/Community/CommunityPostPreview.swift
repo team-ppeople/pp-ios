@@ -15,24 +15,28 @@ struct CommunityPostPreview: View {
     var body: some View {
         NavigationLink(destination: CommunityDetailView(vm: vm, postId: communityPost.id)) {
             VStack(alignment: .leading) {
-               AsyncImage(url: communityPost.thumbnailURLs) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-						.frame(width: size, height: size, alignment: .center)
-                        .clipShape(
-                            .rect(
-                                topLeadingRadius: 10,
-                                bottomLeadingRadius: 0,
-                                bottomTrailingRadius: 0,
-                                topTrailingRadius: 10
-                            ))
-                    
-                } placeholder: {
-                    ProgressView()
-						.frame(width: size, height: size, alignment: .center)
-                    
-                }
+				if let thumbnailURLs = communityPost.thumbnailURLs {
+					AsyncImage(url: thumbnailURLs) { image in
+						image
+							.resizable()
+							.aspectRatio(contentMode: .fill)
+							.frame(width: size, height: size, alignment: .center)
+							.clipShape(
+								.rect(
+									topLeadingRadius: 10,
+									bottomLeadingRadius: 0,
+									bottomTrailingRadius: 0,
+									topTrailingRadius: 10
+								))
+						
+					} placeholder: {
+						ProgressView()
+							.frame(width: size, height: size, alignment: .center)
+						
+					}
+				} else {
+					Image("empty.image")
+				}
                 
                 Text(communityPost.title)
                     .font(.system(size: 15))

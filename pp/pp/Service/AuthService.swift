@@ -60,12 +60,13 @@ class AuthService {
 
 extension AuthService {
 	// MARK: - 토큰 재발급 구현부
-	func fetchRefreshToken() {
+	func fetchRefreshToken(competionHandler: @escaping () -> Void) {
 		self.refreshToken()
 			.sink(receiveCompletion: { completion in
 				switch completion {
 				case .finished:
 					print("토큰 재발급 완료")
+					competionHandler()
 				case .failure(let error):
 					print("토큰 재발급 Error")
 					dump(error)

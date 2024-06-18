@@ -47,7 +47,7 @@ struct DiaryPostPreview: View {
 	
 	private func createImage(_ value: Data?) -> Image {
 		if let value = value {
-			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "emty.image")!
+			let uiImage: UIImage = UIImage(data: value) ?? UIImage(named: "empty.image")!
 			return Image(uiImage: uiImage)
 		} else {
 			return Image("empty.image")
