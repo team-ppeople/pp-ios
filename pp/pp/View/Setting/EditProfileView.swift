@@ -48,16 +48,12 @@ struct EditProfileView<ViewModel: UserViewModelProtocol & PhotoPickerViewModel>:
                     vm.profileImage = tempProfileImage
                 }
 
-                if vm.presignedRequests.isEmpty {
-                    print("Presigned 요청 비어있음")
+                if let userIdString = UserDefaults.standard.string(forKey: "UserId"),
+                   let userId = Int(userIdString) {
+                    vm.updateProfile(userId: userId)
+                    isUpdateConfirmed = true
                 } else {
-                    if let userIdString = UserDefaults.standard.string(forKey: "UserId"),
-                       let userId = Int(userIdString) {
-                        vm.updateProfile(userId: userId)
-                        isUpdateConfirmed = true
-                    } else {
-                        print("UserId 찾을수 없음")
-                    }
+                    print("UserId 찾을수 없음")
                 }
 
                 presentationMode.wrappedValue.dismiss()

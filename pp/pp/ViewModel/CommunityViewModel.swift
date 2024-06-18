@@ -432,23 +432,41 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
             .store(in: &cancellables)
         
     }
-    
+
     func updateProfile(userId: Int) {
-        UserService.shared.updateUserProfile(userId: userId, nickname: nickname, imageUploads:imageUploads, presignedRequests: presignedRequests)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    print("프로필이 성공적으로 수정되었습니다.")
-                    self.fetchUserProfile(userId: userId) // 성공 후 프로필 정보 갱신
-                    self.clearUploadData()
-                case .failure(_): break
-                    //      print("프로필 수정 중 오류 발생: \(error.status), \(error.title)")
-                }
-            }, receiveValue: {
-                print("프로필 수정 완료")
-            })
-            .store(in: &cancellables)
-    }
+            if presignedRequests.isEmpty {
+                // Presigned 요청이 비어있으면 닉네임만 업데이트
+                let profile = EditProfileRequest(nickname: nickname)
+                UserService.shared.editUserInfo(userId: userId, profile: profile)
+                    .sink(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            print("닉네임이 성공적으로 수정되었습니다.")
+                            self.fetchUserProfile(userId: userId)
+                        case .failure(_):
+                            print("닉네임 수정 중 오류 발생")
+                        }
+                    }, receiveValue: {
+                        print("닉네임 수정 완료")
+                    })
+                    .store(in: &cancellables)
+            } else {
+                UserService.shared.updateUserProfile(userId: userId, nickname: nickname, imageUploads: imageUploads, presignedRequests: presignedRequests)
+                    .sink(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            print("프로필이 성공적으로 수정되었습니다.")
+                            self.fetchUserProfile(userId: userId)
+                            self.clearUploadData()
+                        case .failure(_):
+                            print("프로필 수정 중 오류 발생")
+                        }
+                    }, receiveValue: {
+                        print("프로필 수정 완료")
+                    })
+                    .store(in: &cancellables)
+            }
+        }
     
     
     

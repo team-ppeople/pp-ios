@@ -21,7 +21,7 @@ struct Registered: Codable {
 //MARK: - 회원 정보 수정
 struct EditProfileRequest : Codable {
     var nickname:String
-    var profileImageFileUploadId:Int
+    var profileImageFileUploadId:Int?
 }
 
 //MARK: - 유저 프로필 조회

@@ -17,7 +17,10 @@ struct SettingView: View {
 
 	@State var showNoticeAlert: Bool = false
     @State private var showModal = false
-//	
+    
+    @State private var showLogoutAlert: Bool = false
+    @State private var showDeleteUserAlert: Bool = false
+//
 //	init(isLoggedIn: Bool) {
 //		self.isLoggedIn = isLoggedIn
 //	}
@@ -71,18 +74,39 @@ struct SettingView: View {
 					
 					if (isLoggedIn || vm.isLoggedIn) && !vm.isLoggedOut {
 						Button (action: {
-							userVm.logout()
+                            showLogoutAlert = true
 						}, label: {
 							createBoxStyle("로그아웃", isOnlyText: true)
 						})
 						.padding(.bottom, 12)
+                        .alert(isPresented: $showLogoutAlert) {
+                                                    Alert(
+                                                        title: Text("로그아웃 확인"),
+                                                        message: Text("정말 로그아웃 하시겠습니까?"),
+                                                        primaryButton: .destructive(Text("로그아웃")) {
+                                                            userVm.logout()
+                                                        },
+                                                        secondaryButton: .cancel(Text("취소"))
+                                                    )
+                                                }
+
 						
 						Button (action: {
-							userVm.deleteUser()
+                            showDeleteUserAlert = true
 						}, label: {
 							createBoxStyle("탈퇴하기", isOnlyText: true)
 						})
 						.padding(.bottom, 12)
+                        .alert(isPresented: $showDeleteUserAlert) {
+                                                   Alert(
+                                                       title: Text("탈퇴 확인"),
+                                                       message: Text("정말 탈퇴하시겠습니까?\n 탈퇴하면 작성된 글들이 전부 사라집니다!!"),
+                                                       primaryButton: .destructive(Text("탈퇴하기")) {
+                                                           userVm.deleteUser()
+                                                       },
+                                                       secondaryButton: .cancel(Text("취소"))
+                                                   )
+                                               }
 					}
 					
 					Spacer()
