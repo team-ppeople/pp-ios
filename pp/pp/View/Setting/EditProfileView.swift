@@ -79,7 +79,10 @@ struct EditProfileView<ViewModel: UserViewModelProtocol & PhotoPickerViewModel>:
             if !isUpdateConfirmed {
                 vm.profileImage = originalProfileImage
                 vm.nickname = originalNickname
+                vm.clearUploadData()
+         
             }
+           
         }
         .padding()
     }

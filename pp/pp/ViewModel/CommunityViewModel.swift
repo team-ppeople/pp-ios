@@ -31,8 +31,11 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     
     func clearUploadData() {
         imageUploads.removeAll()
+        selectedPhotos.removeAll()
+        selectedProfile.removeAll()
         presignedRequests.removeAll()
         tempProfileImage = nil
+        profileImage = nil
     }
     
     @Published var profileImageUrl: URL?
