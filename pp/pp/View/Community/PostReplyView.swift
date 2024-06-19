@@ -111,32 +111,34 @@ struct PostReplyView: View {
                 vm.loadComments(postId: self.postId, lastId: nil)
             }
             .onAppear {
+                vm.newComment = ""
                 setupKeyboardObservers()
             }
             .onDisappear {
                 removeKeyboardObservers()
-			}
-			.alert("이 댓글을 신고하시겠습니까?", isPresented: $showAlert) {
-				Button("예", role: .destructive) {
-					if let id = reportCommentId {
-						vm.reportComment(commentId: id)
-						print("신고완료\(id)")
-						self.showReportConfirmation = true
-					}
-				}
-				Button("아니요", role: .cancel) {}
-			} message: {
-				Text("신고하면 관리자 검토 후 조치됩니다.")
-			}
-			.alert("신고가 완료되었습니다.", isPresented: $showReportConfirmation) {
-				Button("확인", role: .cancel) {}
-			} message: {
-				Text("관리자 검토가 완료되면 적절한 조치가 이루어집니다.")
-			}
-			
-			.navigationTitle("댓글")
-			.navigationBarTitleDisplayMode(.inline)
-		}
+                vm.newComment = ""
+            }
+            .alert("이 댓글을 신고하시겠습니까?", isPresented: $showAlert) {
+                           Button("예", role: .destructive) {
+                               if let id = reportCommentId {
+                                  vm.reportComment(commentId: id)
+                                   print("신고완료\(id)")
+                                   self.showReportConfirmation = true
+                               }
+                           }
+                           Button("아니요", role: .cancel) {}
+                       } message: {
+                           Text("신고하면 관리자 검토 후 조치됩니다.")
+                       }
+                       .alert("신고가 완료되었습니다.", isPresented: $showReportConfirmation) {
+                                  Button("확인", role: .cancel) {}
+                              } message: {
+                                  Text("관리자 검토가 완료되면 적절한 조치가 이루어집니다.")
+                              }
+
+            .navigationTitle("댓글")
+            .navigationBarTitleDisplayMode(.inline)
+        }
     }
 
     private func hideKeyboard() {
