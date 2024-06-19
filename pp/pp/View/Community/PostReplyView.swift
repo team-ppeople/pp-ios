@@ -111,10 +111,12 @@ struct PostReplyView: View {
                 vm.loadComments(postId: self.postId, lastId: nil)
             }
             .onAppear {
+                vm.newComment = ""
                 setupKeyboardObservers()
             }
             .onDisappear {
                 removeKeyboardObservers()
+                vm.newComment = ""
             }
             .alert("이 댓글을 신고하시겠습니까?", isPresented: $showAlert) {
                            Button("예", role: .destructive) {
