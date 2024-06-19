@@ -253,9 +253,15 @@ struct ReplyCellView: View {
                 if let image = phase.image {
                     image.resizable()
                 } else if phase.error != nil {
-                    Color.red
+					ProgressView()
+						.frame(width: 35, height: 35)
                 } else {
-                    Color.blue
+					Image(systemName: "person.fill")
+						.resizable()
+						.scaledToFill()
+						.frame(width: 35, height: 35)
+						.clipShape(Circle())
+						.background(Circle().foregroundColor(.sub))
                 }
             }
             .scaledToFill()
@@ -268,7 +274,7 @@ struct ReplyCellView: View {
                 .scaledToFill()
                 .frame(width: 35, height: 35)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+				.background(Circle().foregroundColor(.sub))
         }
     }
 }

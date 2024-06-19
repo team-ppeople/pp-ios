@@ -22,38 +22,33 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                     AsyncImage(url: profileImageUrl) { phase in
                         switch phase {
                         case .empty:
-                            ProgressView()
-                                .frame(width: 58, height: 58)
-                                .clipShape(Circle())
-                                .padding(.leading, 8)
+							Image(systemName: "person.fill")
+								.resizable()
+								.scaledToFill()
+								.frame(width: 58, height: 58)
+								.clipShape(Circle())
+								.background(Circle().foregroundColor(.sub))
                         case .success(let image):
                             image
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 58, height: 58)
                                 .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                                .padding(.leading, 8)
                         case .failure:
-                            Image("emty.image")
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 58, height: 58)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                                .padding(.leading, 8)
+							ProgressView()
+								.frame(width: 58, height: 58)
+								.background(Circle().foregroundColor(.sub))
                         @unknown default:
                             EmptyView()
                         }
                     }
                 } else {
-                    Image("emty.image")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 58, height: 58)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                        .padding(.leading, 8)
+					Image(systemName: "person.fill")
+						.resizable()
+						.scaledToFill()
+						.frame(width: 58, height: 58)
+						.clipShape(Circle())
+						.background(Circle().foregroundColor(.sub))
                 }
                 
                 Text(vm.nickname.isEmpty ? "닉네임 불러오기 실패" : vm.nickname)
@@ -103,7 +98,7 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             
             Divider()
                 .background(Color.gray)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, 16)
                 .padding(.top, 16)
             
             HStack(spacing: 0) {

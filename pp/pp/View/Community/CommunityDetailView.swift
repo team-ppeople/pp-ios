@@ -25,7 +25,7 @@ struct CommunityDetailView: View {
 				if let imageUrls = vm.postDetail?.imageUrls, !imageUrls.isEmpty {
 					AutoScroller2(imageURLs: imageUrls, size: UIScreen.main.bounds.width - 32)
 						.frame(height: UIScreen.main.bounds.width - 32)
-						.padding(.vertical, 20)
+						.padding(.top, 20)
 				}
 				
 				HStack {
@@ -41,22 +41,22 @@ struct CommunityDetailView: View {
 							AsyncImage(url: profileImageUrl) { phase in
 								switch phase {
 								case .empty:
-									ProgressView()
-										.frame(width: 35, height: 35)
+									Image(systemName: "person.fill")
+										.resizable()
+										.scaledToFill()
+										.frame(width: 58, height: 58)
+										.clipShape(Circle())
+										.background(Circle().foregroundColor(.sub))
 								case .success(let image):
 									image
 										.resizable()
 										.scaledToFill()
-										.frame(width: 35, height: 35)
+										.frame(width: 58, height: 58)
 										.clipShape(Circle())
-										.overlay(Circle().stroke(Color.white, lineWidth: 2))
 								case .failure:
-									Image(systemName: "person.crop.circle.badge.exclamationmark")
-										.resizable()
-										.scaledToFit()
-										.frame(width: 35, height: 35)
-										.clipShape(Circle())
-										.overlay(Circle().stroke(Color.white, lineWidth: 2))
+									ProgressView()
+										.frame(width: 58, height: 58)
+										.background(Circle().foregroundColor(.sub))
 								@unknown default:
 									EmptyView()
 								}
@@ -66,23 +66,26 @@ struct CommunityDetailView: View {
 					} else {
 						Image(systemName: "person.fill")
 							.resizable()
-							.scaledToFit()
-							.frame(width: 35, height: 35)
+							.scaledToFill()
+							.frame(width: 58, height: 58)
 							.clipShape(Circle())
-							.overlay(Circle().stroke(Color.white, lineWidth: 2))
-							.background(Circle().foregroundColor(.white))
+							.background(Circle().foregroundColor(.sub))
 					}
 					
 					Text(vm.postDetail?.createdUser.nickname ?? "닉네임 불러오는중...")
 						.font(.title2)
 						.foregroundColor(.primary)
+					
+					Spacer()
 				}
+				.padding(.top, 20)
+				.frame(maxWidth: .infinity)
 				
 				Text(vm.postDetail?.title ?? "제목 불러오는중...")
 					.font(.system(size: 18))
 					.padding(.top, 8)
 				
-				Text(vm.postDetail?.createdDate ?? "Date")
+				Text(vm.postDetail?.createdDate ?? "날짜 불러오는중...")
 					.font(.system(size: 15))
 					.foregroundColor(.secondary)
 					.padding(.top, 3)
@@ -90,9 +93,11 @@ struct CommunityDetailView: View {
 				Text(vm.postDetail?.content ?? "내용 불러오는중...")
 					.font(.body)
 					.padding(.vertical, 5)
+				
+				LikeAndReplyView(vm: vm, postId: postId)
+					.padding(.vertical, 15)
 			}
-			
-			LikeAndReplyView(vm: vm, postId: postId)
+			.frame(maxWidth: .infinity)
 		}
 		.padding(.horizontal)
 		.onAppear {
@@ -170,7 +175,7 @@ struct AutoScroller2: View {
 	
 	var body: some View {
 		ZStack {
-			TabView {
+			TabView(selection: $selectedImageIndex) {
 				ForEach(imageURLs, id: \.self) { url in
 					AsyncImage(url: url) { phase in
 						switch phase {
@@ -213,7 +218,7 @@ struct AutoScroller2: View {
 		}
 	}
 }
-	//
+	
 struct LikeAndReplyView: View {
 	@ObservedObject var vm: CommunityViewModel
 	let postId: Int

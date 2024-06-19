@@ -17,42 +17,37 @@ struct MyProfileView: View {
                 AsyncImage(url: profileImageUrl) { phase in
                     switch phase {
                     case .empty:
-                        ProgressView()
-                            .frame(width: 58, height: 58)
-                            .clipShape(Circle())
-                            .padding(.leading, 8)
+						Image(systemName: "person.fill")
+							.resizable()
+							.scaledToFill()
+							.frame(width: 58, height: 58)
+							.clipShape(Circle())
+							.background(Circle().foregroundColor(.sub))
                     case .success(let image):
                         image
                             .resizable()
                             .scaledToFill()
                             .frame(width: 58, height: 58)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                            .padding(.leading, 8)
                     case .failure:
-                        Image("emty.image")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 58, height: 58)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                            .padding(.leading, 8)
+						ProgressView()
+							.frame(width: 58, height: 58)
+							.background(Circle().foregroundColor(.sub))
                     @unknown default:
                         EmptyView()
                     }
                 }
 
             } else {
-                Image("emty.image")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 58, height: 58)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                    .padding(.leading, 8)
+				Image(systemName: "person.fill")
+					.resizable()
+					.scaledToFill()
+					.frame(width: 58, height: 58)
+					.clipShape(Circle())
+					.background(Circle().foregroundColor(.sub))
             }
             
-//            Text((((vm.userProfile?.nickname.isEmpty) != nil) ? "바다거북맘" : vm.userProfile?.nickname) ?? "응답 실패")
+
             Text(vm.nickname.isEmpty ? "" : vm.nickname)
                 .font(.title3)
 				.tint(.black)
@@ -67,7 +62,6 @@ struct MyProfileView: View {
                     .cornerRadius(8)
             }
         }
-        .padding(.horizontal, 8)
     }
 }
 
