@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-	@ObservedObject var vm: LoginViewModel = LoginViewModel()
+	@StateObject var vm: LoginViewModel = LoginViewModel()
     @ObservedObject var communityVm: CommunityViewModel = CommunityViewModel()
 	
     var body: some View {

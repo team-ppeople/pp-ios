@@ -65,7 +65,13 @@ class LoginViewModel: ObservableObject {
 				request.requestedScopes = [.fullName, .email]
 			},
 			onCompletion: { [weak self] result in
-				switch result {
+				
+                guard let self = self else {
+                    print("self가 nil입니다.")
+                    return
+                }
+                
+                switch result {
 				case .success(let authResults):
 					switch authResults.credential {
 					case let appleIDCredential as ASAuthorizationAppleIDCredential:
@@ -73,12 +79,12 @@ class LoginViewModel: ObservableObject {
 						let authorizationCode = String(data: appleIDCredential.authorizationCode!, encoding: .utf8) ?? ""
 						
 						print("애플 인증 성공 - id_token: \(identityToken), auth_code: \(authorizationCode)")
-                    
-						self?.authCode = authorizationCode
-						self?.idToken = identityToken
-						self?.client = .apple
-						
-                        self?.checkRegisteredUser()
+                         
+                        self.authCode = authorizationCode
+						self.idToken = identityToken
+						self.client = .apple
+                        print("checkRegisteredUser 호출 직전")
+                        self.checkRegisteredUser()
 					default:
 						break
 					}
@@ -93,6 +99,7 @@ class LoginViewModel: ObservableObject {
 	// MARK: - 회원여부 체크
     func checkRegisteredUser() {
 		// MARK: - 회원여부 체크 API 요청
+        print("checkRegisteredUser 시작")
 		userService
 			.checkRegisteredUser(client: self.client, idToken: self.idToken)
 			.sink { [weak self] completion in
@@ -107,6 +114,7 @@ class LoginViewModel: ObservableObject {
 				}
 			} receiveValue: { [weak self] recievedValue in
 				guard let isRegistered = recievedValue.data.isRegistered else {
+                    print("isRegistered 값이 nil")
 					self?.showAlert = true
 					return
 				}
