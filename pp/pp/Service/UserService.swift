@@ -20,9 +20,11 @@ class UserService {
     
     // MARK: - 등록된 피피 회원 유저인지 여부 체크
     func checkRegisteredUser(client: Client, idToken: String) -> AnyPublisher<CheckRegisteredUserResponse, APIError> {
+        print("checkRegisteredUser 호출됨 - client: \(client), idToken: \(idToken)")
         return provider
             .requestPublisher(.checkRegisteredUser(client: client, idToken: idToken))
             .tryMap { response -> CheckRegisteredUserResponse in
+                print("response 받음: \(response)")
                 return try JSONDecoder().decode(CheckRegisteredUserResponse.self, from: response.data)
             }
             .mapError(Utils.handleError)
