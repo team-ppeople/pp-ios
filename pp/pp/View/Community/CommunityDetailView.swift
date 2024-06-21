@@ -165,22 +165,20 @@ struct CommunityDetailView: View {
 	}
 }
 
-
-
 struct AutoScroller2: View {
-	@State private var selectedImageIndex: Int = 0
-	
 	var imageURLs: [URL]
 	let size: CGFloat
 	
 	var body: some View {
 		ZStack {
-			TabView(selection: $selectedImageIndex) {
+			TabView {
 				ForEach(imageURLs, id: \.self) { url in
 					AsyncImage(url: url) { phase in
 						switch phase {
 						case .empty:
-							ProgressView()
+							Image(systemName: "empty.image")
+								.resizable()
+								.scaledToFill()
 								.frame(width: size, height: size)
 								.clipShape(RoundedRectangle(cornerRadius: 10))
 						case .success(let image):
@@ -190,9 +188,7 @@ struct AutoScroller2: View {
 								.frame(width: size, height: size)
 								.clipShape(RoundedRectangle(cornerRadius: 10))
 						case .failure:
-							Image(systemName: "empty.image")
-								.resizable()
-								.scaledToFill()
+							ProgressView()
 								.frame(width: size, height: size)
 								.clipShape(RoundedRectangle(cornerRadius: 10))
 						@unknown default:
@@ -201,20 +197,8 @@ struct AutoScroller2: View {
 					}
 				}
 			}
-			.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+			.tabViewStyle(.page)
 			.ignoresSafeArea()
-			
-			HStack {
-				ForEach(0..<imageURLs.count, id: \.self) { index in
-					Capsule()
-						.fill(Color.white.opacity(selectedImageIndex == index ? 1 : 0.33))
-						.frame(width: 10, height: 10)
-						.onTapGesture {
-							selectedImageIndex = index
-						}
-				}
-			}
-			.offset(y: size/2 - 20)
 		}
 	}
 }

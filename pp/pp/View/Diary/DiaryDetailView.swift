@@ -58,14 +58,12 @@ struct DiaryDetailView: View {
 }
 
 struct AutoScroller: View {
-	@State private var selectedImageIndex: Int = 0
-	
     var images: [Image]
 	let size: CGFloat
 
     var body: some View {
         ZStack {
-            TabView(selection: $selectedImageIndex) {
+            TabView {
                 ForEach(0..<images.count, id: \.self) { index in
                     ZStack(alignment: .topLeading) {
 						images[index]
@@ -76,20 +74,8 @@ struct AutoScroller: View {
                     }
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+			.tabViewStyle(.page)
             .ignoresSafeArea()
-			
-            HStack {
-                ForEach(0..<images.count, id: \.self) { index in
-                    Capsule()
-                        .fill(Color.white.opacity(selectedImageIndex == index ? 1 : 0.33))
-                        .frame(width: 10, height: 10)
-                        .onTapGesture {
-                            selectedImageIndex = index
-                        }
-                }
-            }
-			.offset(y: size/2 - 20)
         }
     }
 }
