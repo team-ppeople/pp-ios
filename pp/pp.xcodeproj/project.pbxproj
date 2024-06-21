@@ -93,6 +93,7 @@
 		60B72B2DF0AB5DC3B4B72707 /* Pods_pp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C89518046957F322B68C3A /* Pods-pp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.debug.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.debug.xcconfig"; sourceTree = "<group>"; };
 		77F17E162996FD910D313C07 /* Pods-pp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pp.release.xcconfig"; path = "Target Support Files/Pods-pp/Pods-pp.release.xcconfig"; sourceTree = "<group>"; };
+		9A36981C2C2502D30019C12A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		9A4B12FE2BE9B91C00F7D1C7 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		9A4B13002BE9B92400F7D1C7 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		9A4B13022BE9B92D00F7D1C7 /* CommunityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityService.swift; sourceTree = "<group>"; };
@@ -228,6 +229,7 @@
 				9A73F56A2BBE50A200FFB0B7 /* Launch Screen.storyboard */,
 				9A73F59C2BC5359E00FFB0B7 /* pp.entitlements */,
 				A99B433D2BC3A5B40096A4AB /* Info.plist */,
+				9A36981C2C2502D30019C12A /* PrivacyInfo.xcprivacy */,
 				9AF0F3972BBBF8CA00964E75 /* Preview Content */,
 			);
 			path = pp;
@@ -667,7 +669,7 @@
 				CODE_SIGN_ENTITLEMENTS = pp/pp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24062104;
+				CURRENT_PROJECT_VERSION = 24062105;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
 				ENABLE_PREVIEWS = YES;
@@ -708,7 +710,7 @@
 				CODE_SIGN_ENTITLEMENTS = pp/pp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24062104;
+				CURRENT_PROJECT_VERSION = 24062105;
 				DEVELOPMENT_ASSET_PATHS = "\"pp/Preview Content\"";
 				DEVELOPMENT_TEAM = 6RZ3FF956G;
 				ENABLE_PREVIEWS = YES;
