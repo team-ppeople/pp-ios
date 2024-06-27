@@ -52,7 +52,7 @@ struct CommunityPostPreview: View {
                     .frame(height: 18)
                     .padding(.horizontal, 10)
                 
-                Text(communityPost.createDate)
+				Text(Utils.toString(communityPost.createDate.toDate()))
                     .font(.system(size: 12))
                     .lineLimit(2)
                     .foregroundColor(.secondary)

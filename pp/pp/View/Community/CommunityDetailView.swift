@@ -72,7 +72,7 @@ struct CommunityDetailView: View {
 							.background(Circle().foregroundColor(.sub))
 					}
 					
-					Text(vm.postDetail?.createdUser.nickname ?? "닉네임 불러오는중...")
+					Text(vm.postDetail?.createdUser.nickname ?? "")
 						.font(.title2)
 						.foregroundColor(.primary)
 					
@@ -81,16 +81,16 @@ struct CommunityDetailView: View {
 				.padding(.top, 20)
 				.frame(maxWidth: .infinity)
 				
-				Text(vm.postDetail?.title ?? "제목 불러오는중...")
+				Text(vm.postDetail?.title ?? "")
 					.font(.system(size: 18))
 					.padding(.top, 8)
 				
-				Text(vm.postDetail?.createdDate ?? "날짜 불러오는중...")
+				Text(vm.postDetail?.createdDate ?? "")
 					.font(.system(size: 15))
 					.foregroundColor(.secondary)
 					.padding(.top, 3)
 				
-				Text(vm.postDetail?.content ?? "내용 불러오는중...")
+				Text(vm.postDetail?.content ?? "")
 					.font(.body)
 					.padding(.vertical, 5)
 				

@@ -49,8 +49,7 @@ struct PersistenceController {
         entity.contents = contents
         entity.images = images
         entity.date = Date()
-		
-        print("entity 생성 \(entity.id),\(entity.title),\(entity.contents),\(entity.images),\(entity.date)")
+	
         saveChanges()
     }
     

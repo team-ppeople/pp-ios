@@ -12,7 +12,7 @@ class Utils {
 	// MARK: - date to string
 	static func toString(_ date: Date?) -> String {
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "yyyy-MM-dd"
+		dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
 		return dateFormatter.string(from: date ?? Date())
 	}
 
