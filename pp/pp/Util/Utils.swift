@@ -47,16 +47,46 @@ class Utils {
 	}
 	
 	//MARK: - Error 핸들링
-	static func handleError(_ error: Error) -> APIError {
-		if let moyaError = error as? MoyaError {
-			switch moyaError {
-			case .underlying(let error, let response):
-				return APIError(description: "MoyaError >> underlying", statusCode: response?.statusCode, instance: response?.request?.url?.absoluteString)
-			default:
-				return APIError(description: "Error", statusCode: moyaError.response?.statusCode, instance: moyaError.asAFError?.url?.absoluteString)
-			}
-		}
-		
-		return APIError(description: "Unexpected Error Occurred", statusCode: nil, instance: nil)
-	}
+    static func handleError(_ error: Error) -> APIError {
+        if let moyaError = error as? MoyaError {
+            
+            switch moyaError {
+            case .underlying(_, let response):
+                if let data = response?.data {
+                    do {
+                        
+                        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                        let detail = json?["detail"] as? String
+                        return APIError(description: "MoyaError >> underlying",
+                                        statusCode: response?.statusCode,
+                                        instance: response?.request?.url?.absoluteString,
+                                        detail: detail)
+                    } catch {
+                        
+                        print("JSON parsing error: \(error)")
+                        return APIError(description: "JSON parsing error",
+                                        statusCode: response?.statusCode,
+                                        instance: response?.request?.url?.absoluteString,
+                                        detail: nil)
+                    }
+                } else {
+                    
+                    return APIError(description: "No data available",
+                                    statusCode: response?.statusCode,
+                                    instance: response?.request?.url?.absoluteString,
+                                    detail: nil)
+                }
+            default:
+                return APIError(description: "Unhandled MoyaError type",
+                                statusCode: nil,
+                                instance: nil,
+                                detail: nil)
+            }
+        }
+        
+        return APIError(description: "Unexpected Error Occurred", statusCode: nil, instance: nil)
+    }
+    
+    
+    
 }

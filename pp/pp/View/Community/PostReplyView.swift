@@ -20,79 +20,66 @@ struct PostReplyView: View {
     @State private var isEditing = false
     @State private var reportCommentId: Int?
     @State private var showReportConfirmation = false
-   
+    @State private var showErrorAlert = false
+    @State private var errorMessage: String?
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack(alignment: .bottom) {
                 VStack {
-                    List {
+                    
+                   List {
                         ForEach($vm.comments) { $comments in
 
-                            ReplyCellView(id: comments.id, comments: comments.content, user: comments.createdUser, vm: vm)
+                            ReplyCellView(id: comments.id, comments: comments.content, user: comments.createdUser, createDate: comments.createDate, vm: vm)
                                 .padding(.leading, -16)
 
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
                                         reportCommentId = comments.id
-                                       showAlert = true
+                                        showAlert = true
                                     } label: {
                                         Label("신고", systemImage: "exclamationmark.circle.fill")
                                     }
                                 }
                         }
                     }
-                    
                     .listStyle(.plain)
                     .scrollIndicators(.hidden)
                     .ignoresSafeArea(edges: .horizontal)
 
                     Divider()
 
-                    HStack {
-                        ZStack(alignment: .trailing) {
-                            DynamicHeightTextEditor(text: $vm.newComment, height: $textEditorHeight, maxEditorHeight: maxEditorHeight)
-                                .frame(height: min(textEditorHeight, maxEditorHeight))
-                                .padding(.horizontal, 4)
-                                .padding(.vertical, 8)
+                    HStack(spacing: 10) {
+                        ZStack {
+                         RoundedRectangle(cornerRadius: 16)
+                           // Capsule()
+                                .strokeBorder(Color.secondary, lineWidth: 1)
                                 .background(Color.white)
-                                .cornerRadius(8)
-                                .onTapGesture {
-                                    isEditing = true
-                                }
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.secondary, lineWidth: 1)
-                                )
-                                .padding(.trailing, 34)
+                                .frame(height: max(50, textEditorHeight))
 
-                            if vm.newComment.isEmpty {
-                                Text("댓글 달기...")
-                                    .foregroundColor(Color.secondary.opacity(0.5))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 12)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
+                            HStack {
+                                DynamicHeightTextEditor(text: $vm.newComment, height: $textEditorHeight, maxEditorHeight: maxEditorHeight)
+                                    .frame(height: min(textEditorHeight, maxEditorHeight))
 
-                            Button(action: {
-                                hideKeyboard()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                Spacer()
+
+                                Button(action: {
+                                    hideKeyboard()
                                     addComment()
+                                }) {
+                                    Image(systemName: "paperplane.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 24)
                                 }
-                            }) {
-                                Image(systemName: "paperplane.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                    .padding(.trailing, 0)
+                                .disabled(vm.newComment.isEmpty)
                             }
-                            .disabled(vm.newComment.isEmpty)
-                            .padding(.leading, 32)
+                            .padding(.horizontal, 12)
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
                     }
-                    .background(Color.white.opacity(0.001))
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
                 }
 
                 if isEditing {
@@ -103,13 +90,14 @@ struct PostReplyView: View {
                                 hideKeyboard()
                             }
                         Spacer()
-                            .frame(height: textEditorHeight + 16) // TextEditor 높이에 맞춰 배경 높이 조정
+                            .frame(height: textEditorHeight + 16)
                     }
                 }
             }
+
             .task {
-                vm.loadComments(postId: self.postId, lastId: nil)
-            }
+                           vm.loadComments(postId: self.postId, lastId: nil)
+                       }
             .onAppear {
                 vm.newComment = ""
                 setupKeyboardObservers()
@@ -118,23 +106,48 @@ struct PostReplyView: View {
                 removeKeyboardObservers()
                 vm.newComment = ""
             }
+            
+            
             .alert("이 댓글을 신고하시겠습니까?", isPresented: $showAlert) {
-                           Button("예", role: .destructive) {
-                               if let id = reportCommentId {
-                                  vm.reportComment(commentId: id)
-                                   print("신고완료\(id)")
-                                   self.showReportConfirmation = true
-                               }
-                           }
-                           Button("아니요", role: .cancel) {}
-                       } message: {
-                           Text("신고하면 관리자 검토 후 조치됩니다.")
-                       }
-                       .alert("신고가 완료되었습니다.", isPresented: $showReportConfirmation) {
-                                  Button("확인", role: .cancel) {}
-                              } message: {
-                                  Text("관리자 검토가 완료되면 적절한 조치가 이루어집니다.")
-                              }
+                Button("예", role: .destructive) {
+                    if let id = reportCommentId {
+                        vm.reportComment(commentId: id) { result in
+                            switch result {
+                            case .success():
+                                showReportConfirmation = true
+                            case .failure(let error):
+                               
+                                
+                                
+                                print("에러가 발생했단다\(error)")
+                               
+                                
+                                errorMessage = error.detail
+                                
+                               
+                                showErrorAlert = true
+                            }
+                        }
+                    }
+                }
+                Button("아니요", role: .cancel) {}
+            } message: {
+                Text("신고하면 관리자 검토 후 조치됩니다.")
+            }
+            .alert("신고가 완료되었습니다.", isPresented: $showReportConfirmation) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("관리자 검토가 완료되면 적절한 조치가 이루어집니다.")
+            }
+            .alert("Error", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+               
+                
+                
+                Text(errorMessage ?? "An unknown error occurred")
+            }
+
 
             .navigationTitle("댓글")
             .navigationBarTitleDisplayMode(.inline)
@@ -150,42 +163,23 @@ struct PostReplyView: View {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { notification in
             if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
                 keyboardHeight = keyboardFrame.height
+                isEditing = true
             }
         }
 
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            keyboardHeight = 0
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) {
+            _ in keyboardHeight = 0
             isEditing = false
         }
     }
 
     private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    func adjustTextEditorHeight() {
-        let size = CGSize(width: UIScreen.main.bounds.width - 70, height: .infinity)
-        let estimatedHeight = vm.newComment.boundingRect(
-            with: size,
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: UIFont.systemFont(ofSize: 17)],
-            context: nil
-        ).height
-        textEditorHeight = max(34, min(estimatedHeight + 16, maxEditorHeight))
+        NotificationCenter.default.removeObserver(self)
     }
 
     func addComment() {
-        print("Adding comment: \(vm.newComment)")
-       
-        textEditorHeight = 34 // 댓글 추가 후 높이 초기화
         vm.submitComments(postId: postId, content: vm.newComment)
-        vm.newComment = "" // 댓글을 추가한 후 입력 필드 초기화
-    }
-
-    func reportItem() {
-        print("신고 처리")
-        showAlert = true // 신고 완료 후 Alert를 표시
+        vm.newComment = ""
     }
 }
 
@@ -195,6 +189,7 @@ struct ReplyCellView: View {
     let id: Int
     let comments: String
     let user: CreatedUser
+    let createDate:String
 
     @ObservedObject var vm: CommunityViewModel
     
@@ -224,7 +219,19 @@ struct ReplyCellView: View {
             .buttonStyle(PlainButtonStyle())  // 버튼 스타일 제거하여 이미지만 표시
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(user.nickname)").font(.headline)
+                
+                HStack {
+                    Text(user.nickname)
+                        .font(.headline)
+                        .foregroundColor(Color.primary)
+                    Text(createDate)
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.gray)
+                        .padding(.leading, 8)
+                    
+                }
+                
+                
                 Text(comments)
                     .lineLimit(showFullText ? nil : 3)
                     .font(.subheadline)
