@@ -173,7 +173,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             .padding(.horizontal, 32)
             .padding(.top, 16)
             
-             UserPostView(vm: vm)
+            //UserPostView(vm: vm)
+            blockStateView
             Spacer()
             
         }
@@ -186,4 +187,36 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             
         }
     }
+    
+    
+    private var blockStateView: some View {
+        VStack {
+            Image("block")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 60, height: 60)
+                .foregroundColor(.secondary)
+                .padding(.top, 120)
+            
+            Text("차단된 사용자 입니다.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .padding(.top, 16)
+            
+            Text("게시물을 보려면 차단을 해제해주세요.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .padding(.top, 0)
+            
+            Spacer()
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+    
 }

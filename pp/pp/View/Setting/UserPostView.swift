@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UserPostView<ViewModel: UserViewModelProtocol>: View {
     @ObservedObject var vm: ViewModel
-
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
@@ -38,7 +38,7 @@ struct UserPostView<ViewModel: UserViewModelProtocol>: View {
             }
         }
     }
-
+    
     private var emptyStateView: some View {
         VStack(alignment: .center) {
             Image("no.post")
@@ -46,7 +46,7 @@ struct UserPostView<ViewModel: UserViewModelProtocol>: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .offset(y: -30)
     }
-
+    
     private func userPostsGrid(posts: [Post]) -> some View {
         GeometryReader { geometry in
             ScrollView {
@@ -60,4 +60,18 @@ struct UserPostView<ViewModel: UserViewModelProtocol>: View {
             }
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
