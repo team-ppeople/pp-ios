@@ -34,6 +34,7 @@ struct UserProfile: Codable {
     let profileImageUrl: String
     let postCount: Int
     let thumbsUpCount: Int
+    let isBlocked: Bool		
     let posts: [Post]
     
     

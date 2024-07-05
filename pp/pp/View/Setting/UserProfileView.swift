@@ -105,7 +105,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                                 Button("차단") {
                                     
                                     if let vm = vm as? CommunityViewModel,let userId = userId{
-                                        vm.blockUsers(userId: userId)
+                                       vm.blockUsers(userId: userId)
+                                       // vm.unblockUsers(userId: 13)
                                         print("차단")
                                     }
                                     self.showMenu = false
