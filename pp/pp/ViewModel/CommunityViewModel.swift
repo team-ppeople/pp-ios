@@ -10,7 +10,7 @@ import Combine
 import PhotosUI
 
 class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
-    
+    @Published var errorMessage: String?
     
     @Published var profileImageUrl: URL?
     @Published var nickname: String = ""
@@ -317,26 +317,23 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     }
     
     //MARK: - 게시물 댓글 신고
-    func reportComment(commentId:Int) {
+    func reportComment(commentId: Int, completion: @escaping (Result<Void, APIError>) -> Void) {
         CommunityService.shared.reportComments(commentId: commentId)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
+            .sink(receiveCompletion: { completionStatus in
+                switch completionStatus {
                 case .finished:
-                    print("게시물 댓글 신고 완료")
+                    completion(.success(()))
                 case .failure(let error):
-                    print("게시물 댓글 신고 Error")
-                    dump(error)
+                    completion(.failure(error))
                     
-                    if error.statusCode == 401 {
-                        self?.authService.fetchRefreshToken() {
-                            print("fetchRefreshToken")
-                            self?.reportComment(commentId: commentId)
-                        }
-                    }
                 }
-            }, receiveValue: { })
+            }, receiveValue: { _ in
+                
+            })
             .store(in: &cancellables)
     }
+    
+    
     
     //MARK: - PhotoPicker에서 이미지 선택
     
@@ -480,7 +477,35 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     }
     
     
+    func blockUsers(userId:Int) {
+        UserService.shared.blockUsers(userId: userId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 차단이 완료되었습니다.")
+                case .failure(let error):
+                    print("유저 차단 중 오류 발생: \(error)")
+                }
+            }, receiveValue: {
+                print("유저 차단")
+            })
+            .store(in: &cancellables)
+    }
     
+    func unblockUsers(userId:Int) {
+        UserService.shared.unblockUsers(userId: userId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 차단 해제가 완료되었습니다.")
+                case .failure(let error):
+                    print("유저 차단 해제 중 오류 발생: \(error)")
+                }
+            }, receiveValue: {
+                print("유저 차단 해제")
+            })
+            .store(in: &cancellables)
+    }
     
 }
     

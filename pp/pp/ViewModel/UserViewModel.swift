@@ -227,6 +227,35 @@ class UserViewModel: PhotoPickerViewModel,UserViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    func blockUsers(userId:Int) {
+        UserService.shared.blockUsers(userId: userId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 차단이 완료되었습니다.")
+                case .failure(let error):
+                    print("유저 차단 중 오류 발생: \(error)")
+                }
+            }, receiveValue: {
+                print("유저 차단")
+            })
+            .store(in: &cancellables)
+    }
+    
+    func unblockUsers(userId:Int) {
+        UserService.shared.unblockUsers(userId: userId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("유저 차단 해제가 완료되었습니다.")
+                case .failure(let error):
+                    print("유저 차단 해제 중 오류 발생: \(error)")
+                }
+            }, receiveValue: {
+                print("유저 차단 해제")
+            })
+            .store(in: &cancellables)
+    }
     
     
 }

@@ -139,7 +139,21 @@ class UserService {
             .mapError(Utils.handleError)
             .eraseToAnyPublisher()
     }
+    // MARK: - 유저 차단
     
+    func blockUsers(userId:Int) -> AnyPublisher<Void,APIError> {
+        provider.requestPublisher(.blockUser(userId: userId))
+            .map { _ in Void() }
+            .mapError(Utils.handleError)
+            .eraseToAnyPublisher()
+    }
+    
+    func unblockUsers(userId:Int) -> AnyPublisher<Void,APIError> {
+        provider.requestPublisher(.unblockUser(userId: userId))
+            .map { _ in Void() }
+            .mapError(Utils.handleError)
+            .eraseToAnyPublisher()
+    }
     
     
 }

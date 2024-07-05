@@ -12,8 +12,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
     @State private var showModal = false
     @ObservedObject var vm: ViewModel
     // let postId: Int
-    
-    let userId: Int? 
+    @State private var showMenu = false
+    let userId: Int?
     
     var body: some View {
         VStack {
@@ -22,12 +22,12 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                     AsyncImage(url: profileImageUrl) { phase in
                         switch phase {
                         case .empty:
-							Image(systemName: "person.fill")
-								.resizable()
-								.scaledToFill()
-								.frame(width: 58, height: 58)
-								.clipShape(Circle())
-								.background(Circle().foregroundColor(.sub))
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 58, height: 58)
+                                .clipShape(Circle())
+                                .background(Circle().foregroundColor(.sub))
                         case .success(let image):
                             image
                                 .resizable()
@@ -35,61 +35,99 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                                 .frame(width: 58, height: 58)
                                 .clipShape(Circle())
                         case .failure:
-							ProgressView()
-								.frame(width: 58, height: 58)
-								.background(Circle().foregroundColor(.sub))
+                            ProgressView()
+                                .frame(width: 58, height: 58)
+                                .background(Circle().foregroundColor(.sub))
                         @unknown default:
                             EmptyView()
                         }
                     }
                 } else {
-					Image(systemName: "person.fill")
-						.resizable()
-						.scaledToFill()
-						.frame(width: 58, height: 58)
-						.clipShape(Circle())
-						.background(Circle().foregroundColor(.sub))
+                    Image(systemName: "person.fill")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 58, height: 58)
+                        .clipShape(Circle())
+                        .background(Circle().foregroundColor(.sub))
                 }
                 
                 Text(vm.nickname.isEmpty ? "닉네임 불러오기 실패" : vm.nickname)
                     .font(.title3)
                 
                 Spacer()
-
+                
                 let currentUserId = UserDefaults.standard.string(forKey: "UserId").flatMap(Int.init)
-
-                               // 프로필 수정 버튼 표시 조건
-                               if type(of: vm) == UserViewModel.self || (type(of: vm) == CommunityViewModel.self && userId == currentUserId) {
-                                   Button(action: {
-                                       showModal.toggle()
-                                   }) {
-                                       Text("프로필 수정")
-                                           .frame(width: 93, height: 45)
-                                           .background(Color.accentColor)
-                                           .foregroundColor(.white)
-                                           .cornerRadius(8)
-                                   }
-                                   .padding(.trailing, 8)
-                                   .sheet(isPresented: $showModal) {
-                                       if let userVM = vm as? UserViewModel {
-                                           EditProfileView(vm: userVM)
-                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
-                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
-                                               .cornerRadius(40)
-                                       }
-                                       
-                                       if let vm = vm as? CommunityViewModel {
-                                           EditProfileView(vm: vm)
-                                              
-                                               .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
-                                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
-                                               .cornerRadius(40)
-                                       }
-                                       
-                                       
-                                   }
-                               }
-                         
+                
+                // 프로필 수정 버튼 표시 조건
+                if type(of: vm) == UserViewModel.self || (type(of: vm) == CommunityViewModel.self && userId == currentUserId) {
+                    Button(action: {
+                        showModal.toggle()
+                    }) {
+                        Text("프로필 수정")
+                            .frame(width: 93, height: 45)
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.trailing, 8)
+                    .sheet(isPresented: $showModal) {
+                        if let userVM = vm as? UserViewModel {
+                            EditProfileView(vm: userVM)
+                                .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                                .cornerRadius(40)
+                        }
+                        
+                        if let vm = vm as? CommunityViewModel {
+                            EditProfileView(vm: vm)
+                            
+                                .presentationDetents([.fraction(5/12)]) // 화면의 5/12 높이로 설정
+                                .presentationDragIndicator(.visible) // 드래그 인디케이터를 표시
+                                .cornerRadius(40)
+                        }
+                        
+                        
+                    }
+                }
+                
+                else {
+                    Button(action: {
+                        self.showMenu.toggle()
+                    }) {
+                        Image("menu.icon")
+                            .imageScale(.large)
+                    }
+                    .padding(.trailing, 16)
+                    .buttonStyle(PlainButtonStyle())
+                    .background(
+                        VStack {
+                            if showMenu {
+                                Button("차단") {
+                                    
+                                    if let vm = vm as? CommunityViewModel,let userId = userId{
+                                       vm.blockUsers(userId: userId)
+                                       // vm.unblockUsers(userId: 13)
+                                        print("차단")
+                                    }
+                                    self.showMenu = false
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(5)
+                                .frame(width: 100)
+                                .frame(height: 40)
+                                .background(Color.white)
+                                .cornerRadius(5)
+                                //  .shadow(radius: 5)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.gray, lineWidth: 1)
+                                )
+                            }
+                        }
+                            .offset(x: -55, y: 32)
+                        
+                    )
+                }
                 
                 
                 
@@ -136,7 +174,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             .padding(.horizontal, 32)
             .padding(.top, 16)
             
-             UserPostView(vm: vm)
+            //UserPostView(vm: vm)
+            blockStateView
             Spacer()
             
         }
@@ -149,4 +188,36 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             
         }
     }
+    
+    
+    private var blockStateView: some View {
+        VStack {
+            Image("block")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 60, height: 60)
+                .foregroundColor(.secondary)
+                .padding(.top, 120)
+            
+            Text("차단된 사용자 입니다.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .padding(.top, 16)
+            
+            Text("게시물을 보려면 차단을 해제해주세요.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .padding(.top, 0)
+            
+            Spacer()
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+    
 }

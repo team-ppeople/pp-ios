@@ -16,6 +16,8 @@ enum UserAPI {
     case fetchUserPosts(userId: Int, limit: Int, lastId: Int?)// 유저 커뮤니티 게시글 목록 조회
     case uploadImage(presignedURL: String, imageData: Data)
     case fetchNotices(limit: Int, lastId: Int?) // 공지사항 조회
+    case blockUser(userId:Int) //유저 차단
+    case unblockUser(userId:Int) //유저 차단 해제
 }
 
 extension UserAPI: TargetType {
@@ -46,12 +48,16 @@ extension UserAPI: TargetType {
             return ""
         case .fetchNotices:
             return "/api/v1/notices"
+        case .blockUser(let userId):
+            return "/api/v1/users/\(userId)/block"
+        case .unblockUser(let userId):
+            return "/api/v1/users/\(userId)/unblock"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .checkRegisteredUser, .getPresignedId:
+        case .checkRegisteredUser, .getPresignedId,.blockUser,.unblockUser:
             return .post
         case .editUserInfo:
             return .patch
@@ -61,7 +67,6 @@ extension UserAPI: TargetType {
             return .get
         case .uploadImage:
             return .put
-        
         }
     }
     
@@ -78,7 +83,7 @@ extension UserAPI: TargetType {
             return .requestParameters(parameters: ["idToken": idToken], encoding: URLEncoding.default)
         case .editUserInfo(_, let profile):
             return .requestJSONEncodable(profile)
-        case .deleteUser, .fetchUserProfile:
+        case .deleteUser, .fetchUserProfile, .blockUser,.unblockUser:
             return .requestPlain
         case .fetchUserPosts(_, let limit, let lastId):
             let adjustedLimit = max(10, min(limit, 100)) // 최소값 10, 최대값 100 적용
