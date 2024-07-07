@@ -13,7 +13,10 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
     @ObservedObject var vm: ViewModel
     // let postId: Int
     @State private var showMenu = false
+    @State private var showAlert = false
     let userId: Int?
+	@State private var alertMessage: String = ""
+	@Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
@@ -105,11 +108,19 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
                                 Button("차단") {
                                     
                                     if let vm = vm as? CommunityViewModel,let userId = userId{
-                                       vm.blockUsers(userId: userId)
+										vm.blockUsers(userId: userId) { isBlocked in
+											self.showMenu = false
+											self.showAlert = true
+											
+											if isBlocked {
+												self.alertMessage = "유저가 차단되었습니다."
+											} else {
+												self.alertMessage = "유저를 차단하는데 오류가 발생했습니다. 다시 시도해주세요."
+											}
+										}
                                        // vm.unblockUsers(userId: 13)
-                                        print("차단")
                                     }
-                                    self.showMenu = false
+                                    
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(5)
@@ -174,8 +185,8 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             .padding(.horizontal, 32)
             .padding(.top, 16)
             
-            //UserPostView(vm: vm)
-            blockStateView
+            UserPostView(vm: vm)
+//            blockStateView
             Spacer()
             
         }
@@ -185,8 +196,16 @@ struct UserProfileView<ViewModel: UserViewModelProtocol>: View {
             guard let userId = userId else { return }
             print("유저아이디\(userId)")
             vm.fetchUserProfile(userId: userId)
-            
         }
+		.alert(isPresented: $showAlert) {
+			Alert(
+				title: Text(""),
+				message: Text(alertMessage),
+				dismissButton: .default(Text("OK"), action: {
+					dismiss()
+				})
+			)
+		}
     }
     
     

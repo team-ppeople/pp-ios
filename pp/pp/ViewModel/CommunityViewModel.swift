@@ -477,14 +477,16 @@ class CommunityViewModel: PhotoPickerViewModel,UserViewModelProtocol {
     }
     
     
-    func blockUsers(userId:Int) {
+	func blockUsers(userId:Int, completionHandler: @escaping (Bool) -> Void) {
         UserService.shared.blockUsers(userId: userId)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     print("유저 차단이 완료되었습니다.")
+					completionHandler(true)
                 case .failure(let error):
                     print("유저 차단 중 오류 발생: \(error)")
+					completionHandler(false)
                 }
             }, receiveValue: {
                 print("유저 차단")
