@@ -12,6 +12,7 @@ struct TermsAgreementView: View {
     @ObservedObject var communityVm: CommunityViewModel
 	@State var privacyTermsToggleIsOn: Bool = false
 	@State var serviceTermsToggleIsOn: Bool = false
+	@State var eulaTermsToggleIsOn: Bool = false
 	@State var allTermsToggleIsOn: Bool = false
 	@State private var color: Color = .sub
 	
@@ -46,9 +47,9 @@ struct TermsAgreementView: View {
 			.toggleStyle(.button)
 			.tint(.clear)
 			.onChange(of: privacyTermsToggleIsOn) { isOn in
-				if !allTermsToggleIsOn && serviceTermsToggleIsOn {
+				if !allTermsToggleIsOn && serviceTermsToggleIsOn && eulaTermsToggleIsOn {
 					allTermsToggleIsOn = true
-				} else if !privacyTermsToggleIsOn || !serviceTermsToggleIsOn || !isOn {
+				} else if !privacyTermsToggleIsOn || !serviceTermsToggleIsOn || !eulaTermsToggleIsOn || !isOn {
 					allTermsToggleIsOn = false
 				}
 			}
@@ -83,9 +84,46 @@ struct TermsAgreementView: View {
 			.toggleStyle(.button)
 			.tint(.clear)
 			.onChange(of: serviceTermsToggleIsOn) { isOn in
-				if !allTermsToggleIsOn && privacyTermsToggleIsOn {
+				if !allTermsToggleIsOn && privacyTermsToggleIsOn && eulaTermsToggleIsOn {
 					allTermsToggleIsOn = true
-				} else if !privacyTermsToggleIsOn || !serviceTermsToggleIsOn || !isOn {
+				} else if !privacyTermsToggleIsOn || !serviceTermsToggleIsOn || !eulaTermsToggleIsOn || !isOn {
+					allTermsToggleIsOn = false
+				}
+			}
+			
+			Toggle(isOn: $eulaTermsToggleIsOn, label: {
+				HStack {
+					Image(systemName: "checkmark.circle")
+						.tint(eulaTermsToggleIsOn ? .accent : .sub)
+					Text("EULA 최종 사용자 라이센스 계약")
+						.frame(width: 220)
+						.tint(.black)
+						.font(.system(size: 16))
+					Text("(필수)")
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.tint(.darkSub)
+						.font(.system(size: 14))
+					Button {} label: {
+						Link(destination: URL(string: Url.eulaPolicy.rawValue)!) {
+							Image(systemName: "chevron.right")
+								.tint(.black)
+						}
+					}
+				}
+				.frame(maxWidth: .infinity)
+				.padding(.vertical, 10)
+				.padding(.horizontal, 12)
+				.overlay(
+					RoundedRectangle(cornerRadius: 5)
+						.stroke(eulaTermsToggleIsOn ? .accent : .sub, lineWidth: 1)
+				)
+			})
+			.toggleStyle(.button)
+			.tint(.clear)
+			.onChange(of: serviceTermsToggleIsOn) { isOn in
+				if !allTermsToggleIsOn && privacyTermsToggleIsOn && serviceTermsToggleIsOn {
+					allTermsToggleIsOn = true
+				} else if !privacyTermsToggleIsOn || !serviceTermsToggleIsOn || !eulaTermsToggleIsOn || !isOn {
 					allTermsToggleIsOn = false
 				}
 			}
@@ -95,7 +133,7 @@ struct TermsAgreementView: View {
 			Toggle(isOn: $allTermsToggleIsOn, label: {
 				HStack {
 					Image(systemName: "checkmark.circle")
-						.tint(allTermsToggleIsOn && privacyTermsToggleIsOn && serviceTermsToggleIsOn ? .accent : .sub)
+						.tint(allTermsToggleIsOn && privacyTermsToggleIsOn && serviceTermsToggleIsOn && eulaTermsToggleIsOn ? .accent : .sub)
 					Text("모두 동의")
 						.tint(.black)
 					
@@ -108,9 +146,11 @@ struct TermsAgreementView: View {
 				if isOn {
 					privacyTermsToggleIsOn = true
 					serviceTermsToggleIsOn = true
-				} else if privacyTermsToggleIsOn && serviceTermsToggleIsOn {
+					eulaTermsToggleIsOn = true
+				} else if privacyTermsToggleIsOn && serviceTermsToggleIsOn && eulaTermsToggleIsOn {
 					privacyTermsToggleIsOn = false
 					serviceTermsToggleIsOn = false
+					eulaTermsToggleIsOn = false
 				}
 			}
 			

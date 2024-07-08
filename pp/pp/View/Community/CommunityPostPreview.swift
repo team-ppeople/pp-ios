@@ -41,7 +41,6 @@ struct CommunityPostPreview: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: size, height: size)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
                         .clipped()
                 }
                 

@@ -11,4 +11,5 @@ enum Url: String {
     case server = "https://pp-api.kro.kr"
 	case privacyPolicy = "https://pp-api.kro.kr/pp-policy/privacy-policy.html"
 	case termsAndCondition = "https://pp-api.kro.kr/pp-policy/terms-and-condition.html"
+	case eulaPolicy = "https://pp-api.kro.kr/pp-policy/EULA.html"
 }
