@@ -2,7 +2,7 @@
 
 ## 📌 어플리케이션 제작
 - 기간 : 2024.04.01 ~ 
-- 멤버 : iOS - [임재현](https://github.com/LimJaeHyeon9298) [김지현](https://github.com/jkim68888) / AOS - 이은정, 한은경 / BE - 구민수, 신영진 
+- 멤버 : iOS - [임재현](https://github.com/LimJaeHyeon9298) [김지현](https://github.com/jkim68888) / AOS - [이은정](https://github.com/LeeEunjeong1), [한은경](https://github.com/ppErika) / BE - [구민수](https://github.com/bulmandu), [신영진](https://github.com/sinbom) 
 
 ## 🚀 Release
 - v1.0 : 24.06.21 심사 제출
