@@ -27,9 +27,9 @@ struct TextInputView: View {
             Text("내용")
                 .font(.system(size: 16))
                 .fontWeight(.medium)
-                .padding(.top, 30)
+                .padding(.top, 20)
             TextEditor(text: $contents)
-                .frame(height: 280)
+                .frame(height: 200)
                 .padding(.vertical, 8)
                 .background(.white)
                 .overlay(

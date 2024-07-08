@@ -61,6 +61,15 @@ struct SettingView: View {
 					})
 					.padding(.bottom, 12)
 					
+					Button (action: {
+						print("")
+					}, label: {
+						Link(destination: URL(string: Url.eulaPolicy.rawValue)!) {
+							createBoxStyle("EULA 최종 사용자 라이센스 계약")
+						}
+					})
+					.padding(.bottom, 12)
+					
 					createBoxStyle("버전 정보", version: currentAppVersion())
 						.padding(.bottom, 12)
 					
